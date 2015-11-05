@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.home.HomeController">
+  <center>
+    <SplitPane disable="false" dividerPositions="0.35218508997429304" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
+          <children>
+            <ListView fx:id="projectsListView" maxWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+          </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.9999000000025" prefWidth="556.0">
+          <children>
+            <VBox prefHeight="510.0" prefWidth="464.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <children>
+                <HBox>
+                  <children>
+                    <Button fx:id="breadcrumbButton" mnemonicParsing="false" text="Path">
+                      <HBox.margin>
+                        <Insets />
+                      </HBox.margin>
+                    </Button>
+                  </children>
+                </HBox>
+                <AnchorPane fx:id="mainContentPane" prefHeight="495.0" prefWidth="464.0" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+          </children>
+        </AnchorPane>
+      </items>
+      <BorderPane.margin>
+        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+      </BorderPane.margin>
+    </SplitPane>
+  </center>
+  <top>
+    <VBox>
+      <children>
+        <MenuBar useSystemMenuBar="false">
+          <menus>
+            <Menu mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Close" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Delete" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="About" />
+              </items>
+            </Menu>
+          </menus>
+          <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </VBox.margin>
+        </MenuBar>
+        <HBox>
+          <children>
+            <Button mnemonicParsing="false" text="Create Project" HBox.margin="$x1" />
+            <Button mnemonicParsing="false" text="Create Experiment" HBox.margin="$x1" />
+            <Region prefHeight="24.0" prefWidth="438.0" HBox.hgrow="ALWAYS" HBox.margin="$x1" />
+            <Button mnemonicParsing="false" prefHeight="24.0" text="Log Out" HBox.margin="$x1" />
+          </children>
+        </HBox>
+      </children>
+      <BorderPane.margin>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+      </BorderPane.margin>
+    </VBox>
+  </top>
+</BorderPane>
