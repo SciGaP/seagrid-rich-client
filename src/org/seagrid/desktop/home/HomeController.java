@@ -24,45 +24,96 @@ package org.seagrid.desktop.home;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
 import javafx.util.Callback;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
+import org.apache.airavata.model.experiment.ExperimentSummaryModel;
+import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
-import org.seagrid.desktop.experiment.list.ExperimentListController;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** Controls the home screen */
 public class HomeController {
-
-    @FXML
-    private Button breadcrumbButton;
-
-    @FXML
-    private AnchorPane mainContentPane;
 
     @FXML
     private ListView<Project> projectsListView;
 
     ObservableList observableProjectList = FXCollections.observableArrayList();
 
-    private static final double ARROW_WIDTH = 50;
+    @FXML
+    private TableView<ExperimentSummaryFXModel> expSummaryTable;
 
-    private static final double ARROW_HEIGHT = 20;
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, Boolean> expCheckedColumn;
+
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, String> expApplicationColumn;
+
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, String> expHostColumn;
+
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, String> expStatusColumn;
+
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, String> expNameColumn;
+
+    @FXML
+    private TableColumn<ExperimentSummaryFXModel, LocalDateTime> expCreateTimeColumn;
+
+    @FXML
+    private CheckBox checkAllExps;
 
     public void initialize() {
+        // Initialize the experiment table
+        expSummaryTable.setEditable(true);
+
+        expCheckedColumn.setCellValueFactory(new PropertyValueFactory<>("checked"));
+        expCheckedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(expCheckedColumn));
+        expCheckedColumn.setEditable(true);
+        expNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        expApplicationColumn.setCellValueFactory(cellData -> cellData.getValue().applicationProperty());
+        expHostColumn.setCellValueFactory(cellData -> cellData.getValue().hostProperty());
+        expStatusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
+        expStatusColumn.setCellFactory(new Callback<TableColumn<ExperimentSummaryFXModel, String>,
+                TableCell<ExperimentSummaryFXModel, String>>() {
+            @Override
+            public TableCell<ExperimentSummaryFXModel, String> call(TableColumn<ExperimentSummaryFXModel, String> param) {
+                return new TableCell<ExperimentSummaryFXModel, String>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        if(!empty){
+                            if (item.equals(ExperimentState.COMPLETED.toString())) {
+                                this.setTextFill(Color.GREEN);
+                            }else if(item.equals(ExperimentState.FAILED.toString())){
+                                this.setTextFill(Color.RED);
+                            }else if(item.equals(ExperimentState.CREATED.toString())){
+                                this.setTextFill(Color.BLUE);
+                            }else{
+                                this.setTextFill(Color.ORANGE);
+                            }
+                        }
+
+                    }
+                };
+            }
+        });
+        expCreateTimeColumn.setCellValueFactory(cellData -> cellData.getValue().createdTimeProperty());
+
+        checkAllExps.setOnMouseClicked(event -> handleCheckAllExperiments());
+
+        // Initialize the project list
         projectsListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
             @Override
             public ListCell<Project> call(ListView<Project> param) {
@@ -80,62 +131,24 @@ public class HomeController {
         });
 
         projectsListView.setOnMouseClicked(event -> {
-            updateExperimentList();
+            Project project = projectsListView.getSelectionModel().getSelectedItem();
+            if(project != null){
+                Map<ExperimentSearchFields,String> filters = new HashMap<ExperimentSearchFields, String>();
+                if(!project.getProjectID().startsWith("$$$$$$$")){
+                    filters.put(ExperimentSearchFields.PROJECT_ID,project.getProjectID());
+                    updateExperimentList(filters,-1,0);
+                }else{
+                    updateExperimentList(filters,-1,0);
+                }
+            }
         });
 
-        updateProjectList();
-        updateExperimentList();
-//        updateBreadCrumbs();
+        initProjectList();
+        initExperimentList();
     }
 
-    //update the breadcrumbs
-    public void updateBreadCrumbs(){
-        // build the following shape
-//   --------
-//  \         \
-//  /         /
-//   --------
-        Path path = new Path();
-
-// begin in the upper left corner
-        MoveTo e1 = new MoveTo(0, 0);
-
-// draw a horizontal line that defines the width of the shape
-        HLineTo e2 = new HLineTo();
-// bind the width of the shape to the width of the button
-        e2.xProperty().bind(breadcrumbButton.widthProperty().subtract(ARROW_WIDTH));
-
-// draw upper part of right arrow
-        LineTo e3 = new LineTo();
-// the x endpoint of this line depends on the x property of line e2
-        e3.xProperty().bind(e2.xProperty().add(ARROW_WIDTH));
-        e3.setY(ARROW_HEIGHT / 2.0);
-
-// draw lower part of right arrow
-        LineTo e4 = new LineTo();
-// the x endpoint of this line depends on the x property of line e2
-        e4.xProperty().bind(e2.xProperty());
-        e4.setY(ARROW_HEIGHT);
-
-// draw lower horizontal line
-        HLineTo e5 = new HLineTo(0);
-
-// draw lower part of left arrow
-        LineTo e6 = new LineTo(ARROW_WIDTH, ARROW_HEIGHT / 2.0);
-
-// close path
-        ClosePath e7 = new ClosePath();
-
-        path.getElements().addAll(e1, e2, e3, e4, e5, e6, e7);
-// this is a dummy color to fill the shape, it won't be visible
-        path.setFill(Color.BLACK);
-
-// set path as button shape
-        breadcrumbButton.setClip(path);
-    }
-
-    //update the left pane with project list
-    public void updateProjectList(){
+    //init the left pane with project list
+    public void initProjectList(){
         try {
             List<Project> projectList = AiravataManager.getInstance().getProjects();
             observableProjectList = FXCollections.observableArrayList();
@@ -148,23 +161,38 @@ public class HomeController {
         }
     }
 
-    //updates the right pane with experiment list
-    public void updateExperimentList(){
-        try {
-            Project project = projectsListView.getSelectionModel().getSelectedItem();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../experiment/list/experiment-list.fxml"));
-            Node experimentList = (Node)loader.load();
-            ExperimentListController controller = loader.getController();
-            mainContentPane.getChildren().setAll(experimentList);
-            HashMap<ExperimentSearchFields,String> filters = new HashMap<>();
-            filters.put(ExperimentSearchFields.PROJECT_ID, project.getProjectID());
-            if(project.getProjectID().startsWith("$$$$")){
-                controller.updateExperimentList(new HashMap<>(), 100, 0);
-            }else{
-                controller.updateExperimentList(filters, -1, 0);
+    //init the right pane with experiment list
+    public void initExperimentList(){
+        Map<ExperimentSearchFields,String> filters = new HashMap<>();
+        updateExperimentList(filters,-1,0);
+    }
+
+    public void handleCheckAllExperiments(){
+        if(checkAllExps.isSelected()){
+            for(ExperimentSummaryFXModel experimentSummaryFXModel : expSummaryTable.getItems()){
+                experimentSummaryFXModel.setChecked(true);
             }
-        } catch (IOException e) {
+        }else{
+            for(ExperimentSummaryFXModel experimentSummaryFXModel : expSummaryTable.getItems()){
+                experimentSummaryFXModel.setChecked(false);
+            }
+        }
+    }
+
+    //update the right pane with experiment list
+    public void updateExperimentList(Map<ExperimentSearchFields, String> filters, int limit, int offset){
+        try {
+            List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
+                    .getExperimentSummaries(filters, limit, offset);
+            ObservableList<ExperimentSummaryFXModel> experimentSummaryFXModels = FXCollections.observableArrayList();
+            for(ExperimentSummaryModel expModel : experimentSummaryModelList){
+                ExperimentSummaryFXModel expFXModel = new ExperimentSummaryFXModel(expModel);
+                experimentSummaryFXModels.add(expFXModel);
+            }
+            expSummaryTable.setItems(experimentSummaryFXModels);
+        } catch (AiravataClientException e) {
             e.printStackTrace();
         }
     }
+
 }
