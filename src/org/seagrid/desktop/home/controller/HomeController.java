@@ -23,6 +23,8 @@ package org.seagrid.desktop.home.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -50,6 +52,8 @@ public class HomeController {
 
     ObservableList observableProjectList = FXCollections.observableArrayList();
 
+    ObservableList<ExperimentSummaryFXModel> observableExperimentList = FXCollections.observableArrayList();
+
     @FXML
     private TableView<ExperimentSummaryFXModel> expSummaryTable;
 
@@ -73,6 +77,9 @@ public class HomeController {
 
     @FXML
     private CheckBox checkAllExps;
+
+    @FXML
+    private TextField filterField;
 
     public void initialize() {
         // Initialize the experiment table
@@ -185,12 +192,38 @@ public class HomeController {
         try {
             List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
                     .getExperimentSummaries(filters, limit, offset);
-            ObservableList<ExperimentSummaryFXModel> experimentSummaryFXModels = FXCollections.observableArrayList();
+            observableExperimentList = FXCollections.observableArrayList();
             for(ExperimentSummaryModel expModel : experimentSummaryModelList){
                 ExperimentSummaryFXModel expFXModel = new ExperimentSummaryFXModel(expModel);
-                experimentSummaryFXModels.add(expFXModel);
+                observableExperimentList.add(expFXModel);
             }
-            expSummaryTable.setItems(experimentSummaryFXModels);
+            //Set the filter Predicate whenever the filter changes.
+            FilteredList<ExperimentSummaryFXModel> filteredExpSummaryData = new FilteredList<>(observableExperimentList, p -> true);
+            filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredExpSummaryData.setPredicate(experiment -> {
+                    // If filter text is empty, display all persons.
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+                    // Compare first name and last name of every person with filter text.
+                    String lowerCaseFilter = newValue.toLowerCase();
+
+                    if (experiment.getName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true; // Filter matches first name.
+                    } else if (experiment.getApplication().toLowerCase().contains(lowerCaseFilter)) {
+                        return true; // Filter matches last name.
+                    } else if (experiment.getHost().toLowerCase().contains(lowerCaseFilter)) {
+                        return true; // Filter matches last name.
+                    } else if (experiment.getStatus().toLowerCase().contains(lowerCaseFilter)) {
+                        return true; // Filter matches last name.
+                    }
+                    return false; // Does not match.
+                });
+            });
+            SortedList<ExperimentSummaryFXModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
+            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
+            expSummaryTable.setItems(sortedExperimentListData);
         } catch (AiravataClientException e) {
             e.printStackTrace();
         }
