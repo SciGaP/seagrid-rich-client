@@ -47,12 +47,9 @@ import java.util.Map;
 /** Controls the home screen */
 public class HomeController {
 
-    @FXML
-    private ListView<Project> projectsListView;
+    private ObservableList observableProjectList = FXCollections.observableArrayList();
 
-    ObservableList observableProjectList = FXCollections.observableArrayList();
-
-    ObservableList<ExperimentSummaryFXModel> observableExperimentList = FXCollections.observableArrayList();
+    private ObservableList<ExperimentSummaryFXModel> observableExperimentList = FXCollections.observableArrayList();
 
     @FXML
     private TableView<ExperimentSummaryFXModel> expSummaryTable;
@@ -80,6 +77,12 @@ public class HomeController {
 
     @FXML
     private TextField filterField;
+
+    @FXML
+    private TabPane tabbedPane;
+
+    @FXML
+    private ListView<Project> projectsListView;
 
     public void initialize() {
         // Initialize the experiment table
@@ -144,8 +147,10 @@ public class HomeController {
                 Map<ExperimentSearchFields,String> filters = new HashMap<>();
                 if(!project.getProjectID().startsWith("$$$$$$$")){
                     filters.put(ExperimentSearchFields.PROJECT_ID,project.getProjectID());
+                    tabbedPane.getTabs().get(0).setText(project.getName());
                     updateExperimentList(filters,-1,0);
                 }else{
+                    tabbedPane.getTabs().get(0).setText("last 100 experiments");
                     updateExperimentList(filters,-1,0);
                 }
             }
@@ -172,6 +177,7 @@ public class HomeController {
     //init the right pane with experiment list
     public void initExperimentList(){
         Map<ExperimentSearchFields,String> filters = new HashMap<>();
+        tabbedPane.getTabs().get(0).setText("last 100 experiments");
         updateExperimentList(filters,-1,0);
     }
 
