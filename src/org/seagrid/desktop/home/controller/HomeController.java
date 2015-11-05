@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.home;
+package org.seagrid.desktop.home.controller;
 
 
 import javafx.collections.FXCollections;
@@ -35,6 +35,7 @@ import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
+import org.seagrid.desktop.home.model.ExperimentSummaryFXModel;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.home;
+package org.seagrid.desktop.home.model;
 
 import javafx.beans.property.*;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;

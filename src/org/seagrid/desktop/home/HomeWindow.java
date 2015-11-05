@@ -10,7 +10,7 @@ public class HomeWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("view/home.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
