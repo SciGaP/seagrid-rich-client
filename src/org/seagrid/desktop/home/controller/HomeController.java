@@ -141,7 +141,7 @@ public class HomeController {
         projectsListView.setOnMouseClicked(event -> {
             Project project = projectsListView.getSelectionModel().getSelectedItem();
             if(project != null){
-                Map<ExperimentSearchFields,String> filters = new HashMap<ExperimentSearchFields, String>();
+                Map<ExperimentSearchFields,String> filters = new HashMap<>();
                 if(!project.getProjectID().startsWith("$$$$$$$")){
                     filters.put(ExperimentSearchFields.PROJECT_ID,project.getProjectID());
                     updateExperimentList(filters,-1,0);
@@ -224,6 +224,8 @@ public class HomeController {
             SortedList<ExperimentSummaryFXModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
             sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
             expSummaryTable.setItems(sortedExperimentListData);
+
+            filterField.setText("");
         } catch (AiravataClientException e) {
             e.printStackTrace();
         }
