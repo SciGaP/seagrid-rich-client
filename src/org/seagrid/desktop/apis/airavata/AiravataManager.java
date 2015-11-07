@@ -14,6 +14,7 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,31 @@ public class AiravataManager {
         try{
             exp = getClient().searchExperiments(
                     getAuthzToken(), getGatewayId(), getUserName(), filters, limit, offset);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return exp;
+    }
+
+    public List<ExperimentSummaryModel> getExperimentSummariesInProject(String projectId){
+        List<ExperimentSummaryModel> exp = new ArrayList<>();
+        try{
+            Map<ExperimentSearchFields,String> filters = new HashMap<>();
+            filters.put(ExperimentSearchFields.PROJECT_ID, projectId);
+            exp = getClient().searchExperiments(
+                    getAuthzToken(), getGatewayId(), getUserName(), filters, -1, 0);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return exp;
+    }
+
+    public List<ExperimentSummaryModel> getRecentExperimentSummaries(){
+        List<ExperimentSummaryModel> exp = new ArrayList<>();
+        try{
+            Map<ExperimentSearchFields,String> filters = new HashMap<>();
+            exp = getClient().searchExperiments(
+                    getAuthzToken(), getGatewayId(), getUserName(), filters, 10, 0);
         }catch (Exception ex){
             ex.printStackTrace();
         }

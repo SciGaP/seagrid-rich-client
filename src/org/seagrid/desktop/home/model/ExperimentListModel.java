@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class ExperimentSummaryFXModel{
-    private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryFXModel.class);
+public class ExperimentListModel {
+    private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
     private final BooleanProperty checked;
     private final StringProperty name;
@@ -38,8 +38,8 @@ public class ExperimentSummaryFXModel{
     private final StringProperty status;
     private final ObjectProperty<LocalDateTime> createdTime;
 
-    public ExperimentSummaryFXModel(BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
-                                    StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
+    public ExperimentListModel(BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
+                               StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
         this.checked = checked;
         this.name = name;
         this.application = application;
@@ -48,7 +48,7 @@ public class ExperimentSummaryFXModel{
         this.createdTime = createdTime;
     }
 
-    public ExperimentSummaryFXModel(){
+    public ExperimentListModel(){
         this.checked = new SimpleBooleanProperty(false);
         this.name = new SimpleStringProperty("test-name");
         this.application = new SimpleStringProperty("test-application");
@@ -57,7 +57,7 @@ public class ExperimentSummaryFXModel{
         this.createdTime = new SimpleObjectProperty<>(LocalDateTime.now());
     }
 
-    public ExperimentSummaryFXModel(ExperimentSummaryModel experimentSummaryModel){
+    public ExperimentListModel(ExperimentSummaryModel experimentSummaryModel){
         this.checked = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(experimentSummaryModel.getName());
         this.application = new SimpleStringProperty(experimentSummaryModel.getExecutionId().substring(0,
