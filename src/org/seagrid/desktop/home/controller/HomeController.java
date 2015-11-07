@@ -38,18 +38,22 @@ import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
 import org.seagrid.desktop.home.model.ExperimentSummaryFXModel;
+import org.seagrid.desktop.home.model.ProjectTreeItemFXModel;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /** Controls the home screen */
 public class HomeController {
-
     private ObservableList observableProjectList = FXCollections.observableArrayList();
 
     private ObservableList<ExperimentSummaryFXModel> observableExperimentList = FXCollections.observableArrayList();
+
+    @FXML
+    private TreeView<ProjectTreeItemFXModel> projectsTreeView;
 
     @FXML
     private TableView<ExperimentSummaryFXModel> expSummaryTable;
@@ -81,11 +85,71 @@ public class HomeController {
     @FXML
     private TabPane tabbedPane;
 
-    @FXML
-    private ListView<Project> projectsListView;
-
     public void initialize() {
-        // Initialize the experiment table
+        initProjectTreeView();
+        initExperimentList();
+    }
+
+
+    public void initProjectTreeView(){
+        projectsTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        projectsTreeView.setCellFactory(param -> {
+            TreeCell<ProjectTreeItemFXModel> cell = new TreeCell<ProjectTreeItemFXModel>(){
+                @Override
+                public void updateItem(ProjectTreeItemFXModel item, boolean empty) {
+                    super.updateItem(item, empty) ;
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        setText(item.getDisplayName());
+                    }
+                }
+            };
+            cell.setOnMouseClicked(event->{
+                if (! cell.isEmpty()) {
+                    TreeItem<ProjectTreeItemFXModel> treeItem = cell.getTreeItem();
+                    ProjectTreeItemFXModel projectTreeItemFXModel = treeItem.getValue();
+                    Map<ExperimentSearchFields,String> filters = new HashMap<>();
+                    if(projectTreeItemFXModel.getItemType().equals(ProjectTreeItemFXModel.ITEM_TYPE.PROJECT)){
+                        filters.put(ExperimentSearchFields.PROJECT_ID,projectTreeItemFXModel.getItemId());
+                        tabbedPane.getTabs().get(0).setText(projectTreeItemFXModel.getDisplayName());
+                        updateExperimentList(filters,-1,0);
+                    }else if(projectTreeItemFXModel.getItemType().equals(ProjectTreeItemFXModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
+                        tabbedPane.getTabs().get(0).setText(projectTreeItemFXModel.getDisplayName());
+                        updateExperimentList(filters,-1,0);
+                    }
+                }
+            });
+            return cell;
+        });
+        TreeItem root = new TreeItem();
+        TreeItem recentExps = new TreeItem<>(
+                new ProjectTreeItemFXModel(ProjectTreeItemFXModel.ITEM_TYPE.RECENT_EXPERIMENTS,"no-id","Recent Experiments"));
+        root.getChildren().add(recentExps);
+
+        List<Project> projects = new ArrayList<>();
+        try {
+            projects = AiravataManager.getInstance().getProjects();
+
+        } catch (AiravataClientException e) {
+            e.printStackTrace();
+        }
+        TreeItem projectRoot = new TreeItem<>(
+                new ProjectTreeItemFXModel(ProjectTreeItemFXModel.ITEM_TYPE.PROJECT_ROOT_NODE,"no-id","Projects"));
+        root.setExpanded(true);
+        for (Project itemProject: projects) {
+            projectRoot.getChildren().add(new TreeItem<>(new ProjectTreeItemFXModel(
+                    ProjectTreeItemFXModel.ITEM_TYPE.PROJECT,itemProject.getProjectID(),itemProject.getName())));
+        }
+        root.getChildren().add(projectRoot);
+
+        projectsTreeView.setRoot(root);
+        projectsTreeView.setShowRoot(false);
+
+    }
+
+    //init the right pane with experiment list
+    public void initExperimentList(){
         expSummaryTable.setEditable(true);
 
         expCheckedColumn.setCellValueFactory(new PropertyValueFactory<>("checked"));
@@ -124,60 +188,8 @@ public class HomeController {
 
         checkAllExps.setOnMouseClicked(event -> handleCheckAllExperiments());
 
-        // Initialize the project list
-        projectsListView.setCellFactory(new Callback<ListView<Project>, ListCell<Project>>() {
-            @Override
-            public ListCell<Project> call(ListView<Project> param) {
-                ListCell<Project> cell = new ListCell<Project>() {
-                    @Override
-                    protected void updateItem(Project t, boolean bln) {
-                        super.updateItem(t, bln);
-                        if (t != null) {
-                            setText(t.getName());
-                        }
-                    }
-                };
-                return cell;
-            }
-        });
-
-        projectsListView.setOnMouseClicked(event -> {
-            Project project = projectsListView.getSelectionModel().getSelectedItem();
-            if(project != null){
-                Map<ExperimentSearchFields,String> filters = new HashMap<>();
-                if(!project.getProjectID().startsWith("$$$$$$$")){
-                    filters.put(ExperimentSearchFields.PROJECT_ID,project.getProjectID());
-                    tabbedPane.getTabs().get(0).setText(project.getName());
-                    updateExperimentList(filters,-1,0);
-                }else{
-                    tabbedPane.getTabs().get(0).setText("last 100 experiments");
-                    updateExperimentList(filters,-1,0);
-                }
-            }
-        });
-
-        initProjectList();
-        initExperimentList();
-    }
-
-    //init the left pane with project list
-    public void initProjectList(){
-        try {
-            List<Project> projectList = AiravataManager.getInstance().getProjects();
-            observableProjectList = FXCollections.observableArrayList();
-            observableProjectList.add(new Project("$$$$$$$$","dummy-user","last 100 experiments"));
-            observableProjectList.addAll(projectList);
-            projectsListView.setItems(observableProjectList);
-            projectsListView.getSelectionModel().select(0);
-        } catch (AiravataClientException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //init the right pane with experiment list
-    public void initExperimentList(){
         Map<ExperimentSearchFields,String> filters = new HashMap<>();
-        tabbedPane.getTabs().get(0).setText("last 100 experiments");
+        tabbedPane.getTabs().get(0).setText("Recent Experiments");
         updateExperimentList(filters,-1,0);
     }
 

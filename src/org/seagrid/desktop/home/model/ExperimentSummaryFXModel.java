@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class ExperimentSummaryFXModel {
+public class ExperimentSummaryFXModel{
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryFXModel.class);
 
     private final BooleanProperty checked;
