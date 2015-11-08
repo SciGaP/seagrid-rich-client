@@ -24,8 +24,8 @@ import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TreeItemModel extends TreeItem {
-    private final static Logger logger = LoggerFactory.getLogger(TreeItemModel.class);
+public class TreeModel extends TreeItem {
+    private final static Logger logger = LoggerFactory.getLogger(TreeModel.class);
 
     public static enum ITEM_TYPE {
         PROJECT_ROOT_NODE, PROJECT, RECENT_EXPERIMENTS, EXPERIMENT
@@ -35,7 +35,7 @@ public class TreeItemModel extends TreeItem {
     private String itemId;
     private String displayName;
 
-    public TreeItemModel(ITEM_TYPE itemType, String itemId, String displayName){
+    public TreeModel(ITEM_TYPE itemType, String itemId, String displayName){
         this.itemType = itemType;
         this.itemId = itemId;
         this.displayName = displayName;
