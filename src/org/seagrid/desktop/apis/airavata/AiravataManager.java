@@ -3,6 +3,7 @@ package org.seagrid.desktop.apis.airavata;
 import org.apache.airavata.api.Airavata;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.error.AiravataErrorType;
+import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.security.AuthzToken;
@@ -121,5 +122,15 @@ public class AiravataManager {
             ex.printStackTrace();
         }
         return project;
+    }
+
+    public ExperimentModel getExperiment(String experimentId) {
+        ExperimentModel experiment = null;
+        try{
+            experiment = getClient().getExperiment(getAuthzToken(),experimentId);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return experiment;
     }
 }
