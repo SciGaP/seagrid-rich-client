@@ -21,6 +21,7 @@
 package org.seagrid.desktop.home.controller;
 
 
+import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -37,9 +38,13 @@ import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
+import org.seagrid.desktop.events.SEAGridEvent;
+import org.seagrid.desktop.events.SEAGridEventBus;
 import org.seagrid.desktop.home.model.ExperimentListModel;
-import org.seagrid.desktop.home.model.ProjectTreeItemModel;
+import org.seagrid.desktop.home.model.TreeItemModel;
+import org.seagrid.desktop.project.ProjectWindow;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +57,10 @@ public class HomeController {
     private ObservableList<ExperimentListModel> observableExperimentList = FXCollections.observableArrayList();
 
     @FXML
-    private TreeView<ProjectTreeItemModel> projectsTreeView;
+    public Button createProjectButton;
+
+    @FXML
+    private TreeView<TreeItemModel> projectsTreeView;
 
     @FXML
     private TableView<ExperimentListModel> expSummaryTable;
@@ -85,17 +93,29 @@ public class HomeController {
     private TabPane tabbedPane;
 
     public void initialize() {
+        initMenuBar();
         initProjectTreeView();
         initExperimentList();
     }
 
 
+    public void initMenuBar(){
+        createProjectButton.setOnMouseClicked(event -> {
+            ProjectWindow projectWindow = new ProjectWindow();
+            try {
+                projectWindow.displayCreateProjectAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void initProjectTreeView(){
         projectsTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         projectsTreeView.setCellFactory(param -> {
-            TreeCell<ProjectTreeItemModel> cell = new TreeCell<ProjectTreeItemModel>(){
+            TreeCell<TreeItemModel> cell = new TreeCell<TreeItemModel>(){
                 @Override
-                public void updateItem(ProjectTreeItemModel item, boolean empty) {
+                public void updateItem(TreeItemModel item, boolean empty) {
                     super.updateItem(item, empty) ;
                     if (empty) {
                         setText(null);
@@ -105,21 +125,19 @@ public class HomeController {
                 }
             };
             cell.setOnMouseClicked(event->{
-                if (! cell.isEmpty() &&
-                        //TODO this is a hacky way to detect the click on text and pass the click on drop arrow
-                        !event.getPickResult().getIntersectedNode().getStyleClass().contains("arrow")) {
-                    TreeItem<ProjectTreeItemModel> treeItem = cell.getTreeItem();
-                    ProjectTreeItemModel projectTreeItemModel = treeItem.getValue();
+                if (! cell.isEmpty() && cell.isSelected()){
+                    TreeItem<TreeItemModel> treeItem = cell.getTreeItem();
+                    TreeItemModel treeItemModel = treeItem.getValue();
                     Map<ExperimentSearchFields,String> filters = new HashMap<>();
-                    if(projectTreeItemModel.getItemType().equals(ProjectTreeItemModel.ITEM_TYPE.PROJECT)){
-                        filters.put(ExperimentSearchFields.PROJECT_ID, projectTreeItemModel.getItemId());
-                        tabbedPane.getTabs().get(0).setText(projectTreeItemModel.getDisplayName());
+                    if(treeItemModel.getItemType().equals(TreeItemModel.ITEM_TYPE.PROJECT)){
+                        filters.put(ExperimentSearchFields.PROJECT_ID, treeItemModel.getItemId());
+                        tabbedPane.getTabs().get(0).setText(treeItemModel.getDisplayName());
                         updateExperimentList(filters,-1,0);
-                    }else if(projectTreeItemModel.getItemType().equals(ProjectTreeItemModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
-                        tabbedPane.getTabs().get(0).setText(projectTreeItemModel.getDisplayName());
+                    }else if(treeItemModel.getItemType().equals(TreeItemModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
+                        tabbedPane.getTabs().get(0).setText(treeItemModel.getDisplayName());
                         updateExperimentList(filters,-1,0);
-                    }else if(projectTreeItemModel.getItemType().equals(ProjectTreeItemModel.ITEM_TYPE.EXPERIMENT)){
-                        System.out.println("Experiment ID:"+projectTreeItemModel.getItemId());
+                    }else if(treeItemModel.getItemType().equals(TreeItemModel.ITEM_TYPE.EXPERIMENT)){
+                        System.out.println("Experiment ID:"+ treeItemModel.getItemId());
                     }
                 }
             });
@@ -238,8 +256,8 @@ public class HomeController {
     private TreeItem createProjectTreeModel(){
 
         TreeItem root = new TreeItem();
-        TreeItem recentExps = new TreeItem<ProjectTreeItemModel>(
-                new ProjectTreeItemModel(ProjectTreeItemModel.ITEM_TYPE.RECENT_EXPERIMENTS,"no-id","Recent Experiments")){
+        TreeItem recentExps = new TreeItem<TreeItemModel>(
+                new TreeItemModel(TreeItemModel.ITEM_TYPE.RECENT_EXPERIMENTS,"no-id","Recent Experiments")){
             private boolean isFirstTimeChildren = true;
 
             @Override
@@ -248,17 +266,17 @@ public class HomeController {
             }
 
             @Override
-            public ObservableList<TreeItem<ProjectTreeItemModel>> getChildren() {
+            public ObservableList<TreeItem<TreeItemModel>> getChildren() {
                 if (isFirstTimeChildren) {
                     isFirstTimeChildren = false;
-                    ObservableList<TreeItem<ProjectTreeItemModel>> expChildren = FXCollections.observableArrayList();
+                    ObservableList<TreeItem<TreeItemModel>> expChildren = FXCollections.observableArrayList();
                     List<ExperimentSummaryModel> experiments;
                     try {
                         experiments = AiravataManager.getInstance()
                                 .getRecentExperimentSummaries();
-                        expChildren.addAll(experiments.stream().map(experimentModel -> new TreeItem<ProjectTreeItemModel>(
-                                new ProjectTreeItemModel(
-                                        ProjectTreeItemModel.ITEM_TYPE.EXPERIMENT, experimentModel.getExperimentId(),
+                        expChildren.addAll(experiments.stream().map(experimentModel -> new TreeItem<TreeItemModel>(
+                                new TreeItemModel(
+                                        TreeItemModel.ITEM_TYPE.EXPERIMENT, experimentModel.getExperimentId(),
                                         experimentModel.getName()
                                 )) {
                         }).collect(Collectors.toList()));
@@ -272,9 +290,22 @@ public class HomeController {
         };
         root.getChildren().add(recentExps);
 
-        TreeItem projectRoot = new TreeItem<ProjectTreeItemModel>(
-                new ProjectTreeItemModel(ProjectTreeItemModel.ITEM_TYPE.PROJECT_ROOT_NODE,"no-id","Projects")){
+        TreeItem projectRoot = new TreeItem<TreeItemModel>(
+                new TreeItemModel(TreeItemModel.ITEM_TYPE.PROJECT_ROOT_NODE,"no-id","Projects")){
+            {
+                SEAGridEventBus.getInstance().register(this);
+            }
+
             private boolean isFirstTimeChildren = true;
+
+            @Subscribe
+            public void handleSEAGridEvent(SEAGridEvent event) {
+                if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
+                    Project project = (Project)event.getPayload();
+                    getChildren().add(0, new TreeItem<>(new TreeItemModel(TreeItemModel.ITEM_TYPE.PROJECT,
+                            project.getProjectID(),project.getName())));
+                }
+            }
 
             @Override
             public boolean isLeaf() {
@@ -282,16 +313,16 @@ public class HomeController {
             }
 
             @Override
-            public ObservableList<TreeItem<ProjectTreeItemModel>> getChildren() {
+            public ObservableList<TreeItem<TreeItemModel>> getChildren() {
                 if (isFirstTimeChildren) {
                     isFirstTimeChildren = false;
-                    ObservableList<TreeItem<ProjectTreeItemModel>> projChildern = FXCollections.observableArrayList();
+                    ObservableList<TreeItem<TreeItemModel>> projChildern = FXCollections.observableArrayList();
                     List<Project> projects;
                     try {
                         projects = AiravataManager.getInstance().getProjects();
-                        projChildern.addAll(projects.stream().map(project -> new TreeItem<ProjectTreeItemModel>(
-                                new ProjectTreeItemModel(
-                                        ProjectTreeItemModel.ITEM_TYPE.PROJECT, project.getProjectID(),
+                        projChildern.addAll(projects.stream().map(project -> new TreeItem<TreeItemModel>(
+                                new TreeItemModel(
+                                        TreeItemModel.ITEM_TYPE.PROJECT, project.getProjectID(),
                                         project.getName()
                                 )) {
                             private boolean isFirstTimeChildren = true;
@@ -302,17 +333,17 @@ public class HomeController {
                             }
 
                             @Override
-                            public ObservableList<TreeItem<ProjectTreeItemModel>> getChildren() {
+                            public ObservableList<TreeItem<TreeItemModel>> getChildren() {
                                 if (isFirstTimeChildren) {
                                     isFirstTimeChildren = false;
-                                    ObservableList<TreeItem<ProjectTreeItemModel>> expChildren = FXCollections.observableArrayList();
+                                    ObservableList<TreeItem<TreeItemModel>> expChildren = FXCollections.observableArrayList();
                                     List<ExperimentSummaryModel> experiments;
                                     try {
                                         experiments = AiravataManager.getInstance()
                                                 .getExperimentSummariesInProject(this.getValue().getItemId());
-                                        expChildren.addAll(experiments.stream().map(experimentModel -> new TreeItem<ProjectTreeItemModel>(
-                                                new ProjectTreeItemModel(
-                                                        ProjectTreeItemModel.ITEM_TYPE.EXPERIMENT, experimentModel.getExperimentId(),
+                                        expChildren.addAll(experiments.stream().map(experimentModel -> new TreeItem<TreeItemModel>(
+                                                new TreeItemModel(
+                                                        TreeItemModel.ITEM_TYPE.EXPERIMENT, experimentModel.getExperimentId(),
                                                         experimentModel.getName()
                                                 )) {
                                         }).collect(Collectors.toList()));

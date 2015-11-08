@@ -107,4 +107,19 @@ public class AiravataManager {
         }
         return projects;
     }
+
+    public Project createProject(String projectName, String projectDescription) {
+        Project project = null;
+        try{
+            project = new Project("no-id",getUserName(),projectName);
+            if(projectDescription !=null)
+                project.setDescription(projectDescription);
+            String projectId = getClient().createProject(
+                    getAuthzToken(), getGatewayId(), project);
+            project.setProjectID(projectId);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return project;
+    }
 }
