@@ -18,11 +18,21 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.experiment.details;
+package org.seagrid.desktop.experiment.summary.controller;
 
+import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExperimentDetailsController {
-    private final static Logger logger = LoggerFactory.getLogger(ExperimentDetailsController.class);
+public class ExperimentSummaryController {
+    private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryController.class);
+
+    @FXML
+    private GridPane gridPane;
+
+    public void initialize() {
+    }
 }

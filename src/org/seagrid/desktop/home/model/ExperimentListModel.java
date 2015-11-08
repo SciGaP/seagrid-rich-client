@@ -31,6 +31,7 @@ import java.time.ZoneOffset;
 public class ExperimentListModel {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
+    private final StringProperty id;
     private final BooleanProperty checked;
     private final StringProperty name;
     private final StringProperty application;
@@ -38,8 +39,9 @@ public class ExperimentListModel {
     private final StringProperty status;
     private final ObjectProperty<LocalDateTime> createdTime;
 
-    public ExperimentListModel(BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
+    public ExperimentListModel(StringProperty id, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
                                StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
+        this.id = id;
         this.checked = checked;
         this.name = name;
         this.application = application;
@@ -50,6 +52,7 @@ public class ExperimentListModel {
 
     public ExperimentListModel(){
         this.checked = new SimpleBooleanProperty(false);
+        this.id = new SimpleStringProperty("test-id");
         this.name = new SimpleStringProperty("test-name");
         this.application = new SimpleStringProperty("test-application");
         this.host = new SimpleStringProperty("test-host");
@@ -58,6 +61,7 @@ public class ExperimentListModel {
     }
 
     public ExperimentListModel(ExperimentSummaryModel experimentSummaryModel){
+        this.id = new SimpleStringProperty(experimentSummaryModel.getExperimentId());
         this.checked = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(experimentSummaryModel.getName());
         this.application = new SimpleStringProperty(experimentSummaryModel.getExecutionId().substring(0,
@@ -67,6 +71,18 @@ public class ExperimentListModel {
         this.status = new SimpleStringProperty(experimentSummaryModel.getExperimentStatus());
         this.createdTime = new SimpleObjectProperty<>(LocalDateTime.ofEpochSecond(experimentSummaryModel
                 .getCreationTime() / 1000, 0, ZoneOffset.UTC));
+    }
+
+    public String getId() {
+        return id.get();
+    }
+
+    public StringProperty idProperty() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id.set(id);
     }
 
     public boolean getChecked() {

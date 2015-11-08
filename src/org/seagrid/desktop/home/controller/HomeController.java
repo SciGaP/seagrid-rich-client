@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,6 +41,7 @@ import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
 import org.seagrid.desktop.events.SEAGridEvent;
 import org.seagrid.desktop.events.SEAGridEventBus;
+import org.seagrid.desktop.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.home.model.ExperimentListModel;
 import org.seagrid.desktop.home.model.TreeModel;
 import org.seagrid.desktop.project.ProjectWindow;
@@ -136,8 +138,17 @@ public class HomeController {
                     }else if(treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
                         updateExperimentList(filters,-1,0);
-                    }else if(treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
-                        System.out.println("Experiment ID:"+ treeModel.getItemId());
+                    }else if(event.getClickCount()==2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
+                        try {
+                            ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
+                            Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(treeModel.getItemId());
+                            Tab experimentTab = new Tab(treeModel.getDisplayName(),parentNode);
+                            experimentTab.setClosable(true);
+                            tabbedPane.getTabs().add(experimentTab);
+                            tabbedPane.getSelectionModel().select(experimentTab);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
@@ -153,6 +164,26 @@ public class HomeController {
     //init the right pane with experiment list
     public void initExperimentList(){
         expSummaryTable.setEditable(true);
+
+        expSummaryTable.setRowFactory(tv -> {
+            TableRow<ExperimentListModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    ExperimentListModel rowData = row.getItem();
+                    try {
+                        ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
+                        Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(rowData.getId());
+                        Tab experimentTab = new Tab(rowData.getName(),parentNode);
+                        experimentTab.setClosable(true);
+                        tabbedPane.getTabs().add(experimentTab);
+                        tabbedPane.getSelectionModel().select(experimentTab);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
 
         expCheckedColumn.setCellValueFactory(new PropertyValueFactory<>("checked"));
         expCheckedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(expCheckedColumn));
@@ -191,7 +222,9 @@ public class HomeController {
         checkAllExps.setOnMouseClicked(event -> handleCheckAllExperiments());
 
         Map<ExperimentSearchFields,String> filters = new HashMap<>();
+        tabbedPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabbedPane.getTabs().get(0).setText("Recent Experiments");
+        tabbedPane.getTabs().get(0).setClosable(false);
         updateExperimentList(filters,-1,0);
     }
 
@@ -246,6 +279,7 @@ public class HomeController {
             expSummaryTable.setItems(sortedExperimentListData);
 
             filterField.setText("");
+            tabbedPane.getSelectionModel().select(0);
         } catch (AiravataClientException e) {
             e.printStackTrace();
         }
