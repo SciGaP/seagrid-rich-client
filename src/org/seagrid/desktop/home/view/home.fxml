@@ -137,7 +137,12 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>
             </Button>
-            <Region prefHeight="24.0" prefWidth="438.0" HBox.hgrow="ALWAYS">
+            <Button mnemonicParsing="false" text="Browse Mass Storage">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+            <Region prefHeight="24.0" prefWidth="212.0" HBox.hgrow="ALWAYS">
               <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>

@@ -24,12 +24,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
@@ -44,6 +46,7 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +54,22 @@ import java.util.Map;
 public class ExperimentSummaryController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryController.class);
 
-    private static final double EXPERIMENT_UPDATE_INTERVAL = 3000;
+    private static final double EXPERIMENT_UPDATE_INTERVAL = 10000;
+
+    @FXML
+    private Button expMonitorOutput;
+
+    @FXML
+    private Button expLaunchButton;
+
+    @FXML
+    private Button expEditButton;
+
+    @FXML
+    private Button expCancelButton;
+
+    @FXML
+    private Button expCloneButton;
 
     @FXML
     private Label experimentIdLabel;
@@ -146,7 +164,12 @@ public class ExperimentSummaryController {
                 experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
                         .getComputationalResourceScheduling().getNodeCount()+"");
 
-                showExperimentData(experimentModel);
+                showExperimentInputs(experimentModel);
+                updateButtonOptions(experimentModel);
+                if((experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+                        || experimentStatusLabel.getText().equals("CANCELLED"))) {
+                    showExperimentOutputs(experimentModel);
+                }
             }
 
             //TODO this should replace with a RabbitMQ Listener
@@ -173,7 +196,12 @@ public class ExperimentSummaryController {
                 try {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     showStatus(experimentModel);
-                    showExperimentData(experimentModel);
+                    updateButtonOptions(experimentModel);
+                    String expState = experimentModel.getExperimentStatus().getState().toString();
+                    if(expState.equals("FAILED") || expState.equals("COMPLETED") || expState.equals("CANCELLED")){
+                        showExperimentOutputs(experimentModel);
+                        expListUpdateTimeline.stop();
+                    }
                     logger.debug("Updated Experiment :" + experimentId);
                 } catch (AiravataClientException e) {
                     e.printStackTrace();
@@ -224,40 +252,76 @@ public class ExperimentSummaryController {
         }
     }
 
-    private void showExperimentData(ExperimentModel experimentModel){
+    private void showExperimentInputs(ExperimentModel experimentModel){
         List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
         int rowIndex = 16;
         experimentInfoGridPane.add(new Label("Inputs"), 0, rowIndex);
         for(InputDataObjectType input : inputDataObjectTypes){
-            Label inputLabel = new Label();
             switch (input.getType()){
-                //FIXME should handle file URIs
                 case URI :
-                    inputLabel.setText(input.getName() + ":" + input.getValue());
+                case STDERR:
+                case STDOUT:
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(input.getValue()).getFileName().toString());
+                    TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
+                    hyperlink.setOnAction(event -> {
+                        //Todo File Download
+                    });
+                    experimentInfoGridPane.add(uriInputLabel, 1, rowIndex);
                     break;
                 default :
-                    inputLabel.setText(input.getName() + ":" + input.getValue());
+                    Label outputLabel = new Label();
+                    outputLabel.setText(input.getName() + " : " + input.getValue());
+                    experimentInfoGridPane.add(outputLabel, 1, rowIndex);
             }
-            experimentInfoGridPane.add(inputLabel, 1, rowIndex);
             experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
             rowIndex++;
         }
+    }
 
+    private void showExperimentOutputs(ExperimentModel experimentModel){
+        int rowIndex = experimentInfoGridPane.getRowConstraints().size();
         experimentInfoGridPane.add(new Label("Outputs"), 0, rowIndex);
         List<OutputDataObjectType> outputDataObjectTypes = experimentModel.getExperimentOutputs();
         for(OutputDataObjectType output : outputDataObjectTypes){
-            Label outputLabel = new Label();
             switch (output.getType()){
-                //FIXME should handle file URIs
                 case URI :
-                    outputLabel.setText(output.getName() + " : " + output.getValue());
+                case STDERR:
+                case STDOUT:
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(output.getValue()).getFileName().toString());
+                    TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);
+                    hyperlink.setOnAction(event -> {
+                        //Todo File Download
+                    });
+                    experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                     break;
                 default :
+                    Label outputLabel = new Label();
                     outputLabel.setText(output.getName() + " : " + output.getValue());
+                    experimentInfoGridPane.add(outputLabel, 1, rowIndex);
             }
-            experimentInfoGridPane.add(outputLabel, 1, rowIndex);
             experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
             rowIndex++;
+        }
+    }
+
+    private void updateButtonOptions(ExperimentModel experimentModel){
+        switch (experimentModel.getExperimentStatus().getState()){
+            case CREATED:
+                expCancelButton.setDisable(true);
+                expMonitorOutput.setDisable(true);
+                break;
+            case EXECUTING:
+                expLaunchButton.setDisable(true);
+                expEditButton.setDisable(true);
+                expCancelButton.setDisable(false);
+                expMonitorOutput.setDisable(false);
+                break;
+            case FAILED:
+            case CANCELED:
+            case COMPLETED:
+                expCancelButton.setDisable(true);
+                expLaunchButton.setDisable(true);
+                expEditButton.setDisable(true);
         }
     }
 }

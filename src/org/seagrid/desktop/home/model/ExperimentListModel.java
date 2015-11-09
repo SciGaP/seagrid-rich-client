@@ -40,7 +40,7 @@ import java.time.ZoneOffset;
 
 public class ExperimentListModel {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
-    private static final double EXPERIMENT_LIST_UPDATE_INTERVAL = 3000;
+    private static final double EXPERIMENT_LIST_UPDATE_INTERVAL = 10000;
 
     private StringProperty id;
     private BooleanProperty checked;

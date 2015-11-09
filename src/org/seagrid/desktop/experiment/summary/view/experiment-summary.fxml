@@ -6,12 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane prefHeight="731.0" prefWidth="726.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.experiment.summary.controller.ExperimentSummaryController">
   <content>
-    <VBox id="VBox" alignment="CENTER" prefHeight="716.0" spacing="5.0">
+    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
       <children>
-        <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="-1.0" vgap="3.0" visible="true" VBox.vgrow="SOMETIMES">
+        <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="-1.0" vgap="3.0" visible="true" VBox.vgrow="ALWAYS">
           <children>
             <Label prefWidth="228.0" text="Experiment Summary" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0">
               <font>
@@ -75,9 +76,25 @@
             <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
           </VBox.margin>
         </GridPane>
+        <HBox alignment="CENTER_LEFT" VBox.margin="$x1" VBox.vgrow="NEVER">
+          <children>
+            <Button fx:id="expLaunchButton" cancelButton="false" defaultButton="false" disable="false" mnemonicParsing="false" text="Launch">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+            <Button fx:id="expEditButton" mnemonicParsing="false" text="Edit" HBox.margin="$x1" />
+            <Button fx:id="expCancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" HBox.margin="$x1" />
+            <Button fx:id="expCloneButton" mnemonicParsing="false" text="Clone" HBox.margin="$x1" />
+            <Button fx:id="expMonitorOutput" mnemonicParsing="false" text="Monitor Output" />
+          </children>
+          <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </padding>
+        </HBox>
       </children>
       <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
       </padding>
     </VBox>
   </content>

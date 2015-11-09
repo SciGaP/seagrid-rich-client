@@ -70,7 +70,7 @@ public class AiravataManager {
         return "master";
     }
 
-    public List<ExperimentSummaryModel> getExperimentSummaries(Map<ExperimentSearchFields,String> filters, int limit, int offset){
+    public synchronized List<ExperimentSummaryModel> getExperimentSummaries(Map<ExperimentSearchFields,String> filters, int limit, int offset){
         List<ExperimentSummaryModel> exp = new ArrayList<>();
         try{
             exp = getClient().searchExperiments(
@@ -81,7 +81,7 @@ public class AiravataManager {
         return exp;
     }
 
-    public List<ExperimentSummaryModel> getExperimentSummariesInProject(String projectId){
+    public synchronized List<ExperimentSummaryModel> getExperimentSummariesInProject(String projectId){
         List<ExperimentSummaryModel> exp = new ArrayList<>();
         try{
             Map<ExperimentSearchFields,String> filters = new HashMap<>();
@@ -94,7 +94,7 @@ public class AiravataManager {
         return exp;
     }
 
-    public List<ExperimentSummaryModel> getRecentExperimentSummaries(){
+    public synchronized List<ExperimentSummaryModel> getRecentExperimentSummaries(){
         List<ExperimentSummaryModel> exp = new ArrayList<>();
         try{
             Map<ExperimentSearchFields,String> filters = new HashMap<>();
@@ -106,7 +106,7 @@ public class AiravataManager {
         return exp;
     }
 
-    public List<Project> getProjects(){
+    public synchronized List<Project> getProjects(){
         List<Project> projects = new ArrayList<>();
         try{
             projects = getClient().getUserProjects(
@@ -117,7 +117,7 @@ public class AiravataManager {
         return projects;
     }
 
-    public Project createProject(String projectName, String projectDescription) {
+    public synchronized Project createProject(String projectName, String projectDescription) {
         Project project = null;
         try{
             project = new Project("no-id",getUserName(),projectName);
@@ -132,7 +132,7 @@ public class AiravataManager {
         return project;
     }
 
-    public ExperimentModel getExperiment(String experimentId) {
+    public synchronized ExperimentModel getExperiment(String experimentId) {
         ExperimentModel experiment = null;
         try{
             experiment = getClient().getExperiment(getAuthzToken(),experimentId);
@@ -142,7 +142,7 @@ public class AiravataManager {
         return experiment;
     }
 
-    public ComputeResourceDescription getComputeResource(String resourceId){
+    public synchronized ComputeResourceDescription getComputeResource(String resourceId){
         ComputeResourceDescription computeResourceDescription = null;
         try{
             if(airavataCache.get(resourceId) != null) {
@@ -157,7 +157,7 @@ public class AiravataManager {
         return computeResourceDescription;
     }
 
-    public ApplicationInterfaceDescription getApplicationInterface(String interfaceId){
+    public synchronized ApplicationInterfaceDescription getApplicationInterface(String interfaceId){
         ApplicationInterfaceDescription applicationInterfaceDescription = null;
         try{
             if(airavataCache.get(interfaceId) != null) {
@@ -172,7 +172,7 @@ public class AiravataManager {
         return applicationInterfaceDescription;
     }
 
-    public Project getProject(String projectId){
+    public synchronized Project getProject(String projectId){
         Project project = null;
         try{
             if(airavataCache.get(projectId) != null) {
@@ -187,7 +187,7 @@ public class AiravataManager {
         return project;
     }
 
-    public Map<String,JobStatus> getJobStatuses(String expId){
+    public synchronized Map<String,JobStatus> getJobStatuses(String expId){
         Map<String,JobStatus> jobStatuses = null;
         try{
             jobStatuses = getClient().getJobStatuses(getAuthzToken(),expId);
