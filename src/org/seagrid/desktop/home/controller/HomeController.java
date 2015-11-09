@@ -46,6 +46,8 @@ import org.seagrid.desktop.home.model.ExperimentListModel;
 import org.seagrid.desktop.home.model.ProjectTreeModel;
 import org.seagrid.desktop.home.model.TreeModel;
 import org.seagrid.desktop.project.ProjectWindow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -56,6 +58,7 @@ import java.util.stream.Collectors;
 
 /** Controls the home screen */
 public class HomeController {
+    private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
     private ObservableList<ExperimentListModel> observableExperimentList = FXCollections.observableArrayList();
 
@@ -229,6 +232,7 @@ public class HomeController {
         updateExperimentList(filters,-1,0);
     }
 
+    //checks all experiments
     public void handleCheckAllExperiments(){
         if(checkAllExps.isSelected()){
             for(ExperimentListModel experimentListModel : expSummaryTable.getItems()){
@@ -285,7 +289,6 @@ public class HomeController {
             e.printStackTrace();
         }
     }
-
 
     //Creates the project tree model
     private TreeItem createProjectTreeModel(){

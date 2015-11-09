@@ -20,10 +20,15 @@
 */
 package org.seagrid.desktop.home.model;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.error.AiravataClientException;
+import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -35,6 +40,7 @@ import java.time.ZoneOffset;
 
 public class ExperimentListModel {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
+    private static final double EXPERIMENT_LIST_UPDATE_INTERVAL = 3000;
 
     private StringProperty id;
     private BooleanProperty checked;
@@ -43,6 +49,8 @@ public class ExperimentListModel {
     private StringProperty host;
     private StringProperty status;
     private ObjectProperty<LocalDateTime> createdTime;
+
+    private Timeline expListStatusUpdateTimeline = null;
 
     public ExperimentListModel(StringProperty id, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
                                StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
@@ -94,6 +102,16 @@ public class ExperimentListModel {
         this.status = new SimpleStringProperty(experimentSummaryModel.getExperimentStatus());
         this.createdTime = new SimpleObjectProperty<>(LocalDateTime.ofEpochSecond(experimentSummaryModel
                 .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()));
+
+        //TODO this should replace with a RabbitMQ Listener
+        if(!(status.equals("FAILED") || getStatus().equals("COMPLETED") || getStatus().equals("CANCELLED"))) {
+            expListStatusUpdateTimeline = new Timeline(new KeyFrame(
+                    Duration.millis(EXPERIMENT_LIST_UPDATE_INTERVAL),
+                    ae -> updateExperimentStatuses()));
+            expListStatusUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
+            expListStatusUpdateTimeline.play();
+        }
+
     }
 
     public String getId() {
@@ -178,5 +196,24 @@ public class ExperimentListModel {
 
     public void setCreatedTime(LocalDateTime createdTime) {
         this.createdTime.set(createdTime);
+    }
+
+
+    //updates the experiment status in the background
+    public void updateExperimentStatuses(){
+        if(!(status.equals("FAILED") || getStatus().equals("COMPLETED") || getStatus().equals("CANCELLED"))) {
+            Platform.runLater(() -> {
+                String experimentId = id.getValue();
+                try {
+                    ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+                    status = new SimpleStringProperty(experimentModel.getExperimentStatus().getState().toString());
+                    logger.info("Updated Experiment Status for :" + experimentId);
+                } catch (AiravataClientException e) {
+                    e.printStackTrace();
+                }
+            });
+        }else{
+            expListStatusUpdateTimeline.stop();
+        }
     }
 }
