@@ -23,6 +23,7 @@ package org.seagrid.desktop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,5 +49,9 @@ public class SEAGridContext {
 
     public String getProperty(String key){
         return properties.get(key);
+    }
+
+    public ZoneOffset getTimeZoneOffset(){
+        return ZoneOffset.UTC;
     }
 }

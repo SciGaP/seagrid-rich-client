@@ -43,6 +43,7 @@ import org.seagrid.desktop.events.SEAGridEvent;
 import org.seagrid.desktop.events.SEAGridEventBus;
 import org.seagrid.desktop.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.home.model.ExperimentListModel;
+import org.seagrid.desktop.home.model.ProjectTreeModel;
 import org.seagrid.desktop.home.model.TreeModel;
 import org.seagrid.desktop.project.ProjectWindow;
 
@@ -290,7 +291,7 @@ public class HomeController {
     private TreeItem createProjectTreeModel(){
 
         TreeItem root = new TreeItem();
-        TreeItem recentExps = new ProjectTreeItem(
+        TreeItem recentExps = new ProjectTreeModel(
                 new TreeModel(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS,"no-id","Recent Experiments"));
         root.getChildren().add(recentExps);
 
@@ -306,7 +307,7 @@ public class HomeController {
             public void handleSEAGridEvent(SEAGridEvent event) {
                 if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
                     Project project = (Project)event.getPayload();
-                    getChildren().add(0, new ProjectTreeItem(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
+                    getChildren().add(0, new ProjectTreeModel(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
                             project.getProjectID(),project.getName())));
                 }
             }
@@ -324,7 +325,7 @@ public class HomeController {
                     List<Project> projects;
                     try {
                         projects = AiravataManager.getInstance().getProjects();
-                        projChildern.addAll(projects.stream().map(project -> new ProjectTreeItem(
+                        projChildern.addAll(projects.stream().map(project -> new ProjectTreeModel(
                                 new TreeModel(
                                         TreeModel.ITEM_TYPE.PROJECT, project.getProjectID(),
                                         project.getName()

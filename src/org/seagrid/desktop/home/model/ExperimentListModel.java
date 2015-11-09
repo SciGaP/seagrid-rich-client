@@ -21,7 +21,12 @@
 package org.seagrid.desktop.home.model;
 
 import javafx.beans.property.*;
+import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
+import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
+import org.seagrid.desktop.apis.airavata.AiravataManager;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,13 +36,13 @@ import java.time.ZoneOffset;
 public class ExperimentListModel {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
-    private final StringProperty id;
-    private final BooleanProperty checked;
-    private final StringProperty name;
-    private final StringProperty application;
-    private final StringProperty host;
-    private final StringProperty status;
-    private final ObjectProperty<LocalDateTime> createdTime;
+    private StringProperty id;
+    private BooleanProperty checked;
+    private StringProperty name;
+    private StringProperty application;
+    private StringProperty host;
+    private StringProperty status;
+    private ObjectProperty<LocalDateTime> createdTime;
 
     public ExperimentListModel(StringProperty id, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
                                StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
@@ -64,13 +69,31 @@ public class ExperimentListModel {
         this.id = new SimpleStringProperty(experimentSummaryModel.getExperimentId());
         this.checked = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(experimentSummaryModel.getName());
-        this.application = new SimpleStringProperty(experimentSummaryModel.getExecutionId().substring(0,
-                experimentSummaryModel.getExecutionId().length()-37));
-        this.host = new SimpleStringProperty(experimentSummaryModel.getResourceHostId().substring(0,
-                experimentSummaryModel.getResourceHostId().length()-37));
+        if(experimentSummaryModel.getResourceHostId()!=null){
+            ComputeResourceDescription resourceDescription = null;
+            try {
+                resourceDescription = AiravataManager.getInstance().getComputeResource(experimentSummaryModel.getResourceHostId());
+                if(resourceDescription != null){
+                    this.host = new SimpleStringProperty(resourceDescription.getHostName());
+                }
+            } catch (AiravataClientException e) {
+                e.printStackTrace();
+            }
+        }
+        if(experimentSummaryModel.getExecutionId()!=null){
+            ApplicationInterfaceDescription interfaceDescription = null;
+            try {
+                interfaceDescription = AiravataManager.getInstance().getApplicationInterface(experimentSummaryModel.getExecutionId());
+                if(interfaceDescription != null){
+                    this.application = new SimpleStringProperty(interfaceDescription.getApplicationName());
+                }
+            } catch (AiravataClientException e) {
+                e.printStackTrace();
+            }
+        }
         this.status = new SimpleStringProperty(experimentSummaryModel.getExperimentStatus());
         this.createdTime = new SimpleObjectProperty<>(LocalDateTime.ofEpochSecond(experimentSummaryModel
-                .getCreationTime() / 1000, 0, ZoneOffset.UTC));
+                .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()));
     }
 
     public String getId() {

@@ -1,12 +1,16 @@
 package org.seagrid.desktop.apis.airavata;
 
+import javafx.print.PrinterJob;
 import org.apache.airavata.api.Airavata;
+import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
+import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.error.AiravataErrorType;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.security.AuthzToken;
+import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -25,6 +29,8 @@ public class AiravataManager {
 
     private Airavata.Client airavataClient;
 
+    private AiravataCache<String, Object> airavataCache;
+
     private AiravataManager() throws AiravataClientException {
         String host = "gw56.iu.xsede.org";
         int port = 10930;
@@ -34,6 +40,8 @@ public class AiravataManager {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             this.airavataClient = new Airavata.Client(protocol);
+
+            this.airavataCache = new AiravataCache<>(200,500,6);
         } catch (TTransportException e) {
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
         }
@@ -91,7 +99,7 @@ public class AiravataManager {
         try{
             Map<ExperimentSearchFields,String> filters = new HashMap<>();
             exp = getClient().searchExperiments(
-                    getAuthzToken(), getGatewayId(), getUserName(), filters, 10, 0);
+                    getAuthzToken(), getGatewayId(), getUserName(), filters, 20, 0);
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -132,5 +140,60 @@ public class AiravataManager {
             ex.printStackTrace();
         }
         return experiment;
+    }
+
+    public ComputeResourceDescription getComputeResource(String resourceId){
+        ComputeResourceDescription computeResourceDescription = null;
+        try{
+            if(airavataCache.get(resourceId) != null) {
+                computeResourceDescription = (ComputeResourceDescription)airavataCache.get(resourceId);
+            }else{
+                computeResourceDescription = getClient().getComputeResource(getAuthzToken(),resourceId);
+                airavataCache.put(resourceId,computeResourceDescription);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return computeResourceDescription;
+    }
+
+    public ApplicationInterfaceDescription getApplicationInterface(String interfaceId){
+        ApplicationInterfaceDescription applicationInterfaceDescription = null;
+        try{
+            if(airavataCache.get(interfaceId) != null) {
+                applicationInterfaceDescription = (ApplicationInterfaceDescription)airavataCache.get(interfaceId);
+            }else{
+                applicationInterfaceDescription = getClient().getApplicationInterface(getAuthzToken(), interfaceId);
+                airavataCache.put(interfaceId,applicationInterfaceDescription);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return applicationInterfaceDescription;
+    }
+
+    public Project getProject(String projectId){
+        Project project = null;
+        try{
+            if(airavataCache.get(projectId) != null) {
+                project = (Project)airavataCache.get(projectId);
+            }else{
+                project = getClient().getProject(getAuthzToken(), projectId);
+                airavataCache.put(projectId,project);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return project;
+    }
+
+    public Map<String,JobStatus> getJobStatuses(String expId){
+        Map<String,JobStatus> jobStatuses = null;
+        try{
+            jobStatuses = getClient().getJobStatuses(getAuthzToken(),expId);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return jobStatuses;
     }
 }

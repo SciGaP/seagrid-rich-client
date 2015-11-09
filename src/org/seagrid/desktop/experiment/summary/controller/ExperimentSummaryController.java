@@ -25,11 +25,22 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
+import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
+import org.apache.airavata.model.status.ExperimentState;
+import org.apache.airavata.model.status.JobStatus;
+import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Map;
 
 public class ExperimentSummaryController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryController.class);
@@ -92,14 +103,62 @@ public class ExperimentSummaryController {
                 experimentIdLabel.setText(experimentModel.getExperimentId());
                 experimentNameLabel.setText(experimentModel.getExperimentName());
                 experimentDescField.setText(experimentModel.getDescription());
-                experimentProjectLabel.setText(experimentModel.getProjectId());
-                experimentApplicationLabel.setText(experimentModel.getExecutionId());
-                experimentCRLabel.setText(experimentModel.getUserConfigurationData()
-                        .getComputationalResourceScheduling().getResourceHostId());
-                experimentJobStatusLabel.setText("JOB-STATUS");
+                if(experimentModel.getProjectId() != null){
+                    Project project = AiravataManager.getInstance().getProject(experimentModel.getProjectId());
+                    if(project != null){
+                        experimentProjectLabel.setText(project.getName());
+                    }
+                }
+                if(experimentModel.getExecutionId() != null){
+                    ApplicationInterfaceDescription app = AiravataManager.getInstance().getApplicationInterface(
+                            experimentModel.getExecutionId());
+                    if(app != null){
+                        experimentApplicationLabel.setText(app.getApplicationName());
+                    }
+                }
+                if(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId() != null){
+                    ComputeResourceDescription computeResourceDescription = AiravataManager.getInstance().getComputeResource(
+                            experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()
+                    );
+                    if(computeResourceDescription != null){
+                        experimentCRLabel.setText(computeResourceDescription.getHostName());
+                    }
+                }
+                Map<String, JobStatus> jobStatusMap = AiravataManager.getInstance().getJobStatuses(experimentModel.getExperimentId());
+                if(jobStatusMap != null && jobStatusMap.values().size()>0){
+                    JobStatus jobStatus = (JobStatus)jobStatusMap.values().toArray()[0];
+                    experimentJobStatusLabel.setText(jobStatus.getJobState().toString());
+                    switch (jobStatus.getJobState()){
+                        case COMPLETE :
+                            experimentJobStatusLabel.setTextFill(Color.GREEN);
+                            break;
+                        case FAILED :
+                            experimentJobStatusLabel.setTextFill(Color.RED);
+                            break;
+                        default :
+                            experimentJobStatusLabel.setTextFill(Color.ORANGE);
+                    }
+                }else{
+                    experimentJobStatusLabel.setText("NOT-AVAILABLE");
+                }
                 experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
-                experimentCreationTimeLabel.setText(experimentModel.getCreationTime()+"");
-                experimentLastModifiedTimeLabel.setText(experimentModel.getCreationTime()+"");
+                switch (experimentModel.getExperimentStatus().getState()){
+                    case COMPLETED :
+                        experimentStatusLabel.setTextFill(Color.GREEN);
+                        break;
+                    case FAILED :
+                        experimentStatusLabel.setTextFill(Color.RED);
+                        break;
+                    case CREATED :
+                        experimentStatusLabel.setTextFill(Color.BLUE);
+                        break;
+                    default :
+                        experimentStatusLabel.setTextFill(Color.ORANGE);
+                }
+                experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
+                        .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
+                experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
+                                .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
                 experimentEnableAutoSchedLabel.setText("true");
                 experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
                         .getComputationalResourceScheduling().getWallTimeLimit()+"");

@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.home.controller;
+package org.seagrid.desktop.home.model;
 
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
@@ -27,11 +27,9 @@ import javafx.scene.control.TreeItem;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
-import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
 import org.seagrid.desktop.events.SEAGridEvent;
 import org.seagrid.desktop.events.SEAGridEventBus;
-import org.seagrid.desktop.home.model.TreeModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,12 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProjectTreeItem extends TreeItem<TreeModel> {
-    private final static Logger logger = LoggerFactory.getLogger(ProjectTreeItem.class);
+public class ProjectTreeModel extends TreeItem<TreeModel> {
+    private final static Logger logger = LoggerFactory.getLogger(ProjectTreeModel.class);
 
     private boolean isFirstTimeChildren = true;
 
-    public ProjectTreeItem(TreeModel treeModel) {
+    public ProjectTreeModel(TreeModel treeModel) {
         super(treeModel);
         SEAGridEventBus.getInstance().register(this);
     }
