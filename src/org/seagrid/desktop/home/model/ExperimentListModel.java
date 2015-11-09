@@ -207,7 +207,7 @@ public class ExperimentListModel {
                 try {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     status = new SimpleStringProperty(experimentModel.getExperimentStatus().getState().toString());
-                    logger.info("Updated Experiment Status for :" + experimentId);
+                    logger.debug("Updated Experiment Status for :" + experimentId);
                 } catch (AiravataClientException e) {
                     e.printStackTrace();
                 }

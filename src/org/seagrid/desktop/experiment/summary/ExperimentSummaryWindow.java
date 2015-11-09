@@ -47,7 +47,7 @@ public class ExperimentSummaryWindow extends Application {
                 "view/experiment-summary.fxml"));
         Parent node = loader.load();
         ExperimentSummaryController controller = loader.getController();
-        controller.updateExperimentInfo(experimentId);
+        controller.initExperimentInfo(experimentId);
         return node;
     }
 }

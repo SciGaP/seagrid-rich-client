@@ -20,17 +20,18 @@
 */
 package org.seagrid.desktop.experiment.summary.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
-import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.apis.airavata.AiravataManager;
@@ -39,11 +40,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Map;
 
 public class ExperimentSummaryController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryController.class);
+
+    private static final double EXPERIMENT_UPDATE_INTERVAL = 3000;
 
     @FXML
     private Label experimentIdLabel;
@@ -93,10 +95,12 @@ public class ExperimentSummaryController {
     @FXML
     private GridPane experimentInfoGridPane;
 
+    private Timeline expListUpdateTimeline = null;
+
     public void initialize() {
     }
 
-    public void updateExperimentInfo(String experimentId){
+    public void initExperimentInfo(String experimentId){
         try {
             ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
             if(experimentModel != null){
@@ -169,8 +173,51 @@ public class ExperimentSummaryController {
                 experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
                         .getComputationalResourceScheduling().getNodeCount()+"");
             }
+
+            //TODO this should replace with a RabbitMQ Listener
+            if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+                    || experimentStatusLabel.getText().equals("CANCELLED"))) {
+                expListUpdateTimeline = new Timeline(new KeyFrame(
+                        Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
+                        ae -> updateExperimentInfo()));
+                expListUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
+                expListUpdateTimeline.play();
+            }
         } catch (AiravataClientException e) {
             e.printStackTrace();
+        }
+    }
+
+    //TODO update other experiment details too
+    //updates the experiment status in the background
+    public void updateExperimentInfo(){
+        if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+                || experimentStatusLabel.getText().equals("CANCELLED"))) {
+            Platform.runLater(() -> {
+                String experimentId = experimentIdLabel.getText();
+                try {
+                    ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+                    experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
+                    switch (experimentModel.getExperimentStatus().getState()){
+                        case COMPLETED :
+                            experimentStatusLabel.setTextFill(Color.GREEN);
+                            break;
+                        case FAILED :
+                            experimentStatusLabel.setTextFill(Color.RED);
+                            break;
+                        case CREATED :
+                            experimentStatusLabel.setTextFill(Color.BLUE);
+                            break;
+                        default :
+                            experimentStatusLabel.setTextFill(Color.ORANGE);
+                    }
+                    logger.debug("Updated Experiment :" + experimentId);
+                } catch (AiravataClientException e) {
+                    e.printStackTrace();
+                }
+            });
+        }else{
+            expListUpdateTimeline.stop();
         }
     }
 }
