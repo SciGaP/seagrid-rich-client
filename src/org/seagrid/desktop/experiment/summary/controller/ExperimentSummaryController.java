@@ -25,11 +25,16 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.application.io.InputDataObjectType;
+import org.apache.airavata.model.application.io.OutputDataObjectType;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.status.JobStatus;
@@ -40,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public class ExperimentSummaryController {
@@ -97,9 +103,6 @@ public class ExperimentSummaryController {
 
     private Timeline expListUpdateTimeline = null;
 
-    public void initialize() {
-    }
-
     public void initExperimentInfo(String experimentId){
         try {
             ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
@@ -128,37 +131,7 @@ public class ExperimentSummaryController {
                         experimentCRLabel.setText(computeResourceDescription.getHostName());
                     }
                 }
-                Map<String, JobStatus> jobStatusMap = AiravataManager.getInstance().getJobStatuses(experimentModel.getExperimentId());
-                if(jobStatusMap != null && jobStatusMap.values().size()>0){
-                    JobStatus jobStatus = (JobStatus)jobStatusMap.values().toArray()[0];
-                    experimentJobStatusLabel.setText(jobStatus.getJobState().toString());
-                    switch (jobStatus.getJobState()){
-                        case COMPLETE :
-                            experimentJobStatusLabel.setTextFill(Color.GREEN);
-                            break;
-                        case FAILED :
-                            experimentJobStatusLabel.setTextFill(Color.RED);
-                            break;
-                        default :
-                            experimentJobStatusLabel.setTextFill(Color.ORANGE);
-                    }
-                }else{
-                    experimentJobStatusLabel.setText("NOT-AVAILABLE");
-                }
-                experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
-                switch (experimentModel.getExperimentStatus().getState()){
-                    case COMPLETED :
-                        experimentStatusLabel.setTextFill(Color.GREEN);
-                        break;
-                    case FAILED :
-                        experimentStatusLabel.setTextFill(Color.RED);
-                        break;
-                    case CREATED :
-                        experimentStatusLabel.setTextFill(Color.BLUE);
-                        break;
-                    default :
-                        experimentStatusLabel.setTextFill(Color.ORANGE);
-                }
+                showStatus(experimentModel);
                 experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
                         .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
                 experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
@@ -172,6 +145,8 @@ public class ExperimentSummaryController {
                         .getComputationalResourceScheduling().getQueueName());
                 experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
                         .getComputationalResourceScheduling().getNodeCount()+"");
+
+                showExperimentData(experimentModel);
             }
 
             //TODO this should replace with a RabbitMQ Listener
@@ -197,20 +172,8 @@ public class ExperimentSummaryController {
                 String experimentId = experimentIdLabel.getText();
                 try {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
-                    experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
-                    switch (experimentModel.getExperimentStatus().getState()){
-                        case COMPLETED :
-                            experimentStatusLabel.setTextFill(Color.GREEN);
-                            break;
-                        case FAILED :
-                            experimentStatusLabel.setTextFill(Color.RED);
-                            break;
-                        case CREATED :
-                            experimentStatusLabel.setTextFill(Color.BLUE);
-                            break;
-                        default :
-                            experimentStatusLabel.setTextFill(Color.ORANGE);
-                    }
+                    showStatus(experimentModel);
+                    showExperimentData(experimentModel);
                     logger.debug("Updated Experiment :" + experimentId);
                 } catch (AiravataClientException e) {
                     e.printStackTrace();
@@ -218,6 +181,83 @@ public class ExperimentSummaryController {
             });
         }else{
             expListUpdateTimeline.stop();
+        }
+    }
+
+    private void showStatus(ExperimentModel experimentModel){
+        experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
+        switch (experimentModel.getExperimentStatus().getState()){
+            case COMPLETED :
+                experimentStatusLabel.setTextFill(Color.GREEN);
+                break;
+            case FAILED :
+                experimentStatusLabel.setTextFill(Color.RED);
+                break;
+            case CREATED :
+                experimentStatusLabel.setTextFill(Color.BLUE);
+                break;
+            default :
+                experimentStatusLabel.setTextFill(Color.ORANGE);
+        }
+
+        Map<String, JobStatus> jobStatusMap = null;
+        try {
+            jobStatusMap = AiravataManager.getInstance().getJobStatuses(experimentModel.getExperimentId());
+            if(jobStatusMap != null && jobStatusMap.values().size()>0){
+                JobStatus jobStatus = (JobStatus)jobStatusMap.values().toArray()[0];
+                experimentJobStatusLabel.setText(jobStatus.getJobState().toString());
+                switch (jobStatus.getJobState()){
+                    case COMPLETE :
+                        experimentJobStatusLabel.setTextFill(Color.GREEN);
+                        break;
+                    case FAILED :
+                        experimentJobStatusLabel.setTextFill(Color.RED);
+                        break;
+                    default :
+                        experimentJobStatusLabel.setTextFill(Color.ORANGE);
+                }
+            }else{
+                experimentJobStatusLabel.setText("NOT-AVAILABLE");
+            }
+        } catch (AiravataClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showExperimentData(ExperimentModel experimentModel){
+        List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
+        int rowIndex = 16;
+        experimentInfoGridPane.add(new Label("Inputs"), 0, rowIndex);
+        for(InputDataObjectType input : inputDataObjectTypes){
+            Label inputLabel = new Label();
+            switch (input.getType()){
+                //FIXME should handle file URIs
+                case URI :
+                    inputLabel.setText(input.getName() + ":" + input.getValue());
+                    break;
+                default :
+                    inputLabel.setText(input.getName() + ":" + input.getValue());
+            }
+            experimentInfoGridPane.add(inputLabel, 1, rowIndex);
+            experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
+            rowIndex++;
+        }
+
+        experimentInfoGridPane.add(new Label("Outputs"), 0, rowIndex);
+        List<OutputDataObjectType> outputDataObjectTypes = experimentModel.getExperimentOutputs();
+        for(OutputDataObjectType output : outputDataObjectTypes){
+            Label outputLabel = new Label();
+            switch (output.getType()){
+                //FIXME should handle file URIs
+                case URI :
+                    outputLabel.setText(output.getName() + " : " + output.getValue());
+                    break;
+                default :
+                    outputLabel.setText(output.getName() + " : " + output.getValue());
+            }
+            experimentInfoGridPane.add(outputLabel, 1, rowIndex);
+            experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
+            rowIndex++;
         }
     }
 }
