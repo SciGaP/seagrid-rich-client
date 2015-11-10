@@ -33,7 +33,7 @@ public class ProjectWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/project.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/project/project.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Project");
         primaryStage.setScene(new Scene(root, 400, 150));
         primaryStage.setResizable(false);
@@ -42,7 +42,7 @@ public class ProjectWindow extends Application {
 
     public void displayCreateProjectAndWait() throws IOException {
         Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("view/project.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/project/project.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Create Project");
         primaryStage.setScene(new Scene(root, 400, 150));
         primaryStage.setResizable(false);

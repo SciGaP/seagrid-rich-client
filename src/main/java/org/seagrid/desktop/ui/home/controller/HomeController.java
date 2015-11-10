@@ -129,10 +129,12 @@ public class HomeController {
                     } else {
                         setText(item.getDisplayName());
                         if(item.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
-
+                            Node experimentIcon = new ImageView(new Image(HomeController.class
+                                    .getResourceAsStream("/images/experiment.png")));
+                            setGraphic(experimentIcon);
                         }else{
                             Node projectIcon = new ImageView(new Image(HomeController.class
-                                    .getResourceAsStream("/images/project.ico")));
+                                    .getResourceAsStream("/images/project.png")));
                             setGraphic(projectIcon);
                         }
                     }

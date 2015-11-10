@@ -12,7 +12,7 @@ public class LoginWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/login/login.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root, 300, 125));
         primaryStage.setResizable(false);
@@ -21,7 +21,7 @@ public class LoginWindow extends Application {
 
     public void displayAndWait() throws IOException {
         Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("view/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/login/login.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root, 300, 125));
         primaryStage.setResizable(false);

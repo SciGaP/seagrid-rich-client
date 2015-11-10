@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
@@ -124,7 +125,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </VBox.margin>
         </MenuBar>
-        <HBox>
+        <HBox minHeight="28.999908447265625" prefHeight="28.999908447265625" prefWidth="790.0">
           <children>
             <Button fx:id="createProjectButton" mnemonicParsing="false" text="Create Project">
               <HBox.margin>

@@ -36,7 +36,7 @@ public class ExperimentSummaryWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("view/experiment-summary.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/experiment/summary/experiment-summary.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Experiment Summary");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
@@ -44,7 +44,7 @@ public class ExperimentSummaryWindow extends Application {
 
     public Parent getExperimentInfoNode(String experimentId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "view/experiment-summary.fxml"));
+                "/views/experiment/summary/experiment-summary.fxml"));
         Parent node = loader.load();
         ExperimentSummaryController controller = loader.getController();
         controller.initExperimentInfo(experimentId);

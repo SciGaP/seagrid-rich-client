@@ -21,6 +21,8 @@
 package org.seagrid.desktop;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.seagrid.desktop.ui.home.HomeWindow;
 import org.seagrid.desktop.ui.login.LoginWindow;
@@ -42,6 +44,12 @@ public class SEAGridClient extends Application{
         if(isAuthenticated!=null && isAuthenticated.equalsIgnoreCase("true")){
             HomeWindow homeWindow =  new HomeWindow();
             homeWindow.start(primaryStage);
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+            primaryStage.setX(bounds.getMinX());
+            primaryStage.setY(bounds.getMinY());
+            primaryStage.setWidth(bounds.getWidth());
+            primaryStage.setHeight(bounds.getHeight());
         }
     }
 
