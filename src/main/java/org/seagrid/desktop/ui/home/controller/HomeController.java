@@ -22,10 +22,11 @@ package org.seagrid.desktop.ui.home.controller;
 
 
 import com.google.common.eventbus.Subscribe;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -42,18 +43,19 @@ import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.util.messaging.SEAGridEvent;
-import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
 import org.seagrid.desktop.ui.project.ProjectWindow;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -226,7 +228,6 @@ public class HomeController {
                                 this.setTextFill(Color.ORANGE);
                             }
                         }
-
                     }
                 };
             }
@@ -245,7 +246,12 @@ public class HomeController {
         try {
             List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
                     .getExperimentSummaries(filters, limit, offset);
-            observableExperimentList = FXCollections.observableArrayList();
+            observableExperimentList = FXCollections.observableArrayList(new Callback<ExperimentListModel, Observable[]>() {
+                @Override
+                public Observable[] call(ExperimentListModel param) {
+                    return new Observable[]{param.statusProperty()};
+                }
+            });
             for(ExperimentSummaryModel expModel : experimentSummaryModelList){
                 ExperimentListModel expFXModel = new ExperimentListModel(expModel);
                 observableExperimentList.add(expFXModel);
@@ -274,9 +280,9 @@ public class HomeController {
                     return false; // Does not match.
                 });
             });
-            SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
-            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
-            expSummaryTable.setItems(sortedExperimentListData);
+//            SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
+//            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
+            expSummaryTable.setItems(filteredExpSummaryData);
 
             filterField.setText("");
             tabbedPane.getSelectionModel().select(0);
