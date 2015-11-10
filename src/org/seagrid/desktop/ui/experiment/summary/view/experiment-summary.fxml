@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane prefHeight="731.0" prefWidth="726.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController">
+  <content>
+    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
+      <children>
+        <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="-1.0" vgap="3.0" visible="true" VBox.vgrow="ALWAYS">
+          <children>
+            <Label prefWidth="228.0" text="Experiment Summary" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0">
+              <font>
+                <Font name="System Bold" size="20.0" />
+              </font>
+            </Label>
+            <Label text="Experiment ID" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Experiment Name" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label text="Project" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Label text="Application" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label text="Compute Resource" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label text="Experiment Status" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <Label text="Job Status" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+            <Label text="Creation Time" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+            <Label text="Last Modified Time" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+            <Label text="Enable Auto Schedule" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+            <Label text="Wall Time" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+            <Label text="CPU Count" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+            <Label text="Node Count" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+            <Label text="Queue" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+            <Label fx:id="experimentIdLabel" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+            <Label fx:id="experimentNameLabel" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+            <Label fx:id="experimentDescField" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+            <Label fx:id="experimentProjectLabel" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+            <Label fx:id="experimentApplicationLabel" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" />
+            <Label fx:id="experimentCRLabel" text="Label" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" />
+            <Label fx:id="experimentStatusLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="experimentJobStatusLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label fx:id="experimentCreationTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label fx:id="experimentLastModifiedTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <Label fx:id="experimentEnableAutoSchedLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <Label fx:id="experimentWallTimeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <Label fx:id="experimentCPUCountLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+            <Label fx:id="experimentNodeCountLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+            <Label fx:id="experimentQueueLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="335.0" minWidth="10.0" prefWidth="271.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="418.0" minWidth="10.0" prefWidth="402.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+          <VBox.margin>
+            <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
+          </VBox.margin>
+        </GridPane>
+        <HBox alignment="CENTER_LEFT" VBox.margin="$x1" VBox.vgrow="NEVER">
+          <children>
+            <Button fx:id="expLaunchButton" cancelButton="false" defaultButton="false" disable="false" mnemonicParsing="false" text="Launch">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+            <Button fx:id="expEditButton" mnemonicParsing="false" text="Edit" HBox.margin="$x1" />
+            <Button fx:id="expCancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" HBox.margin="$x1" />
+            <Button fx:id="expCloneButton" mnemonicParsing="false" text="Clone" HBox.margin="$x1" />
+            <Button fx:id="expMonitorOutput" mnemonicParsing="false" text="Monitor Output" />
+          </children>
+          <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </padding>
+        </HBox>
+      </children>
+      <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+      </padding>
+    </VBox>
+  </content>
+</ScrollPane>

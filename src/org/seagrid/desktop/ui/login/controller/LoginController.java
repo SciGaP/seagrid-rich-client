@@ -18,34 +18,43 @@
  * under the License.
  *
 */
-package org.seagrid.desktop;
+package org.seagrid.desktop.ui.login.controller;
 
-import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.seagrid.desktop.ui.home.HomeWindow;
-import org.seagrid.desktop.ui.login.LoginWindow;
 import org.seagrid.desktop.util.SEAGridConfig;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+public class LoginController {
+    private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-public class SEAGridClient extends Application{
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridClient.class);
+    @FXML
+    private TextField usernameField;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        LoginWindow loginWindow =  new LoginWindow();
-        loginWindow.displayAndWait();
-        String isAuthenticated = SEAGridContext.getInstance().getProperty(SEAGridConfig.AUTHENTICATED);
-        if(isAuthenticated!=null && isAuthenticated.equalsIgnoreCase("true")){
-            HomeWindow homeWindow =  new HomeWindow();
-            homeWindow.start(primaryStage);
-        }
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Button loginButton;
+
+    public void initialize() {
+        loginButton.setOnMouseClicked(event -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            if(handleLogin(username, password)){
+                SEAGridContext.getInstance().setProperty(SEAGridConfig.AUTHENTICATED,"true");
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.close();
+            }
+        });
     }
 
-    public static void main(String[] args) throws IOException {
-        launch(args);
+    public boolean handleLogin(String username, String password){
+        return true;
     }
 }

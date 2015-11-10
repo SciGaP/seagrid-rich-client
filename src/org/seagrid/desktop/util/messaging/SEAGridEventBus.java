@@ -18,44 +18,39 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.util;
+package org.seagrid.desktop.util.messaging;
 
+import com.google.common.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
+public class SEAGridEventBus {
+    private final static Logger logger = LoggerFactory.getLogger(SEAGridEventBus.class);
 
-public class SEAGridContext {
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridContext.class);
+    private static SEAGridEventBus instance;
 
-    private Map<String,String> properties = new HashMap<>();
+    private EventBus eventBus;
 
-    private static SEAGridContext instance;
+    private SEAGridEventBus(){
+        this.eventBus = new EventBus();
+    }
 
-    private SEAGridContext(){}
-
-    public static SEAGridContext getInstance(){
-        if(SEAGridContext.instance == null){
-            SEAGridContext.instance = new SEAGridContext();
+    public static SEAGridEventBus getInstance(){
+        if(SEAGridEventBus.instance == null){
+            SEAGridEventBus.instance = new SEAGridEventBus();
         }
-        return SEAGridContext.instance;
+        return SEAGridEventBus.instance;
     }
 
-    public void setProperty(String key, String value){
-        properties.put(key,value);
+    public void register(Object subscriber){
+        eventBus.register(subscriber);
     }
 
-    public String getProperty(String key){
-        return properties.get(key);
+    public void unregister(Object subscriber){
+        eventBus.unregister(subscriber);
     }
 
-    public ZoneOffset getTimeZoneOffset(){
-        return ZoneOffset.UTC;
-    }
-
-    public String getFileDownloadLocation(){
-        return "/Users/supun/Desktop";
+    public void post(SEAGridEvent event){
+        eventBus.post(event);
     }
 }

@@ -18,44 +18,40 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.util;
+package org.seagrid.desktop.util.messaging;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
+public class SEAGridEvent {
+    private final static Logger logger = LoggerFactory.getLogger(SEAGridEvent.class);
 
-public class SEAGridContext {
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridContext.class);
-
-    private Map<String,String> properties = new HashMap<>();
-
-    private static SEAGridContext instance;
-
-    private SEAGridContext(){}
-
-    public static SEAGridContext getInstance(){
-        if(SEAGridContext.instance == null){
-            SEAGridContext.instance = new SEAGridContext();
-        }
-        return SEAGridContext.instance;
+    public static enum SEAGridEventType{
+        EXPERIMENT_CREATED, PROJECT_CREATED
     }
 
-    public void setProperty(String key, String value){
-        properties.put(key,value);
+    private SEAGridEventType eventType;
+
+    private Object payload;
+
+    public SEAGridEvent(SEAGridEventType eventType, Object payload){
+        this.eventType = eventType;
+        this.payload = payload;
     }
 
-    public String getProperty(String key){
-        return properties.get(key);
+    public SEAGridEventType getEventType() {
+        return eventType;
     }
 
-    public ZoneOffset getTimeZoneOffset(){
-        return ZoneOffset.UTC;
+    public void setEventType(SEAGridEventType eventType) {
+        this.eventType = eventType;
     }
 
-    public String getFileDownloadLocation(){
-        return "/Users/supun/Desktop";
+    public Object getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 }

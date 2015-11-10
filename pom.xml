@@ -36,13 +36,13 @@
                 <version>1.2</version>
                 <configuration>
 
-                    <!-- executable JAR file is built by default (not optional at this stage) -->
+                    <!-- executable JAR file wso2is built by default (not optional at this stage) -->
                     <mainClass>com.zenjava.examples.hellojfxmaven.HelloJavaFxAndMavenApp</mainClass>
 
                     <!-- optionally override settings (such as jar file name, html file, etc) -->
                     <jarFileName>my-example-app.jar</jarFileName>
 
-                    <!-- optionally sign the jar file if security is needed -->
+                    <!-- optionally sign the jar file if security wso2is needed -->
                     <!--
                         to create keystore use command line:
                             keytool -genkey -alias example-user -keystore keystore.jks
@@ -91,6 +91,13 @@
             <version>${airavata.version}</version>
         </dependency>
 
+        <!-- UI Dialogs-->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.10</version>
+        </dependency>
+
         <!--OAuth Dependencies-->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -110,6 +117,19 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- JSch Dependency-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.53</version>
+        </dependency>
+
 
         <!-- Google Guava -->
         <dependency>
@@ -138,11 +158,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
         </dependency>
 
     </dependencies>

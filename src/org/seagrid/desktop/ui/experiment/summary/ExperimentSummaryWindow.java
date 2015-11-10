@@ -18,34 +18,36 @@
  * under the License.
  *
 */
-package org.seagrid.desktop;
+package org.seagrid.desktop.ui.experiment.summary;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.seagrid.desktop.ui.home.HomeWindow;
-import org.seagrid.desktop.ui.login.LoginWindow;
-import org.seagrid.desktop.util.SEAGridConfig;
-import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class SEAGridClient extends Application{
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridClient.class);
+public class ExperimentSummaryWindow extends Application {
+    private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryWindow.class);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        LoginWindow loginWindow =  new LoginWindow();
-        loginWindow.displayAndWait();
-        String isAuthenticated = SEAGridContext.getInstance().getProperty(SEAGridConfig.AUTHENTICATED);
-        if(isAuthenticated!=null && isAuthenticated.equalsIgnoreCase("true")){
-            HomeWindow homeWindow =  new HomeWindow();
-            homeWindow.start(primaryStage);
-        }
+        Parent root = FXMLLoader.load(getClass().getResource("view/experiment-summary.fxml"));
+        primaryStage.setTitle("SEAGrid Desktop Client - Experiment Summary");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.show();
     }
 
-    public static void main(String[] args) throws IOException {
-        launch(args);
+    public Parent getExperimentInfoNode(String experimentId) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "view/experiment-summary.fxml"));
+        Parent node = loader.load();
+        ExperimentSummaryController controller = loader.getController();
+        controller.initExperimentInfo(experimentId);
+        return node;
     }
 }
