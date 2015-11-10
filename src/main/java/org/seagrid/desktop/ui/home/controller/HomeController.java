@@ -27,10 +27,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.apache.airavata.model.error.AiravataClientException;
@@ -122,28 +125,36 @@ public class HomeController {
                     super.updateItem(item, empty) ;
                     if (empty) {
                         setText(null);
+                        setGraphic(null);
                     } else {
                         setText(item.getDisplayName());
+                        if(item.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
+
+                        }else{
+                            Node projectIcon = new ImageView(new Image(HomeController.class
+                                    .getResourceAsStream("/images/project.ico")));
+                            setGraphic(projectIcon);
+                        }
                     }
                 }
             };
-            cell.setOnMouseClicked(event->{
-                if (! cell.isEmpty() && cell.isSelected()){
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty() && cell.isSelected()) {
                     TreeItem<TreeModel> treeItem = cell.getTreeItem();
                     TreeModel treeModel = treeItem.getValue();
-                    Map<ExperimentSearchFields,String> filters = new HashMap<>();
-                    if(treeModel.getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)){
+                    Map<ExperimentSearchFields, String> filters = new HashMap<>();
+                    if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)) {
                         filters.put(ExperimentSearchFields.PROJECT_ID, treeModel.getItemId());
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
-                        updateExperimentList(filters,-1,0);
-                    }else if(treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
+                        updateExperimentList(filters, -1, 0);
+                    } else if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)) {
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
-                        updateExperimentList(filters,-1,0);
-                    }else if(event.getClickCount()==2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
+                        updateExperimentList(filters, -1, 0);
+                    } else if (event.getClickCount() == 2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)) {
                         try {
                             ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
                             Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(treeModel.getItemId());
-                            Tab experimentTab = new Tab(treeModel.getDisplayName(),parentNode);
+                            Tab experimentTab = new Tab(treeModel.getDisplayName(), parentNode);
                             experimentTab.setClosable(true);
                             tabbedPane.getTabs().add(experimentTab);
                             tabbedPane.getSelectionModel().select(experimentTab);
