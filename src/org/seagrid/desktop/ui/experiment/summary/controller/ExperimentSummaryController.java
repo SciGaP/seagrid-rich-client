@@ -325,6 +325,12 @@ public class ExperimentSummaryController {
                     return new FileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    ExceptionDialog exceptionDialog = new ExceptionDialog(e);
+                    exceptionDialog.setTitle("Exception Dialog");
+                    exceptionDialog.initOwner(experimentInfoGridPane.getScene().getWindow());
+                    exceptionDialog.setHeaderText("Unable To Connect To File Server !");
+                    exceptionDialog.initModality(Modality.WINDOW_MODAL);
+                    exceptionDialog.showAndWait();
                 }
                 return null;
             }
@@ -338,7 +344,7 @@ public class ExperimentSummaryController {
             ExceptionDialog exceptionDialog = new ExceptionDialog(service.getException());
             exceptionDialog.setTitle("Exception Dialog");
             exceptionDialog.initOwner(experimentInfoGridPane.getScene().getWindow());
-            exceptionDialog.setHeaderText("File Download Failed!");
+            exceptionDialog.setHeaderText("File Download Failed !");
             exceptionDialog.initModality(Modality.WINDOW_MODAL);
             exceptionDialog.showAndWait();
         });
