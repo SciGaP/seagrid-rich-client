@@ -49,6 +49,7 @@ import org.controlsfx.dialog.ExceptionDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.file.FileDownloadTask;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -325,28 +326,21 @@ public class ExperimentSummaryController {
                     return new FileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ExceptionDialog exceptionDialog = new ExceptionDialog(e);
-                    exceptionDialog.setTitle("Exception Dialog");
-                    exceptionDialog.initOwner(experimentInfoGridPane.getScene().getWindow());
-                    exceptionDialog.setHeaderText("Unable To Connect To File Server !");
-                    exceptionDialog.initModality(Modality.WINDOW_MODAL);
-                    exceptionDialog.showAndWait();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",experimentInfoGridPane.getScene().getWindow(),
+                            "Unable To Connect To File Server !");
                 }
                 return null;
             }
         };
-        ProgressDialog progressDialog = new ProgressDialog(service);
-        progressDialog.setTitle("Progress Dialog");
-        progressDialog.initOwner(experimentInfoGridPane.getScene().getWindow());
-        progressDialog.setHeaderText("Downloading File " + remotePath.getFileName());
-        progressDialog.initModality(Modality.WINDOW_MODAL);
+        SEAGridDialogHelper.showProgressDialog(service,"Progress Dialog",experimentInfoGridPane.getScene().getWindow(),
+                "Downloading File " + remotePath.getFileName());
         service.setOnFailed((WorkerStateEvent t) -> {
-            ExceptionDialog exceptionDialog = new ExceptionDialog(service.getException());
-            exceptionDialog.setTitle("Exception Dialog");
-            exceptionDialog.initOwner(experimentInfoGridPane.getScene().getWindow());
-            exceptionDialog.setHeaderText("File Download Failed !");
-            exceptionDialog.initModality(Modality.WINDOW_MODAL);
-            exceptionDialog.showAndWait();
+            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+                    experimentInfoGridPane.getScene().getWindow(), "File Download Failed");
+        });
+        service.setOnSucceeded((WorkerStateEvent t)->{
+            SEAGridDialogHelper.showInformationNotification("Success",remotePath.getFileName()
+                    +" was downloaded successfully", experimentInfoGridPane.getScene().getWindow());
         });
         service.start();
     }

@@ -67,13 +67,6 @@ public class FileDownloadTask extends FileTask {
             updateProgress(percentCompleted, 1);
         }
 
-        try {
-            //Showing a delay for the user
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         remoteInputStream.close();
         localOutputStream.close();
     }

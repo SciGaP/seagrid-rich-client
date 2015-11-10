@@ -26,6 +26,7 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -42,6 +43,7 @@ import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
@@ -278,8 +280,8 @@ public class HomeController {
                     return false; // Does not match.
                 });
             });
-//            SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
-//            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
+            SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
+            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
             expSummaryTable.setItems(filteredExpSummaryData);
 
             filterField.setText("");
@@ -309,8 +311,12 @@ public class HomeController {
             public void handleSEAGridEvent(SEAGridEvent event) {
                 if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
                     Project project = (Project)event.getPayload();
-                    getChildren().add(0, new ProjectTreeModel(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
-                            project.getProjectID(),project.getName())));
+                    if(!isFirstTimeChildren){
+                        getChildren().add(0, new ProjectTreeModel(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
+                                project.getProjectID(),project.getName())));
+                    }
+                    SEAGridDialogHelper.showInformationNotification("Success","Project " +
+                            project.getName() + " created successfully", createProjectButton.getScene().getWindow());
                 }
             }
 
