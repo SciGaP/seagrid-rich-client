@@ -57,12 +57,12 @@ public class FileDownloadTask extends FileTask {
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytesRead = -1;
         long totalBytesRead = 0;
-        int percentCompleted = 0;
+        double percentCompleted = 0;
 
         while ((bytesRead = remoteInputStream.read(buffer)) != -1) {
             localOutputStream.write(buffer, 0, bytesRead);
             totalBytesRead += bytesRead;
-            percentCompleted = (int) (totalBytesRead * 100 / fileSize);
+            percentCompleted = ((double)totalBytesRead)/ fileSize;
             updateProgress(percentCompleted, 1);
         }
 

@@ -17,10 +17,7 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AiravataManager {
 
@@ -200,6 +197,7 @@ public class AiravataManager {
         List<ApplicationInterfaceDescription> allApplicationInterfaces = null;
         try{
             allApplicationInterfaces = getClient().getAllApplicationInterfaces(getAuthzToken(), getGatewayId());
+            Collections.sort(allApplicationInterfaces, (o1, o2) -> o1.getApplicationName().compareTo(o2.getApplicationName()));
         }catch (Exception ex){
             ex.printStackTrace();
         }

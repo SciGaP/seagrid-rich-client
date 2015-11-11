@@ -47,6 +47,7 @@ public class BulkFileUploadTask extends FileTask {
 
     public boolean uploadFiles(Map<String, File> uploadFiles) throws IOException, SftpException {
         int numberOfFiles = uploadFiles.size();
+        int index = 1;
         for(String remoteFilePath : uploadFiles.keySet()){
             createRemoteParentDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
             OutputStream remoteOutputStream = new BufferedOutputStream(channelSftp.put(remoteFilePath));
@@ -55,18 +56,19 @@ public class BulkFileUploadTask extends FileTask {
             long fileSize = localFile.length();
             byte[] buffer = new byte[BUFFER_SIZE];
             int bytesRead = -1;
-            long totalBytesRead = 0;
-            int percentCompleted = 0;
+            int totalBytesRead = 0;
+            double percentCompleted = 0;
 
             while ((bytesRead = localInputStream.read(buffer)) != -1) {
                 remoteOutputStream.write(buffer, 0, bytesRead);
                 totalBytesRead += bytesRead;
-                percentCompleted = (int) (totalBytesRead * 100 / fileSize / (numberOfFiles));
+                percentCompleted = ((double)totalBytesRead) / fileSize * index / numberOfFiles;
                 updateProgress(percentCompleted, 1);
             }
 
             remoteOutputStream.close();
             localInputStream.close();
+            index++;
         }
         return true;
     }

@@ -44,13 +44,13 @@ public class SEAGridDesktop extends Application{
         String isAuthenticated = SEAGridContext.getInstance().getProperty(SEAGridConfig.AUTHENTICATED);
         if(isAuthenticated!=null && isAuthenticated.equalsIgnoreCase("true")){
             HomeWindow homeWindow =  new HomeWindow();
-            homeWindow.start(primaryStage);
             Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();
             primaryStage.setX(bounds.getMinX());
             primaryStage.setY(bounds.getMinY());
             primaryStage.setWidth(bounds.getWidth());
             primaryStage.setHeight(bounds.getHeight());
+            homeWindow.start(primaryStage);
             primaryStage.setOnCloseRequest(t -> {
                 Platform.exit();
                 System.exit(0);
