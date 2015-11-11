@@ -28,6 +28,7 @@ import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
@@ -76,7 +77,8 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
                     experiments = AiravataManager.getInstance()
                             .getExperimentSummariesInProject(this.getValue().getItemId());
                 }else if(getValue().getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
-                    experiments = AiravataManager.getInstance().getRecentExperimentSummaries();
+                    experiments = AiravataManager.getInstance().getRecentExperimentSummaries(SEAGridContext
+                            .getInstance().getMaxRecentExpCount());
                 }
                 expChildren.addAll(experiments.stream().map(experimentModel -> new TreeItem<TreeModel>(
                         new TreeModel(

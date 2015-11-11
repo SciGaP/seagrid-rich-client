@@ -51,6 +51,7 @@ import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
 import org.seagrid.desktop.ui.project.ProjectWindow;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
@@ -172,7 +173,7 @@ public class HomeController {
                         updateExperimentList(filters, -1, 0);
                     } else if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)) {
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
-                        updateExperimentList(filters, -1, 0);
+                        updateExperimentList(filters, SEAGridContext.getInstance().getMaxRecentExpCount(), 0);
                     } else if (event.getClickCount() == 2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)) {
                         try {
                             ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
@@ -257,7 +258,7 @@ public class HomeController {
         tabbedPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabbedPane.getTabs().get(0).setText("Recent Experiments");
         tabbedPane.getTabs().get(0).setClosable(false);
-        updateExperimentList(filters,-1,0);
+        updateExperimentList(filters,SEAGridContext.getInstance().getMaxRecentExpCount(),0);
     }
 
     //update the right pane with experiment list
@@ -404,7 +405,8 @@ public class HomeController {
             ExperimentListModel experimentListModel = new ExperimentListModel(experimentSummaryModel);
             if(this.previousExperimentListFilter == null ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
-                    this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).startsWith("$$$$$$$$$") ||
+                    this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(
+                            SEAGridContext.getInstance().getRecentExperimentsDummyId()) ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experiment.getProjectId())) {
                 observableExperimentList.add(0,experimentListModel);
             }

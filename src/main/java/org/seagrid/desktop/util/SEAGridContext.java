@@ -60,4 +60,8 @@ public class SEAGridContext {
     public String getAiravataGatewayId(){ return "default";}
 
     public String getUserName(){ return "master";}
+
+    public int getMaxRecentExpCount(){ return 20; }
+
+    public String getRecentExperimentsDummyId(){ return "$$$$$$"; }
 }

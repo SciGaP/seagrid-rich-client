@@ -93,12 +93,12 @@ public class AiravataManager {
         return exp;
     }
 
-    public synchronized List<ExperimentSummaryModel> getRecentExperimentSummaries(){
+    public synchronized List<ExperimentSummaryModel> getRecentExperimentSummaries(int limit){
         List<ExperimentSummaryModel> exp = new ArrayList<>();
         try{
             Map<ExperimentSearchFields,String> filters = new HashMap<>();
             exp = getClient().searchExperiments(
-                    getAuthzToken(), getGatewayId(), getUserName(), filters, 20, 0);
+                    getAuthzToken(), getGatewayId(), getUserName(), filters, limit, 0);
         }catch (Exception ex){
             ex.printStackTrace();
         }

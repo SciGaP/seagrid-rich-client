@@ -277,8 +277,11 @@ public class ExperimentCreateController {
             experimentModel.setUserName(SEAGridContext.getInstance().getUserName());
 
             UserConfigurationDataModel userConfigurationDataModel = new UserConfigurationDataModel();
+
+            //FIXME Hard Coded Default Values
             userConfigurationDataModel.setAiravataAutoSchedule(false);
             userConfigurationDataModel.setOverrideManualScheduledParams(false);
+
             ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
             resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
                     .getSelectedItem()).getComputeResourceId());
