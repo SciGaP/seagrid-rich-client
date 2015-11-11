@@ -38,6 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.apache.airavata.model.error.AiravataClientException;
+import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
@@ -104,6 +105,8 @@ public class HomeController {
 
     @FXML
     private TabPane tabbedPane;
+
+    private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
     @SuppressWarnings("unused")
     public void initialize() {
@@ -260,6 +263,8 @@ public class HomeController {
     //update the right pane with experiment list
     public void updateExperimentList(Map<ExperimentSearchFields, String> filters, int limit, int offset){
         try {
+            this.previousExperimentListFilter = filters;
+
             List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
                     .getExperimentSummaries(filters, limit, offset);
             observableExperimentList = FXCollections.observableArrayList(new Callback<ExperimentListModel, Observable[]>() {
@@ -369,14 +374,40 @@ public class HomeController {
     @SuppressWarnings("unused")
     @Subscribe
     public void listenSEAGridEvents(SEAGridEvent event) {
-        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
+        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
             Project project = (Project)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success","Project " +
                     project.getName() + " created successfully", createProjectButton.getScene().getWindow());
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED)){
+        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED)){
             String localFilePath = (String)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
                     +" was downloaded successfully", createProjectButton.getScene().getWindow());
+        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
+            ExperimentModel experiment = (ExperimentModel) event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success","Experiment " +
+                    experiment.getExperimentName() + " created successfully", createProjectButton.getScene().getWindow());
+            ExperimentSummaryModel experimentSummaryModel = new ExperimentSummaryModel();
+            experimentSummaryModel.setExperimentId(experiment.getExperimentId());
+            experimentSummaryModel.setName(experiment.getExperimentName());
+            experimentSummaryModel.setExecutionId(experiment.getExecutionId());
+            experimentSummaryModel.setResourceHostId(experiment.getUserConfigurationData()
+                    .getComputationalResourceScheduling().getResourceHostId());
+            experimentSummaryModel.setProjectId(experiment.getProjectId());
+            experimentSummaryModel.setGatewayId(experiment.getGatewayId());
+            experimentSummaryModel.setUserName(experiment.getUserName());
+            experimentSummaryModel.setDescription(experiment.getDescription());
+            experimentSummaryModel.setExperimentStatus("CREATED");
+            long time = System.currentTimeMillis();
+            experimentSummaryModel.setCreationTime(time);
+            experimentSummaryModel.setStatusUpdateTime(time);
+
+            ExperimentListModel experimentListModel = new ExperimentListModel(experimentSummaryModel);
+            if(this.previousExperimentListFilter == null ||
+                    this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
+                    this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).startsWith("$$$$$$$$$") ||
+                    this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experiment.getProjectId())) {
+                observableExperimentList.add(0,experimentListModel);
+            }
         }
     }
 

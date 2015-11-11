@@ -3,14 +3,14 @@ package org.seagrid.desktop.connectors.airavata;
 import org.apache.airavata.api.Airavata;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
-import org.apache.airavata.model.error.AiravataClientException;
-import org.apache.airavata.model.error.AiravataErrorType;
+import org.apache.airavata.model.error.*;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.security.AuthzToken;
 import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
@@ -218,5 +218,9 @@ public class AiravataManager {
             ex.printStackTrace();
         }
         return availableComputeResources;
+    }
+
+    public String createExperiment(ExperimentModel experimentModel) throws TException {
+        return getClient().createExperiment(getAuthzToken(), getGatewayId(), experimentModel);
     }
 }

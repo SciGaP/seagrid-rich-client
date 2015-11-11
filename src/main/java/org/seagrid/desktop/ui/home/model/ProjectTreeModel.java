@@ -52,6 +52,11 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
     public void handleNewExperimentEvent(SEAGridEvent event) {
         if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
             ExperimentModel experiment = (ExperimentModel)event.getPayload();
+            if(!isFirstTimeChildren && getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)
+                    && getValue().getItemId().equals(experiment.getProjectId())) {
+                getChildren().add(0, new TreeItem<>(new TreeModel(TreeModel.ITEM_TYPE.EXPERIMENT, experiment.getExperimentId(),
+                        experiment.getExperimentName())));
+            }
         }
     }
 

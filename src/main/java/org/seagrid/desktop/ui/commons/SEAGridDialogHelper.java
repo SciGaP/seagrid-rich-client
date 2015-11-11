@@ -22,6 +22,7 @@ package org.seagrid.desktop.ui.commons;
 
 import javafx.concurrent.Service;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -49,7 +50,16 @@ public class SEAGridDialogHelper {
         exceptionDialog.initOwner(parentWindow);
         exceptionDialog.setHeaderText(message);
         exceptionDialog.initModality(Modality.WINDOW_MODAL);
+        exceptionDialog.setWidth(800);
         exceptionDialog.showAndWait();
+    }
+
+    public static void showWarningDialog(String title, String headerText, String contentText){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 
     public static void showInformationNotification(String title, String message, Window parentWindow){

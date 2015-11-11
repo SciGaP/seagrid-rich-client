@@ -22,13 +22,22 @@ package org.seagrid.desktop.ui.experiment.create.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.error.AiravataClientException;
+import org.apache.airavata.model.experiment.ExperimentModel;
+import org.apache.airavata.model.experiment.UserConfigurationDataModel;
+import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
 import org.apache.airavata.model.workspace.Project;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
+import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,8 +138,69 @@ public class ExperimentCreateController {
             });
             expCreateAppField.getSelectionModel().selectFirst();
 
-        }catch (Exception e){
+            //Won't allow characters to be entered
+            expCreateNodeCountField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    expCreateNodeCountField.setText(oldValue);
+                }
+            });
+            expCreateNodeCountField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    expCreateNodeCountField.setText(oldValue);
+                }
+            });
+            expCreateWallTimeField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    expCreateWallTimeField.setText(oldValue);
+                }
+            });
+            expCreatePhysicalMemField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    expCreatePhysicalMemField.setText(oldValue);
+                }
+            });
 
+            expSaveButton.setOnAction(event -> {
+                ExperimentModel experimentModel = null;
+                try {
+                    experimentModel = createExperiment();
+                    if(experimentModel != null && experimentModel.getExperimentId() != null
+                            && !experimentModel.getExperimentId().isEmpty()){
+                        Stage stage = (Stage) expSaveButton.getScene().getWindow();
+                        stage.close();
+                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
+                                ,experimentModel));
+                    }
+                } catch (TException e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
+                            "Experiment create failed !");
+                }
+            });
+
+            //Todo
+            expSaveLaunchButton.setOnAction(event -> {
+                ExperimentModel experimentModel = null;
+                try {
+                    experimentModel = createExperiment();
+                    if(experimentModel != null && experimentModel.getExperimentId() == null
+                            && !experimentModel.getExperimentId().isEmpty()){
+                        Stage stage = (Stage) expSaveButton.getScene().getWindow();
+                        stage.close();
+                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
+                                ,experimentModel));
+                    }
+                } catch (TException e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
+                            "Experiment create failed !");
+                }
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expCreateNameField.getScene().getWindow(),
+                    "Failed To Load New Experiment Window !");
         }
     }
 
@@ -186,12 +256,86 @@ public class ExperimentCreateController {
     private void updateQueueSpecificLimitsInLabels(){
         BatchQueue selectedQueue = (BatchQueue)expCreateQueueField.getSelectionModel().getSelectedItem();
         if(selectedQueue !=  null){
-            expCreateNodeCountLabel.setText(expCreateNodeCountLabel.getText() + " ( max - " + selectedQueue.getMaxNodes()
+            expCreateNodeCountLabel.setText("Node Count ( max - " + selectedQueue.getMaxNodes()
                     + " )");
-            expCreateCoreCountLabel.setText(expCreateCoreCountLabel.getText() + " ( max - " + selectedQueue.getMaxProcessors()
+            expCreateCoreCountLabel.setText("Total Core Count ( max - " + selectedQueue.getMaxProcessors()
                     + " )");
-            expCreateWallTimeLabel.setText(expCreateWallTimeLabel.getText() + " ( max - " + selectedQueue.getMaxRunTime()
+            expCreateWallTimeLabel.setText("Wall Time Limit ( max - " + selectedQueue.getMaxRunTime()
                     + " )");
         }
+    }
+
+    private ExperimentModel createExperiment() throws TException {
+        if(validateExperimentFields()){
+            ExperimentModel experimentModel = new ExperimentModel();
+            experimentModel.setExperimentName(expCreateNameField.getText());
+            experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
+            experimentModel.setProjectId(((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID());
+            experimentModel.setExecutionId(((ApplicationInterfaceDescription)expCreateAppField.getSelectionModel()
+                    .getSelectedItem()).getApplicationInterfaceId());
+            experimentModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
+            experimentModel.setUserName(SEAGridContext.getInstance().getUserName());
+
+            UserConfigurationDataModel userConfigurationDataModel = new UserConfigurationDataModel();
+            userConfigurationDataModel.setAiravataAutoSchedule(false);
+            userConfigurationDataModel.setOverrideManualScheduledParams(false);
+            ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
+            resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
+                    .getSelectedItem()).getComputeResourceId());
+            resourceSchedulingModel.setQueueName(((BatchQueue)expCreateQueueField.getSelectionModel().getSelectedItem())
+                    .getQueueName());
+            resourceSchedulingModel.setNodeCount(Integer.parseInt(expCreateNodeCountField.getText()));
+            resourceSchedulingModel.setTotalCPUCount(Integer.parseInt(expCreateTotalCoreCountField.getText()));
+            resourceSchedulingModel.setWallTimeLimit(Integer.parseInt(expCreateWallTimeField.getText()));
+            resourceSchedulingModel.setTotalPhysicalMemory(Integer.parseInt(expCreatePhysicalMemField.getText()));
+            userConfigurationDataModel.setComputationalResourceScheduling(resourceSchedulingModel);
+            experimentModel.setUserConfigurationData(userConfigurationDataModel);
+
+            String expId = AiravataManager.getInstance().createExperiment(experimentModel);
+            experimentModel.setExperimentId(expId);
+            return experimentModel;
+        }
+        return null;
+    }
+
+    private boolean validateExperimentFields(){
+
+        String expName = expCreateNameField.getText();
+        if(expName == null || expName.isEmpty()){
+            SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Experiment name should" +
+                    " be non empty");
+            return false;
+        }
+
+        BatchQueue selectedQueue = (BatchQueue)expCreateQueueField.getSelectionModel().getSelectedItem();
+        if(selectedQueue != null) {
+            try {
+                int nodeCount = Integer.parseInt(expCreateNodeCountField.getText().trim());
+                if (nodeCount <= 0 || nodeCount > selectedQueue.getMaxNodes()){
+                    SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Node count should" +
+                            " be positive value less than " + selectedQueue.getMaxNodes());
+                    return false;
+                }
+
+                int coreCount = Integer.parseInt(expCreateTotalCoreCountField.getText().trim());
+                if (coreCount <= 0 || coreCount > selectedQueue.getMaxProcessors()){
+                    SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Core count should" +
+                            " be positive value less than " + selectedQueue.getMaxProcessors());
+                    return false;
+                }
+
+                int wallTime = Integer.parseInt(expCreateWallTimeField.getText().trim());
+                if (wallTime <= 0 || wallTime > selectedQueue.getMaxProcessors()){
+                    SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Wall time should" +
+                            " be positive value less than " + selectedQueue.getMaxRunTime());
+                    return false;
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return true;
     }
 }

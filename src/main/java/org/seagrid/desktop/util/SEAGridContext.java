@@ -55,7 +55,9 @@ public class SEAGridContext {
         return ZoneOffset.UTC;
     }
 
-    public String getFileDownloadLocation(){
-        return "/Users/supun/Desktop";
-    }
+    public String getFileDownloadLocation(){ return "/Users/supun/Desktop";}
+
+    public String getAiravataGatewayId(){ return "default";}
+
+    public String getUserName(){ return "master";}
 }
