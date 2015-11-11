@@ -20,13 +20,23 @@
 */
 package org.seagrid.desktop.ui.experiment.create.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.application.io.DataType;
+import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
@@ -41,10 +51,15 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class ExperimentCreateController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateController.class);
+
+    @FXML
+    public GridPane expCreateInputsGridPane;
 
     @FXML
     private Label expCreateWallTimeLabel;
@@ -94,9 +109,12 @@ public class ExperimentCreateController {
     @FXML
     private Button expSaveLaunchButton;
 
+    private FileChooser fileChooser;
+
     @SuppressWarnings("unused")
     public void initialize() {
         initElements();
+        initFileChooser();
     }
 
     private void initElements(){
@@ -132,6 +150,7 @@ public class ExperimentCreateController {
             expCreateAppField.valueProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     loadAvailableComputeResources();
+                    updateExperimentInputs();
                 } catch (AiravataClientException e) {
                     e.printStackTrace();
                 }
@@ -204,6 +223,17 @@ public class ExperimentCreateController {
         }
     }
 
+    private void initFileChooser(){
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+//        Todo Should add Science Specific Filters
+//        fileChooser.getExtensionFilters().addAll(
+//                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+//                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+//                new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+//                new FileChooser.ExtensionFilter("All Files", "*.*"));
+    }
+
     private void loadAvailableComputeResources() throws AiravataClientException {
         ApplicationInterfaceDescription selectedApp = (ApplicationInterfaceDescription)expCreateAppField
                 .getSelectionModel().getSelectedItem();
@@ -262,6 +292,63 @@ public class ExperimentCreateController {
                     + " )");
             expCreateWallTimeLabel.setText("Wall Time Limit ( max - " + selectedQueue.getMaxRunTime()
                     + " )");
+        }
+    }
+
+    private void updateExperimentInputs() {
+        ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
+                .getSelectionModel().getSelectedItem();
+        if(applicationInterfaceDescription != null){
+            List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
+            expCreateInputsGridPane.getChildren().clear();
+            expCreateInputsGridPane.getRowConstraints().clear();
+            int index = 0;
+            for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
+                if(inputDataObjectType.getType().equals(DataType.STRING)){
+                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                    expCreateInputsGridPane.add(new TextField(), 1, index);
+                }else if(inputDataObjectType.getType().equals(DataType.INTEGER)){
+                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                    TextField numericField = new TextField();
+                    numericField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        if (!newValue.matches("\\d*")) {
+                            numericField.setText(oldValue);
+                        }
+                    });
+                    expCreateInputsGridPane.add(numericField, 1, index);
+                }else if(inputDataObjectType.getType().equals(DataType.FLOAT)){
+                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                    TextField floatField = new TextField();
+                    floatField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        if (!newValue.matches("\\f*")) {
+                            floatField.setText(oldValue);
+                        }
+                    });
+                    expCreateInputsGridPane.add(floatField, 1, index);
+                }else if(inputDataObjectType.getType().equals(DataType.URI)){
+                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                    Button filePickBtn = new Button("Select File");
+                    filePickBtn.setOnAction(event -> {
+                        File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
+                        if (selectedFile != null) {
+                            HBox hBox = new HBox();
+                            Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
+                            hyperlink.setOnAction(hyperLinkEvent -> {
+                                //TODO File Click Event
+                            });
+                            hBox.getChildren().add(0, hyperlink);
+                            filePickBtn.setText("Select Different File");
+                            hBox.getChildren().add(1, filePickBtn);
+                            int filePickBtnRowIndex = expCreateInputsGridPane.getRowIndex(filePickBtn);
+                            expCreateInputsGridPane.add(hBox, 1, filePickBtnRowIndex);
+                        }
+                    });
+                    expCreateInputsGridPane.add(filePickBtn, 1, index);
+                }
+                //maintaining the grid pane row height
+                expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
+                index++;
+            }
         }
     }
 
