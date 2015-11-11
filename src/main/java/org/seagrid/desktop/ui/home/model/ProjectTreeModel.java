@@ -23,7 +23,6 @@ package org.seagrid.desktop.ui.home.model;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
@@ -48,8 +47,9 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
         SEAGridEventBus.getInstance().register(this);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
-    public void handleSEAGridEvent(SEAGridEvent event) {
+    public void handleNewExperimentEvent(SEAGridEvent event) {
         if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
             ExperimentModel experiment = (ExperimentModel)event.getPayload();
         }

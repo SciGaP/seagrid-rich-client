@@ -132,7 +132,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Create Experiment">
+            <Button fx:id="createExperimentButton" mnemonicParsing="false" text="Create Experiment">
               <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>

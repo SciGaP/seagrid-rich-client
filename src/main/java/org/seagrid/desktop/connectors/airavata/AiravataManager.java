@@ -195,4 +195,28 @@ public class AiravataManager {
         }
         return jobStatuses;
     }
+
+    public List<ApplicationInterfaceDescription> getAllApplicationInterfaces() {
+        List<ApplicationInterfaceDescription> allApplicationInterfaces = null;
+        try{
+            allApplicationInterfaces = getClient().getAllApplicationInterfaces(getAuthzToken(), getGatewayId());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return allApplicationInterfaces;
+    }
+
+    public List<ComputeResourceDescription> getAvailableComputeResourcesForApp(String applicationInterfaceId) {
+        List<ComputeResourceDescription> availableComputeResources = null;
+        try{
+            Map<String,String> temp = getClient().getAvailableAppInterfaceComputeResources(getAuthzToken(), applicationInterfaceId);
+            availableComputeResources = new ArrayList<>();
+            for(String resourceId : temp.keySet()){
+                availableComputeResources.add(getComputeResource(resourceId));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return availableComputeResources;
+    }
 }

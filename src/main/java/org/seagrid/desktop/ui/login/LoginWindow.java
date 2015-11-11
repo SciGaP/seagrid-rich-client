@@ -19,7 +19,7 @@ public class LoginWindow extends Application {
         primaryStage.show();
     }
 
-    public void displayAndWait() throws IOException {
+    public void displayLoginAndWait() throws IOException {
         Stage primaryStage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/views/login/login.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Login");

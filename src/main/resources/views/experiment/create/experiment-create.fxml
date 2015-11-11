@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<ScrollPane prefHeight="731.0" prefWidth="645.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController">
+  <content>
+    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
+      <children>
+        <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="598.0" vgap="3.0" visible="true" VBox.vgrow="ALWAYS">
+          <children>
+            <Label prefWidth="228.0" text="Create Experiment" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0">
+              <font>
+                <Font name="System Bold" size="20.0" />
+              </font>
+            </Label>
+            <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label text="Project" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label text="Application" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Label text="Compute Resource" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label text="Queue" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label fx:id="expCreateNodeCountLabel" text="Node Count" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <Label fx:id="expCreateCoreCountLabel" text="Total Core Count" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+            <Label fx:id="expCreateWallTimeLabel" text="Wall Time Limit" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+            <Label text="Total Physical Memory" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+            <Label text="Static Working Directory" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+            <TextField fx:id="expCreateNameField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea fx:id="expCreateDescField" prefHeight="68.0" prefWidth="402.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="expCreateProjField" prefWidth="-1.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <ComboBox fx:id="expCreateAppField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <ComboBox fx:id="expCreateResourceField" GridPane.columnIndex="1" GridPane.rowIndex="5">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <ComboBox fx:id="expCreateQueueField" GridPane.columnIndex="1" GridPane.rowIndex="6">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+            </ComboBox>
+            <TextField fx:id="expCreateNodeCountField" prefWidth="200.0" text="1" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="expCreateTotalCoreCountField" prefWidth="200.0" text="16" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="expCreateWallTimeField" prefWidth="200.0" text="30" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <TextField fx:id="expCreatePhysicalMemField" prefWidth="200.0" text="512" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <TextField fx:id="expCreateStaticDirField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="335.0" minWidth="10.0" prefWidth="277.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="418.0" minWidth="10.0" prefWidth="318.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+          <VBox.margin>
+            <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
+          </VBox.margin>
+        </GridPane>
+        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+          <children>
+            <Button id="expLaunchButton" fx:id="expSaveButton" cancelButton="false" defaultButton="false" disable="false" mnemonicParsing="false" text="Save">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+            <Button id="expLaunchSaveButton" fx:id="expSaveLaunchButton" mnemonicParsing="false" text="Save and Launch" HBox.margin="$x1" />
+          </children>
+          <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </padding>
+          <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </VBox.margin>
+        </HBox>
+      </children>
+      <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+      </padding>
+    </VBox>
+  </content>
+</ScrollPane>

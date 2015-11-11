@@ -44,6 +44,7 @@ import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
+import org.seagrid.desktop.ui.experiment.create.ExperimentCreateWindow;
 import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
@@ -70,6 +71,9 @@ public class HomeController {
 
     @FXML
     public Button createProjectButton;
+
+    @FXML
+    private Button createExperimentButton;
 
     @FXML
     private TreeView<TreeModel> projectsTreeView;
@@ -101,6 +105,7 @@ public class HomeController {
     @FXML
     private TabPane tabbedPane;
 
+    @SuppressWarnings("unused")
     public void initialize() {
         SEAGridEventBus.getInstance().register(this);
         initMenuBar();
@@ -118,6 +123,15 @@ public class HomeController {
                 e.printStackTrace();
             }
         });
+        createExperimentButton.setOnMouseClicked(event -> {
+            ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
+            try {
+                experimentCreateWindow.displayCreateExperimentAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     public void initProjectTreeView(){
