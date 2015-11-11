@@ -20,15 +20,14 @@
 */
 package org.seagrid.desktop.ui.experiment.create.controller;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -44,6 +43,7 @@ import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.connectors.file.BulkFileUploadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -52,8 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.file.Paths;
-import java.util.List;
+import java.util.*;
 
 public class ExperimentCreateController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateController.class);
@@ -110,6 +109,8 @@ public class ExperimentCreateController {
     private Button expSaveLaunchButton;
 
     private FileChooser fileChooser;
+
+    private Map<InputDataObjectType, Object> experimentInputs;
 
     @SuppressWarnings("unused")
     public void initialize() {
@@ -299,6 +300,7 @@ public class ExperimentCreateController {
         ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
                 .getSelectionModel().getSelectedItem();
         if(applicationInterfaceDescription != null){
+            this.experimentInputs = new HashMap<>();
             List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
             expCreateInputsGridPane.getChildren().clear();
             expCreateInputsGridPane.getRowConstraints().clear();
@@ -306,13 +308,21 @@ public class ExperimentCreateController {
             for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
                 if(inputDataObjectType.getType().equals(DataType.STRING)){
                     expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                    expCreateInputsGridPane.add(new TextField(), 1, index);
+                    TextField stringField = new TextField();
+                    expCreateInputsGridPane.add( stringField, 1, index);
+                    this.experimentInputs.put(inputDataObjectType,null);
+                    stringField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        experimentInputs.put(inputDataObjectType,newValue);
+                    });
                 }else if(inputDataObjectType.getType().equals(DataType.INTEGER)){
                     expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
                     TextField numericField = new TextField();
                     numericField.textProperty().addListener((observable, oldValue, newValue) -> {
                         if (!newValue.matches("\\d*")) {
                             numericField.setText(oldValue);
+                            experimentInputs.put(inputDataObjectType, oldValue);
+                        } else {
+                            experimentInputs.put(inputDataObjectType, newValue);
                         }
                     });
                     expCreateInputsGridPane.add(numericField, 1, index);
@@ -322,6 +332,9 @@ public class ExperimentCreateController {
                     floatField.textProperty().addListener((observable, oldValue, newValue) -> {
                         if (!newValue.matches("\\f*")) {
                             floatField.setText(oldValue);
+                            experimentInputs.put(inputDataObjectType, oldValue);
+                        } else {
+                            experimentInputs.put(inputDataObjectType, newValue);
                         }
                     });
                     expCreateInputsGridPane.add(floatField, 1, index);
@@ -341,6 +354,7 @@ public class ExperimentCreateController {
                             hBox.getChildren().add(1, filePickBtn);
                             int filePickBtnRowIndex = expCreateInputsGridPane.getRowIndex(filePickBtn);
                             expCreateInputsGridPane.add(hBox, 1, filePickBtnRowIndex);
+                            experimentInputs.put(inputDataObjectType, selectedFile);
                         }
                     });
                     expCreateInputsGridPane.add(filePickBtn, 1, index);
@@ -381,6 +395,29 @@ public class ExperimentCreateController {
             userConfigurationDataModel.setComputationalResourceScheduling(resourceSchedulingModel);
             experimentModel.setUserConfigurationData(userConfigurationDataModel);
 
+            Map<String,File> uploadFiles = new HashMap<>();
+            //FIXME Hardcoded value
+            String remoteDataDir = "/var/www/portal/experimentData/" + UUID.randomUUID().toString() + "/";
+            this.experimentInputs.keySet().stream().filter(
+                    inputDataObjectType -> inputDataObjectType.getType().equals(DataType.URI)).forEach(inputDataObjectType -> {
+                File file = (File)this.experimentInputs.get(inputDataObjectType);
+                uploadFiles.put(remoteDataDir + file.getName(), file);
+            });
+            if(uploadFiles.size() > 0 && Boolean.FALSE.equals(uploadExperimentInputFiles(uploadFiles))){
+                return null;
+            }
+
+            List<InputDataObjectType> temp = new ArrayList<>();
+            for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
+                if(inputDataObjectType.getType().equals(DataType.URI)){
+                    inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
+                            .get(inputDataObjectType)).getName());
+                }else{
+                    inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
+                }
+                temp.add(inputDataObjectType);
+            }
+            experimentModel.setExperimentInputs(temp);
             String expId = AiravataManager.getInstance().createExperiment(experimentModel);
             experimentModel.setExperimentId(expId);
             return experimentModel;
@@ -426,6 +463,44 @@ public class ExperimentCreateController {
             }
         }
 
+        if(this.experimentInputs == null || this.experimentInputs.size()==0){
+            SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Experiment inputs" +
+                    " not selected");
+            return false;
+        }else{
+            for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
+                Object object = this.experimentInputs.get(inputDataObjectType);
+                if(object == null){
+                    SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "No value" +
+                            " selected for input " + inputDataObjectType.getName());
+                    return false;
+                }
+            }
+        }
         return true;
+    }
+
+    private Boolean uploadExperimentInputFiles(Map<String,File> uploadFiles){
+        Service<Boolean> service = new Service<Boolean>() {
+            @Override
+            protected Task<Boolean> createTask() {
+                try {
+                    return new BulkFileUploadTask(uploadFiles);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateInputsGridPane.getScene().getWindow(),
+                            "Unable To Connect To File Server !");
+                }
+                return null;
+            }
+        };
+        SEAGridDialogHelper.showProgressDialog(service,"Progress Dialog",expCreateInputsGridPane.getScene().getWindow(),
+                "Uploading Experiment Input Files");
+        service.setOnFailed((WorkerStateEvent t) -> {
+            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+                    expCreateInputsGridPane.getScene().getWindow(), "File Upload Failed");
+        });
+        service.start();
+        return service.getValue();
     }
 }

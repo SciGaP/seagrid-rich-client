@@ -275,7 +275,9 @@ public class ExperimentSummaryController {
                     Hyperlink hyperlink = new Hyperlink(Paths.get(input.getValue()).getFileName().toString());
                     TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
-                        String filePathString = input.getValue().split(":")[2];
+                        //FIXME the path has different different forms.
+                        String[] bits = input.getValue().split(":");
+                        String filePathString = bits[bits.length-1];
                         Path filePath = Paths.get(filePathString);
                         downloadFile(filePath, experimentModel);
                     });
@@ -321,9 +323,9 @@ public class ExperimentSummaryController {
         String localPath = SEAGridContext.getInstance()
                 .getFileDownloadLocation()+ File.separator + experimentModel.getExperimentId()
                 +File.separator+remotePath.getFileName();
-        Service<Void> service = new Service<Void>() {
+        Service<Boolean> service = new Service<Boolean>() {
             @Override
-            protected Task<Void> createTask() {
+            protected Task<Boolean> createTask() {
                 try {
                     return new FileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {

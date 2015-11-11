@@ -50,7 +50,7 @@ public class SEAGridDialogHelper {
         exceptionDialog.initOwner(parentWindow);
         exceptionDialog.setHeaderText(message);
         exceptionDialog.initModality(Modality.WINDOW_MODAL);
-        exceptionDialog.setWidth(800);
+        exceptionDialog.getDialogPane().setMaxWidth(800);
         exceptionDialog.showAndWait();
     }
 

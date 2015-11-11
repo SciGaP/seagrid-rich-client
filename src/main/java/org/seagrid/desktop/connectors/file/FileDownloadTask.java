@@ -41,12 +41,11 @@ public class FileDownloadTask extends FileTask {
     }
 
     @Override
-    protected Void call() throws Exception {
-        downloadFile(remoteFilePath, localFilePath);
-        return null;
+    protected Boolean call() throws Exception {
+        return downloadFile(remoteFilePath, localFilePath);
     }
 
-    public void downloadFile(String remoteFilePath, String localFilePath) throws SftpException, IOException {
+    public Boolean downloadFile(String remoteFilePath, String localFilePath) throws SftpException, IOException {
         InputStream remoteInputStream = new BufferedInputStream(channelSftp.get(remoteFilePath));
         File localFile = new File(localFilePath);
         if(!localFile.getParentFile().exists()){
@@ -69,5 +68,7 @@ public class FileDownloadTask extends FileTask {
 
         remoteInputStream.close();
         localOutputStream.close();
+
+        return true;
     }
 }

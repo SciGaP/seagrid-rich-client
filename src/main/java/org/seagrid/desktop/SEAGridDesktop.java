@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class SEAGridClient extends Application{
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridClient.class);
+public class SEAGridDesktop extends Application{
+    private final static Logger logger = LoggerFactory.getLogger(SEAGridDesktop.class);
 
     @Override
     public void start(Stage primaryStage) throws Exception {

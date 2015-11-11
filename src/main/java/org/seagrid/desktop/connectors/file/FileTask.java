@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public abstract class FileTask extends Task<Void> {
+public abstract class FileTask extends Task<Boolean> {
     private final static Logger logger = LoggerFactory.getLogger(FileTask.class);
 
     protected static final int BUFFER_SIZE = 4096;

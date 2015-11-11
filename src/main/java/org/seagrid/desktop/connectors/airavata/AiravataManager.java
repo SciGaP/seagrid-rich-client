@@ -32,7 +32,7 @@ public class AiravataManager {
 
     private AiravataManager() throws AiravataClientException {
         String host = "gw56.iu.xsede.org";
-        int port = 10930;
+        int port = 8930;
         try {
 
             TTransport transport = new TSocket(host, port);

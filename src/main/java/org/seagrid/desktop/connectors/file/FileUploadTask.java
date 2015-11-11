@@ -39,12 +39,12 @@ public class FileUploadTask extends FileTask {
     }
 
     @Override
-    protected Void call() throws Exception {
-        uploadFile(remoteFilePath, localFilePath);
-        return null;
+    protected Boolean call() throws Exception {
+        return uploadFile(remoteFilePath, localFilePath);
     }
 
-    public void uploadFile(String remoteFilePath, String localFilePath) throws IOException {
-
+    //TODO
+    public Boolean uploadFile(String remoteFilePath, String localFilePath) throws IOException {
+        return false;
     }
 }
