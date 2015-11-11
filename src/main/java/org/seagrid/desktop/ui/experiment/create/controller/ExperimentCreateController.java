@@ -181,40 +181,12 @@ public class ExperimentCreateController {
             });
 
             expSaveButton.setOnAction(event -> {
-                ExperimentModel experimentModel = null;
-                try {
-                    experimentModel = createExperiment();
-                    if(experimentModel != null && experimentModel.getExperimentId() != null
-                            && !experimentModel.getExperimentId().isEmpty()){
-                        Stage stage = (Stage) expSaveButton.getScene().getWindow();
-                        stage.close();
-                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
-                                ,experimentModel));
-                    }
-                } catch (TException e) {
-                    e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
-                            "Experiment create failed !");
-                }
+                createExperiment();
             });
 
             //Todo
             expSaveLaunchButton.setOnAction(event -> {
-                ExperimentModel experimentModel = null;
-                try {
-                    experimentModel = createExperiment();
-                    if(experimentModel != null && experimentModel.getExperimentId() == null
-                            && !experimentModel.getExperimentId().isEmpty()){
-                        Stage stage = (Stage) expSaveButton.getScene().getWindow();
-                        stage.close();
-                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
-                                ,experimentModel));
-                    }
-                } catch (TException e) {
-                    e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
-                            "Experiment create failed !");
-                }
+                createExperiment();
             });
 
         }catch (Exception e){
@@ -366,63 +338,87 @@ public class ExperimentCreateController {
         }
     }
 
-    private ExperimentModel createExperiment() throws TException {
+    private void createExperiment(){
         if(validateExperimentFields()){
-            ExperimentModel experimentModel = new ExperimentModel();
-            experimentModel.setExperimentName(expCreateNameField.getText());
-            experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
-            experimentModel.setProjectId(((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID());
-            experimentModel.setExecutionId(((ApplicationInterfaceDescription)expCreateAppField.getSelectionModel()
-                    .getSelectedItem()).getApplicationInterfaceId());
-            experimentModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
-            experimentModel.setUserName(SEAGridContext.getInstance().getUserName());
-
-            UserConfigurationDataModel userConfigurationDataModel = new UserConfigurationDataModel();
-
-            //FIXME Hard Coded Default Values
-            userConfigurationDataModel.setAiravataAutoSchedule(false);
-            userConfigurationDataModel.setOverrideManualScheduledParams(false);
-
-            ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
-            resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
-                    .getSelectedItem()).getComputeResourceId());
-            resourceSchedulingModel.setQueueName(((BatchQueue)expCreateQueueField.getSelectionModel().getSelectedItem())
-                    .getQueueName());
-            resourceSchedulingModel.setNodeCount(Integer.parseInt(expCreateNodeCountField.getText()));
-            resourceSchedulingModel.setTotalCPUCount(Integer.parseInt(expCreateTotalCoreCountField.getText()));
-            resourceSchedulingModel.setWallTimeLimit(Integer.parseInt(expCreateWallTimeField.getText()));
-            resourceSchedulingModel.setTotalPhysicalMemory(Integer.parseInt(expCreatePhysicalMemField.getText()));
-            userConfigurationDataModel.setComputationalResourceScheduling(resourceSchedulingModel);
-            experimentModel.setUserConfigurationData(userConfigurationDataModel);
-
-            Map<String,File> uploadFiles = new HashMap<>();
             //FIXME Hardcoded value
             String remoteDataDir = "/var/www/portal/experimentData/" + UUID.randomUUID().toString() + "/";
-            this.experimentInputs.keySet().stream().filter(
-                    inputDataObjectType -> inputDataObjectType.getType().equals(DataType.URI)).forEach(inputDataObjectType -> {
-                File file = (File)this.experimentInputs.get(inputDataObjectType);
-                uploadFiles.put(remoteDataDir + file.getName(), file);
-            });
-            if(uploadFiles.size() > 0 && Boolean.FALSE.equals(uploadExperimentInputFiles(uploadFiles))){
-                return null;
-            }
-
-            List<InputDataObjectType> temp = new ArrayList<>();
-            for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
-                if(inputDataObjectType.getType().equals(DataType.URI)){
-                    inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
-                            .get(inputDataObjectType)).getName());
-                }else{
-                    inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
+            ExperimentModel experimentModel = assembleExperiment(remoteDataDir);
+            Map<String,File> uploadFiles = new HashMap<>();
+            for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<InputDataObjectType, Object> entry = it.next();
+                if(entry.getKey().getType().equals(DataType.URI)) {
+                    File file = (File) entry.getValue();
+                    uploadFiles.put(remoteDataDir + file.getName(), file);
                 }
-                temp.add(inputDataObjectType);
             }
-            experimentModel.setExperimentInputs(temp);
+            if(uploadFiles.size() > 0){
+                Service fileUploadService = getFileUploadService(uploadFiles);
+                fileUploadService.setOnSucceeded(event -> {
+                    createExperiment(experimentModel);
+                });
+                fileUploadService.start();
+            }else{
+                createExperiment();
+            }
+        }
+    }
+
+    private void createExperiment(ExperimentModel experimentModel){
+        try {
             String expId = AiravataManager.getInstance().createExperiment(experimentModel);
             experimentModel.setExperimentId(expId);
-            return experimentModel;
+            Stage stage = (Stage) expSaveButton.getScene().getWindow();
+            stage.close();
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
+                    ,experimentModel));
+        } catch (TException e) {
+            e.printStackTrace();
+            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
+                    "Experiment create failed !");
         }
-        return null;
+    }
+
+    private ExperimentModel assembleExperiment(String remoteDataDir){
+        ExperimentModel experimentModel = new ExperimentModel();
+        experimentModel.setExperimentName(expCreateNameField.getText());
+        experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
+        experimentModel.setProjectId(((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID());
+        experimentModel.setExecutionId(((ApplicationInterfaceDescription)expCreateAppField.getSelectionModel()
+                .getSelectedItem()).getApplicationInterfaceId());
+        experimentModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
+        experimentModel.setUserName(SEAGridContext.getInstance().getUserName());
+
+        UserConfigurationDataModel userConfigurationDataModel = new UserConfigurationDataModel();
+
+        //FIXME Hard Coded Default Values
+        userConfigurationDataModel.setAiravataAutoSchedule(false);
+        userConfigurationDataModel.setOverrideManualScheduledParams(false);
+
+        ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
+        resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
+                .getSelectedItem()).getComputeResourceId());
+        resourceSchedulingModel.setQueueName(((BatchQueue)expCreateQueueField.getSelectionModel().getSelectedItem())
+                .getQueueName());
+        resourceSchedulingModel.setNodeCount(Integer.parseInt(expCreateNodeCountField.getText()));
+        resourceSchedulingModel.setTotalCPUCount(Integer.parseInt(expCreateTotalCoreCountField.getText()));
+        resourceSchedulingModel.setWallTimeLimit(Integer.parseInt(expCreateWallTimeField.getText()));
+        resourceSchedulingModel.setTotalPhysicalMemory(Integer.parseInt(expCreatePhysicalMemField.getText()));
+        userConfigurationDataModel.setComputationalResourceScheduling(resourceSchedulingModel);
+        experimentModel.setUserConfigurationData(userConfigurationDataModel);
+
+        List<InputDataObjectType> temp = new ArrayList<>();
+        for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
+            if(inputDataObjectType.getType().equals(DataType.URI)){
+                inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
+                        .get(inputDataObjectType)).getName());
+            }else{
+                inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
+            }
+            temp.add(inputDataObjectType);
+        }
+        experimentModel.setExperimentInputs(temp);
+
+        return experimentModel;
     }
 
     private boolean validateExperimentFields(){
@@ -480,7 +476,7 @@ public class ExperimentCreateController {
         return true;
     }
 
-    private Boolean uploadExperimentInputFiles(Map<String,File> uploadFiles){
+    private Service getFileUploadService(Map<String,File> uploadFiles){
         Service<Boolean> service = new Service<Boolean>() {
             @Override
             protected Task<Boolean> createTask() {
@@ -500,7 +496,6 @@ public class ExperimentCreateController {
             SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
                     expCreateInputsGridPane.getScene().getWindow(), "File Upload Failed");
         });
-        service.start();
-        return service.getValue();
+        return service;
     }
 }
