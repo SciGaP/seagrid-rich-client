@@ -55,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +102,7 @@ public class HomeController {
     private TabPane tabbedPane;
 
     public void initialize() {
+        SEAGridEventBus.getInstance().register(this);
         initMenuBar();
         initProjectTreeView();
         initExperimentList();
@@ -307,16 +309,15 @@ public class HomeController {
 
             private boolean isFirstTimeChildren = true;
 
+            @SuppressWarnings("unused")
             @Subscribe
-            public void handleSEAGridEvent(SEAGridEvent event) {
+            public void handleNewProjectEvent(SEAGridEvent event) {
                 if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
-                    Project project = (Project)event.getPayload();
                     if(!isFirstTimeChildren){
+                        Project project = (Project)event.getPayload();
                         getChildren().add(0, new ProjectTreeModel(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
                                 project.getProjectID(),project.getName())));
                     }
-                    SEAGridDialogHelper.showInformationNotification("Success","Project " +
-                            project.getName() + " created successfully", createProjectButton.getScene().getWindow());
                 }
             }
 
@@ -349,6 +350,20 @@ public class HomeController {
         root.getChildren().add(projectRoot);
 
         return root;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void listenSEAGridEvents(SEAGridEvent event) {
+        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
+            Project project = (Project)event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success","Project " +
+                    project.getName() + " created successfully", createProjectButton.getScene().getWindow());
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED)){
+            String localFilePath = (String)event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
+                    +" was downloaded successfully", createProjectButton.getScene().getWindow());
+        }
     }
 
 }

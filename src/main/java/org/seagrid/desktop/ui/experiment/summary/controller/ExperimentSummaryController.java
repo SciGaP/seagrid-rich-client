@@ -51,6 +51,8 @@ import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.file.FileDownloadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -339,8 +341,7 @@ public class ExperimentSummaryController {
                     experimentInfoGridPane.getScene().getWindow(), "File Download Failed");
         });
         service.setOnSucceeded((WorkerStateEvent t)->{
-            SEAGridDialogHelper.showInformationNotification("Success",remotePath.getFileName()
-                    +" was downloaded successfully", experimentInfoGridPane.getScene().getWindow());
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED,localPath));
         });
         service.start();
     }
