@@ -23,14 +23,10 @@ package org.seagrid.desktop.ui.home.controller;
 
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -39,9 +35,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.apache.airavata.model.error.AiravataClientException;
@@ -59,6 +53,7 @@ import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
 import org.seagrid.desktop.ui.project.ProjectWindow;
+import org.seagrid.desktop.ui.storage.MassStorageBrowserWindow;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
@@ -67,19 +62,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.rmi.server.ExportException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /** Controls the home screen */
 public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
-    private ObservableList<ExperimentListModel> observableExperimentList = FXCollections.observableArrayList();
+    private ObservableList<ExperimentListModel> observableExperimentList;
+
+    @FXML
+    private Button browseMassStorageBtn;
 
     @FXML
     public Button createProjectButton;
@@ -143,6 +139,16 @@ public class HomeController {
                 experimentCreateWindow.displayCreateExperimentAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        });
+        browseMassStorageBtn.setOnMouseClicked(event -> {
+            MassStorageBrowserWindow massStorageBrowserWindow = new MassStorageBrowserWindow();
+            try {
+                massStorageBrowserWindow.displayFileBrowseAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",browseMassStorageBtn.getScene().getWindow(),
+                        "Failed to open Mass Storage Browser");
             }
         });
 

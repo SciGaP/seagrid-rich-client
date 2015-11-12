@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="758.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.storage.controller.MassStorageBrowserController">
+  <children>
+    <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <SplitPane dividerPositions="0.5052910052910053" focusTraversable="true" prefHeight="423.0" prefWidth="758.0" VBox.vgrow="ALWAYS">
+          <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="158.0" prefWidth="313.0">
+              <children>
+                <VBox prefHeight="428.0" prefWidth="375.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                    <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="NEVER">
+                      <children>
+                        <Label alignment="BASELINE_CENTER" text="Local Site">
+                          <font>
+                            <Font size="13.0" fx:id="x2" />
+                          </font>
+                          <HBox.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+                          </HBox.margin>
+                        </Label>
+                        <TextField alignment="BASELINE_CENTER" editable="false" prefWidth="200.0" HBox.hgrow="ALWAYS" HBox.margin="$x1" />
+                      </children>
+                    </HBox>
+                    <TableView fx:id="fbLocalFileTable" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+                      <columns>
+                        <TableColumn editable="true" maxWidth="5000.0" minWidth="100.0" prefWidth="95.0" text="Filename" fx:id="fbLocalFileTblFileName" />
+                        <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="83.0" text="Filesize" fx:id="fbLocalFileTblFileSize" />
+                        <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="95.0" text="Filetype" fx:id="fbLocalFileTblFileType" />
+                        <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="88.0" text="Last Modified" fx:id="fbLocalFileTblLastMod" />
+                      </columns>
+                      <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x4" />
+                      </VBox.margin>
+                    </TableView>
+                  </children>
+                </VBox>
+              </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="456.9998779296875" prefWidth="375.0001220703125">
+              <children>
+                <VBox prefHeight="428.0" prefWidth="375.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                    <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="NEVER">
+                      <children>
+                        <Label alignment="BASELINE_CENTER" font="$x2" text="Remote Site" HBox.margin="$x1" />
+                        <TextField alignment="BASELINE_CENTER" editable="false" prefWidth="-1.0" HBox.hgrow="ALWAYS" HBox.margin="$x1" />
+                      </children>
+                    </HBox>
+                    <TableView fx:id="fbRemoteFileTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                      <columns>
+                        <TableColumn prefWidth="75.0" text="Filename" fx:id="fbRemoteFileTblFileName" />
+                        <TableColumn prefWidth="75.0" text="Filesize" fx:id="fbRemoteFileTblFileSize" />
+                        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="76.0" text="Filetype" fx:id="fbRemoteFileTblFileType" />
+                        <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="138.0" text="Last Modified" fx:id="fbRemoteFileTblLastMod" />
+                      </columns>
+                      <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x4" />
+                      </VBox.margin>
+                    </TableView>
+                  </children>
+                </VBox>
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
