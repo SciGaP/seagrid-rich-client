@@ -128,14 +128,8 @@ public class AiravataManager {
         return project;
     }
 
-    public synchronized ExperimentModel getExperiment(String experimentId) {
-        ExperimentModel experiment = null;
-        try{
-            experiment = getClient().getExperiment(getAuthzToken(),experimentId);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return experiment;
+    public synchronized ExperimentModel getExperiment(String experimentId) throws TException {
+        return getClient().getExperiment(getAuthzToken(),experimentId);
     }
 
     public synchronized ComputeResourceDescription getComputeResource(String resourceId){
@@ -224,5 +218,9 @@ public class AiravataManager {
 
     public void launchExperiment(String experimentId) throws TException {
         getClient().launchExperiment(getAuthzToken(),experimentId, getGatewayId());
+    }
+
+    public void deleteExperiment(String experimentId) throws TException {
+        getClient().deleteExperiment(getAuthzToken(),experimentId);
     }
 }

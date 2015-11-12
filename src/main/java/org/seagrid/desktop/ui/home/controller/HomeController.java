@@ -23,10 +23,14 @@ package org.seagrid.desktop.ui.home.controller;
 
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -35,6 +39,9 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.apache.airavata.model.error.AiravataClientException;
@@ -43,6 +50,7 @@ import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.experiment.create.ExperimentCreateWindow;
@@ -59,10 +67,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.rmi.server.ExportException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /** Controls the home screen */
@@ -182,8 +192,10 @@ public class HomeController {
                             experimentTab.setClosable(true);
                             tabbedPane.getTabs().add(experimentTab);
                             tabbedPane.getSelectionModel().select(experimentTab);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                                    "Cannot open experiment information");
                         }
                     }
                 }
@@ -213,8 +225,10 @@ public class HomeController {
                         experimentTab.setClosable(true);
                         tabbedPane.getTabs().add(experimentTab);
                         tabbedPane.getSelectionModel().select(experimentTab);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                                "Cannot open experiment information");
                     }
                 }
             });
@@ -259,6 +273,92 @@ public class HomeController {
         tabbedPane.getTabs().get(0).setText("Recent Experiments");
         tabbedPane.getTabs().get(0).setClosable(false);
         updateExperimentList(filters,SEAGridContext.getInstance().getMaxRecentExpCount(),0);
+
+        addContextMenuForExperimentSummaryTable();
+    }
+
+    private void addContextMenuForExperimentSummaryTable(){
+        ContextMenu cm = new ContextMenu();
+        MenuItem mi1 = new MenuItem("launch");
+        mi1.setOnAction(event -> {
+            try {
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if (experimentListModel != null) {
+                    AiravataManager.getInstance().launchExperiment(experimentListModel.getId());
+                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                            .EXPERIMENT_LAUNCHED, experimentListModel));
+                }
+            } catch (TException e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene()
+                        .getWindow(), "Experiment launch failed");
+            }
+        });
+        cm.getItems().add(mi1);
+        MenuItem mi2 = new MenuItem("open in new tab");
+        mi2.setOnAction(event -> {
+            try {
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if(experimentListModel != null) {
+                    ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
+                    Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(experimentListModel.getId());
+                    Tab experimentTab = new Tab(experimentListModel.getName(), parentNode);
+                    experimentTab.setClosable(true);
+                    tabbedPane.getTabs().add(experimentTab);
+                    tabbedPane.getSelectionModel().select(experimentTab);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+                        "Cannot open experiment information");
+            }
+        });
+        cm.getItems().add(mi2);
+        MenuItem mi3 = new MenuItem("open in new window");
+        mi3.setOnAction(event -> {
+            try {
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if(experimentListModel != null) {
+                    ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
+                    experimentSummaryWindow.showExperimentSummaryWindow(experimentListModel.getId());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+                        "Cannot open experiment information");
+            }
+        });
+        cm.getItems().add(mi3);
+        MenuItem mi4 = new MenuItem("delete");
+        mi4.setOnAction(event -> {
+            try {
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if (experimentListModel != null) {
+                    AiravataManager.getInstance().deleteExperiment(experimentListModel.getId());
+                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                            .EXPERIMENT_DELETED, experimentListModel));
+                }
+            } catch (TException e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene()
+                        .getWindow(), "Experiment delete failed");
+            }
+        });
+        cm.getItems().add(mi4);
+        expSummaryTable.setContextMenu(cm);
+
+        expSummaryTable.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.SECONDARY){
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if(experimentListModel != null && !experimentListModel.getStatus().equals("CREATED")){
+                    mi1.setDisable(true);
+                    mi4.setDisable(true);
+                }else{
+                    mi1.setDisable(false);
+                    mi4.setDisable(false);
+                }
+            }
+        });
     }
 
     //update the right pane with experiment list
@@ -411,9 +511,31 @@ public class HomeController {
                 observableExperimentList.add(0,experimentListModel);
             }
         } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED)){
-            ExperimentModel experimentModel = (ExperimentModel)event.getPayload();
-            SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentModel.getExperimentName(),
-                    createProjectButton.getScene().getWindow());
+            if (event.getPayload() instanceof ExperimentModel) { // This is coming from create and launch experiment
+                ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
+                SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentModel.getExperimentName(),
+                        createProjectButton.getScene().getWindow());
+            } else if (event.getPayload() instanceof  ExperimentListModel){ // This is coming from experiment list in home
+                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
+                SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentListModel.getName(),
+                        createProjectButton.getScene().getWindow());
+            }
+        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)){
+            if(event.getPayload() instanceof ExperimentListModel){
+                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
+                ExperimentListModel matchingModel = null;
+                for(ExperimentListModel temp : observableExperimentList){
+                    if(experimentListModel.getId().equals(experimentListModel.getId())){
+                        matchingModel = temp;
+                        break;
+                    }
+                }
+                if(matchingModel != null){
+                    observableExperimentList.remove(matchingModel);
+                }
+                SEAGridDialogHelper.showInformationNotification("Success", "Deleted experiment "
+                        + experimentListModel.getName(), createProjectButton.getScene().getWindow());
+            }
         }
     }
 

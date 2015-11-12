@@ -20,6 +20,7 @@
 */
 package org.seagrid.desktop.ui.home.model;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -32,6 +33,8 @@ import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,7 @@ public class ExperimentListModel {
     private static final double EXPERIMENT_LIST_UPDATE_INTERVAL = 10000;
 
     private StringProperty id;
+    private StringProperty projectId;
     private BooleanProperty checked;
     private StringProperty name;
     private StringProperty application;
@@ -49,11 +53,12 @@ public class ExperimentListModel {
     private StringProperty status;
     private ObjectProperty<LocalDateTime> createdTime;
 
-    private Timeline expListStatusUpdateTimeline = null;
+    private Timeline expStatusUpdateTimer = null;
 
-    public ExperimentListModel(StringProperty id, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
+    public ExperimentListModel(StringProperty id, StringProperty projectId, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
                                StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
         this.id = id;
+        this.projectId = projectId;
         this.checked = checked;
         this.name = name;
         this.application = application;
@@ -65,6 +70,7 @@ public class ExperimentListModel {
     public ExperimentListModel(){
         this.checked = new SimpleBooleanProperty(false);
         this.id = new SimpleStringProperty("test-id");
+        this.projectId = new SimpleStringProperty("test-proj-id");
         this.name = new SimpleStringProperty("test-name");
         this.application = new SimpleStringProperty("test-application");
         this.host = new SimpleStringProperty("test-host");
@@ -74,6 +80,7 @@ public class ExperimentListModel {
 
     public ExperimentListModel(ExperimentSummaryModel experimentSummaryModel){
         this.id = new SimpleStringProperty(experimentSummaryModel.getExperimentId());
+        this.projectId = new SimpleStringProperty(experimentSummaryModel.getProjectId());
         this.checked = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(experimentSummaryModel.getName());
         if(experimentSummaryModel.getResourceHostId()!=null){
@@ -104,13 +111,14 @@ public class ExperimentListModel {
 
         //TODO this should replace with a RabbitMQ Listener
         if(!(status.equals("FAILED") || getStatus().equals("COMPLETED") || getStatus().equals("CANCELLED"))) {
-            expListStatusUpdateTimeline = new Timeline(new KeyFrame(
+            expStatusUpdateTimer = new Timeline(new KeyFrame(
                     Duration.millis(EXPERIMENT_LIST_UPDATE_INTERVAL),
                     ae -> updateExperimentStatuses()));
-            expListStatusUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
-            expListStatusUpdateTimeline.play();
+            expStatusUpdateTimer.setCycleCount(Timeline.INDEFINITE);
+            expStatusUpdateTimer.play();
         }
 
+        SEAGridEventBus.getInstance().register(this);
     }
 
     public String getId() {
@@ -123,6 +131,18 @@ public class ExperimentListModel {
 
     public void setId(String id) {
         this.id.set(id);
+    }
+
+    public String getProjectId() {
+        return projectId.get();
+    }
+
+    public StringProperty projectIdProperty() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId.set(projectId);
     }
 
     public boolean getChecked() {
@@ -197,9 +217,21 @@ public class ExperimentListModel {
         this.createdTime.set(createdTime);
     }
 
+    @SuppressWarnings("unuseed")
+    @Subscribe
+    private void listenSEAGridEvents(SEAGridEvent event){
+        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)){
+            if(event.getPayload() instanceof ExperimentListModel){
+                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
+                if(this.getId().equals(experimentListModel.getId()) && this.expStatusUpdateTimer != null){
+                    this.expStatusUpdateTimer.stop();
+                }
+            }
+        }
+    }
 
     //updates the experiment status in the background
-    public void updateExperimentStatuses(){
+    private void updateExperimentStatuses(){
         if(!(status.equals("FAILED") || getStatus().equals("COMPLETED") || getStatus().equals("CANCELLED"))) {
             Platform.runLater(() -> {
                 String experimentId = id.getValue();
@@ -207,12 +239,14 @@ public class ExperimentListModel {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     this.setStatus(experimentModel.getExperimentStatus().getState().toString());
                     logger.debug("Updated Experiment Status for :" + experimentId);
-                } catch (AiravataClientException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    if(this.expStatusUpdateTimer != null)
+                        expStatusUpdateTimer.stop();
                 }
             });
         }else{
-            expListStatusUpdateTimeline.stop();
+            expStatusUpdateTimer.stop();
         }
     }
 }

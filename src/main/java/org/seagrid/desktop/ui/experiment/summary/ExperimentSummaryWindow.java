@@ -25,6 +25,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +44,24 @@ public class ExperimentSummaryWindow extends Application {
         primaryStage.show();
     }
 
-    public Parent getExperimentInfoNode(String experimentId) throws IOException {
+    public Parent getExperimentInfoNode(String experimentId) throws IOException, TException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
                 "/views/experiment/summary/experiment-summary.fxml"));
         Parent node = loader.load();
         ExperimentSummaryController controller = loader.getController();
         controller.initExperimentInfo(experimentId);
         return node;
+    }
+
+    public void showExperimentSummaryWindow(String experimentId) throws IOException, TException {
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/views/experiment/summary/experiment-summary.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Experiment Summary");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentSummaryController controller = loader.getController();
+        controller.initExperimentInfo(experimentId);
+        primaryStage.show();
     }
 }

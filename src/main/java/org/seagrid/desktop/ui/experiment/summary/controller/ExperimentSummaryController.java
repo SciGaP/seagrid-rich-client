@@ -35,7 +35,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Modality;
 import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
@@ -45,8 +44,7 @@ import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
-import org.controlsfx.dialog.ExceptionDialog;
-import org.controlsfx.dialog.ProgressDialog;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.file.FileDownloadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
@@ -131,70 +129,66 @@ public class ExperimentSummaryController {
     @FXML
     private GridPane experimentInfoGridPane;
 
-    private Timeline expListUpdateTimeline = null;
+    private Timeline expInfpUpdateTimer = null;
 
-    public void initExperimentInfo(String experimentId){
-        try {
-            ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
-            if(experimentModel != null){
-                experimentIdLabel.setText(experimentModel.getExperimentId());
-                experimentNameLabel.setText(experimentModel.getExperimentName());
-                experimentDescField.setText(experimentModel.getDescription());
-                if(experimentModel.getProjectId() != null){
-                    Project project = AiravataManager.getInstance().getProject(experimentModel.getProjectId());
-                    if(project != null){
-                        experimentProjectLabel.setText(project.getName());
-                    }
-                }
-                if(experimentModel.getExecutionId() != null){
-                    ApplicationInterfaceDescription app = AiravataManager.getInstance().getApplicationInterface(
-                            experimentModel.getExecutionId());
-                    if(app != null){
-                        experimentApplicationLabel.setText(app.getApplicationName());
-                    }
-                }
-                if(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId() != null){
-                    ComputeResourceDescription computeResourceDescription = AiravataManager.getInstance().getComputeResource(
-                            experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()
-                    );
-                    if(computeResourceDescription != null){
-                        experimentCRLabel.setText(computeResourceDescription.getHostName());
-                    }
-                }
-                showStatus(experimentModel);
-                experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
-                        .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
-                experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
-                                .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
-                experimentEnableAutoSchedLabel.setText("true");
-                experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
-                        .getComputationalResourceScheduling().getWallTimeLimit()+"");
-                experimentCPUCountLabel.setText(experimentModel.getUserConfigurationData()
-                        .getComputationalResourceScheduling().getTotalCPUCount()+"");
-                experimentQueueLabel.setText(experimentModel.getUserConfigurationData()
-                        .getComputationalResourceScheduling().getQueueName());
-                experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
-                        .getComputationalResourceScheduling().getNodeCount()+"");
-
-                showExperimentInputs(experimentModel);
-                updateButtonOptions(experimentModel);
-                if((experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
-                        || experimentStatusLabel.getText().equals("CANCELLED"))) {
-                    showExperimentOutputs(experimentModel);
+    public void initExperimentInfo(String experimentId) throws TException{
+        ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+        if(experimentModel != null){
+            experimentIdLabel.setText(experimentModel.getExperimentId());
+            experimentNameLabel.setText(experimentModel.getExperimentName());
+            experimentDescField.setText(experimentModel.getDescription());
+            if(experimentModel.getProjectId() != null){
+                Project project = AiravataManager.getInstance().getProject(experimentModel.getProjectId());
+                if(project != null){
+                    experimentProjectLabel.setText(project.getName());
                 }
             }
+            if(experimentModel.getExecutionId() != null){
+                ApplicationInterfaceDescription app = AiravataManager.getInstance().getApplicationInterface(
+                        experimentModel.getExecutionId());
+                if(app != null){
+                    experimentApplicationLabel.setText(app.getApplicationName());
+                }
+            }
+            if(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId() != null){
+                ComputeResourceDescription computeResourceDescription = AiravataManager.getInstance().getComputeResource(
+                        experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()
+                );
+                if(computeResourceDescription != null){
+                    experimentCRLabel.setText(computeResourceDescription.getHostName());
+                }
+            }
+            showStatus(experimentModel);
+            experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
+                    .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
+            experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
+                            .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
+            experimentEnableAutoSchedLabel.setText("true");
+            experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
+                    .getComputationalResourceScheduling().getWallTimeLimit()+"");
+            experimentCPUCountLabel.setText(experimentModel.getUserConfigurationData()
+                    .getComputationalResourceScheduling().getTotalCPUCount()+"");
+            experimentQueueLabel.setText(experimentModel.getUserConfigurationData()
+                    .getComputationalResourceScheduling().getQueueName());
+            experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
+                    .getComputationalResourceScheduling().getNodeCount()+"");
 
-            //TODO this should replace with a RabbitMQ Listener
-            if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+            showExperimentInputs(experimentModel);
+            updateButtonOptions(experimentModel);
+            if((experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
                     || experimentStatusLabel.getText().equals("CANCELLED"))) {
-                expListUpdateTimeline = new Timeline(new KeyFrame(
-                        Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
-                        ae -> updateExperimentInfo()));
-                expListUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
-                expListUpdateTimeline.play();
+                showExperimentOutputs(experimentModel);
             }
-        } catch (AiravataClientException e) {
-            e.printStackTrace();
+        }
+
+        //TODO this should replace with a RabbitMQ Listener
+        if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+                || experimentStatusLabel.getText().equals("CANCELLED"))) {
+            expInfpUpdateTimer = new Timeline(new KeyFrame(
+                    Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
+                    ae -> updateExperimentInfo()));
+            expInfpUpdateTimer.setCycleCount(Timeline.INDEFINITE);
+            expInfpUpdateTimer.play();
         }
     }
 
@@ -211,15 +205,17 @@ public class ExperimentSummaryController {
                     String expState = experimentModel.getExperimentStatus().getState().toString();
                     if(expState.equals("FAILED") || expState.equals("COMPLETED") || expState.equals("CANCELLED")){
                         showExperimentOutputs(experimentModel);
-                        expListUpdateTimeline.stop();
+                        expInfpUpdateTimer.stop();
                     }
                     logger.debug("Updated Experiment :" + experimentId);
-                } catch (AiravataClientException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    if(this.expInfpUpdateTimer != null)
+                        this.expInfpUpdateTimer.stop();
                 }
             });
         }else{
-            expListUpdateTimeline.stop();
+            expInfpUpdateTimer.stop();
         }
     }
 
