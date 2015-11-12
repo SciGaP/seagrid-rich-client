@@ -129,10 +129,7 @@ public class OAuthClient {
 
                     public boolean verify(String hostname,
                                           javax.net.ssl.SSLSession sslSession) {
-                        if (hostname.equals("localhost")) {
-                            return true;
-                        }
-                        return false;
+                        return hostname.equals("localhost");
                     }
                 });
 

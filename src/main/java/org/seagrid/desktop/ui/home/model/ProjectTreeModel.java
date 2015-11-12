@@ -51,23 +51,23 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleSEAGridEvents(SEAGridEvent event) {
-        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
-            ExperimentModel experiment = (ExperimentModel)event.getPayload();
-            if(!isFirstTimeChildren && (((getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT))
-                                    && getValue().getItemId().equals(experiment.getProjectId())) || (getValue().getItemType()
+        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)) {
+            ExperimentModel experiment = (ExperimentModel) event.getPayload();
+            if (!isFirstTimeChildren && (((getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT))
+                    && getValue().getItemId().equals(experiment.getProjectId())) || (getValue().getItemType()
                     .equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)))) {
                 getChildren().add(0, new TreeItem<>(new TreeModel(TreeModel.ITEM_TYPE.EXPERIMENT, experiment.getExperimentId(),
                         experiment.getExperimentName())));
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)){
-            if(event.getPayload() instanceof ExperimentListModel){
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
+            if (event.getPayload() instanceof ExperimentListModel) {
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
-                if(!isFirstTimeChildren && (((getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT))
+                if (!isFirstTimeChildren && (((getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT))
                         && getValue().getItemId().equals(experimentListModel.getProjectId())) || (getValue().getItemType()
                         .equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)))) {
                     TreeItem matchingTreeItem = null;
-                    for(TreeItem<TreeModel> temp : getChildren()){
-                        if(temp.getValue().getItemId().equals(experimentListModel.getId())){
+                    for (TreeItem<TreeModel> temp : getChildren()) {
+                        if (temp.getValue().getItemId().equals(experimentListModel.getId())) {
                             matchingTreeItem = temp;
                             break;
                         }
@@ -90,10 +90,10 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
             ObservableList<TreeItem<TreeModel>> expChildren = FXCollections.observableArrayList();
             List<ExperimentSummaryModel> experiments = new ArrayList<>();
             try {
-                if(getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)){
+                if (getValue().getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)) {
                     experiments = AiravataManager.getInstance()
                             .getExperimentSummariesInProject(this.getValue().getItemId());
-                }else if(getValue().getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)){
+                } else if (getValue().getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)) {
                     experiments = AiravataManager.getInstance().getRecentExperimentSummaries(SEAGridContext
                             .getInstance().getMaxRecentExpCount());
                 }

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class TreeModel extends TreeItem {
     private final static Logger logger = LoggerFactory.getLogger(TreeModel.class);
 
-    public static enum ITEM_TYPE {
+    public enum ITEM_TYPE {
         PROJECT_ROOT_NODE, PROJECT, RECENT_EXPERIMENTS, EXPERIMENT
     }
 

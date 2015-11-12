@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class SEAGridEvent {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridEvent.class);
 
-    public static enum SEAGridEventType{
+    public enum SEAGridEventType{
         EXPERIMENT_CREATED, FILE_DOWNLOADED, EXPERIMENT_LAUNCHED, EXPERIMENT_DELETED, PROJECT_CREATED
     }
 

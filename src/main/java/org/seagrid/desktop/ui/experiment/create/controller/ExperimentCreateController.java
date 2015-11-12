@@ -165,9 +165,9 @@ public class ExperimentCreateController {
                     expCreateNodeCountField.setText(oldValue);
                 }
             });
-            expCreateNodeCountField.textProperty().addListener((observable, oldValue, newValue) -> {
+            expCreateTotalCoreCountField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.matches("\\d*")) {
-                    expCreateNodeCountField.setText(oldValue);
+                    expCreateTotalCoreCountField.setText(oldValue);
                 }
             });
             expCreateWallTimeField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -316,7 +316,7 @@ public class ExperimentCreateController {
                     Button filePickBtn = new Button("Select File");
                     hBox.getChildren().add(0, filePickBtn);
                     expCreateInputsGridPane.add(hBox, 1, index);
-                    int filePickBtnRowIndex = expCreateInputsGridPane.getRowIndex(hBox);
+                    int filePickBtnRowIndex = GridPane.getRowIndex(hBox);
                     filePickBtn.setOnAction(event -> {
                         File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
                         if (selectedFile != null) {
