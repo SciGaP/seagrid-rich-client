@@ -29,7 +29,7 @@ public class AiravataManager {
 
     private AiravataManager() throws AiravataClientException {
         String host = "gw56.iu.xsede.org";
-        int port = 8930;
+        int port = 10930;
         try {
 
             TTransport transport = new TSocket(host, port);
@@ -220,5 +220,9 @@ public class AiravataManager {
 
     public String createExperiment(ExperimentModel experimentModel) throws TException {
         return getClient().createExperiment(getAuthzToken(), getGatewayId(), experimentModel);
+    }
+
+    public void launchExperiment(String experimentId) throws TException {
+        getClient().launchExperiment(getAuthzToken(),experimentId, getGatewayId());
     }
 }

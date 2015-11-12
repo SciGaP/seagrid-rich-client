@@ -410,6 +410,10 @@ public class HomeController {
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experiment.getProjectId())) {
                 observableExperimentList.add(0,experimentListModel);
             }
+        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED)){
+            ExperimentModel experimentModel = (ExperimentModel)event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentModel.getExperimentName(),
+                    createProjectButton.getScene().getWindow());
         }
     }
 

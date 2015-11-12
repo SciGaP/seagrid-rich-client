@@ -24,6 +24,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -181,12 +182,11 @@ public class ExperimentCreateController {
             });
 
             expSaveButton.setOnAction(event -> {
-                createExperiment();
+                createExperiment(false);
             });
 
-            //Todo
             expSaveLaunchButton.setOnAction(event -> {
-                createExperiment();
+                createExperiment(true);
             });
 
         }catch (Exception e){
@@ -312,11 +312,15 @@ public class ExperimentCreateController {
                     expCreateInputsGridPane.add(floatField, 1, index);
                 }else if(inputDataObjectType.getType().equals(DataType.URI)){
                     expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                    HBox hBox = new HBox();
                     Button filePickBtn = new Button("Select File");
+                    hBox.getChildren().add(0, filePickBtn);
+                    expCreateInputsGridPane.add(hBox, 1, index);
+                    int filePickBtnRowIndex = expCreateInputsGridPane.getRowIndex(hBox);
                     filePickBtn.setOnAction(event -> {
                         File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
                         if (selectedFile != null) {
-                            HBox hBox = new HBox();
+                            hBox.getChildren().clear();
                             Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
                             hyperlink.setOnAction(hyperLinkEvent -> {
                                 //TODO File Click Event
@@ -324,12 +328,10 @@ public class ExperimentCreateController {
                             hBox.getChildren().add(0, hyperlink);
                             filePickBtn.setText("Select Different File");
                             hBox.getChildren().add(1, filePickBtn);
-                            int filePickBtnRowIndex = expCreateInputsGridPane.getRowIndex(filePickBtn);
                             expCreateInputsGridPane.add(hBox, 1, filePickBtnRowIndex);
                             experimentInputs.put(inputDataObjectType, selectedFile);
                         }
                     });
-                    expCreateInputsGridPane.add(filePickBtn, 1, index);
                 }
                 //maintaining the grid pane row height
                 expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
@@ -338,7 +340,7 @@ public class ExperimentCreateController {
         }
     }
 
-    private void createExperiment(){
+    private void createExperiment(boolean launch){
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String remoteDataDir = "/var/www/portal/experimentData/" + UUID.randomUUID().toString() + "/";
@@ -354,23 +356,34 @@ public class ExperimentCreateController {
             if(uploadFiles.size() > 0){
                 Service fileUploadService = getFileUploadService(uploadFiles);
                 fileUploadService.setOnSucceeded(event -> {
-                    createExperiment(experimentModel);
+                    createExperiment(experimentModel, launch);
                 });
                 fileUploadService.start();
             }else{
-                createExperiment();
+                createExperiment(experimentModel, launch);
             }
         }
     }
 
-    private void createExperiment(ExperimentModel experimentModel){
+    private void createExperiment(ExperimentModel experimentModel, boolean launch){
         try {
             String expId = AiravataManager.getInstance().createExperiment(experimentModel);
             experimentModel.setExperimentId(expId);
-            Stage stage = (Stage) expSaveButton.getScene().getWindow();
-            stage.close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
                     ,experimentModel));
+            if(launch){
+                try {
+                    AiravataManager.getInstance().launchExperiment(experimentModel.getExperimentId());
+                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED
+                            ,experimentModel));
+                }catch (TException e){
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveLaunchButton.getScene().getWindow(),
+                            "Experiment launch failed !");
+                }
+            }
+            Stage stage = (Stage) expSaveButton.getScene().getWindow();
+            stage.close();
         } catch (TException e) {
             e.printStackTrace();
             SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
