@@ -25,7 +25,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.seagrid.desktop.util.SEAGridConfig;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class LoginController {
             String username = usernameField.getText();
             String password = passwordField.getText();
             if(handleLogin(username, password)){
-                SEAGridContext.getInstance().setProperty(SEAGridConfig.AUTHENTICATED,"true");
+                SEAGridContext.getInstance().setAuthenticated(true);
                 Stage stage = (Stage) loginButton.getScene().getWindow();
                 stage.close();
             }

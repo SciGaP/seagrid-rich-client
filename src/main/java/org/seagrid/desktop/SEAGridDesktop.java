@@ -27,7 +27,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.seagrid.desktop.ui.home.HomeWindow;
 import org.seagrid.desktop.ui.login.LoginWindow;
-import org.seagrid.desktop.util.SEAGridConfig;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,8 @@ public class SEAGridDesktop extends Application{
     public void start(Stage primaryStage) throws Exception {
         LoginWindow loginWindow =  new LoginWindow();
         loginWindow.displayLoginAndWait();
-        String isAuthenticated = SEAGridContext.getInstance().getProperty(SEAGridConfig.AUTHENTICATED);
-        if(isAuthenticated!=null && isAuthenticated.equalsIgnoreCase("true")){
+        boolean isAuthenticated = SEAGridContext.getInstance().getAuthenticated();
+        if(isAuthenticated){
             HomeWindow homeWindow =  new HomeWindow();
             Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();

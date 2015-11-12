@@ -34,6 +34,8 @@ public class SEAGridContext {
 
     private static SEAGridContext instance;
 
+    private boolean authenticated = false;
+
     private SEAGridContext(){}
 
     public static SEAGridContext getInstance(){
@@ -64,4 +66,8 @@ public class SEAGridContext {
     public int getMaxRecentExpCount(){ return 20; }
 
     public String getRecentExperimentsDummyId(){ return "$$$$$$"; }
+
+    public void setAuthenticated(boolean authenticated) { this.authenticated = authenticated; }
+
+    public boolean getAuthenticated() { return this.authenticated; }
 }

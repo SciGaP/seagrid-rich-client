@@ -25,6 +25,4 @@ import org.slf4j.LoggerFactory;
 
 public class SEAGridConfig {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
-
-    public static final String AUTHENTICATED = "seagrid.authenticated";
 }
