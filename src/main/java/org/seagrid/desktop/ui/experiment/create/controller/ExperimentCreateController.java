@@ -316,7 +316,6 @@ public class ExperimentCreateController {
                     Button filePickBtn = new Button("Select File");
                     hBox.getChildren().add(0, filePickBtn);
                     expCreateInputsGridPane.add(hBox, 1, index);
-                    int filePickBtnRowIndex = GridPane.getRowIndex(hBox);
                     filePickBtn.setOnAction(event -> {
                         File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
                         if (selectedFile != null) {
@@ -328,7 +327,6 @@ public class ExperimentCreateController {
                             hBox.getChildren().add(0, hyperlink);
                             filePickBtn.setText("Select Different File");
                             hBox.getChildren().add(1, filePickBtn);
-                            expCreateInputsGridPane.add(hBox, 1, filePickBtnRowIndex);
                             experimentInputs.put(inputDataObjectType, selectedFile);
                         }
                     });
