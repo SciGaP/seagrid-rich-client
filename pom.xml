@@ -5,16 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.seagrid</groupId>
-    <artifactId>desktop</artifactId>
-    <name>SEAGrid Desktop Client</name>
+    <artifactId>seagrid-app</artifactId>
+    <name>SEAGrid Rich Client</name>
     <organization>
-        <name>SciGaP</name>
+        <name>Indiana University</name>
     </organization>
 
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.6.1</slf4j.version>
         <airavata.version>0.16-SNAPSHOT</airavata.version>
     </properties>
@@ -33,39 +34,30 @@
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>1.2</version>
+                <version>8.1.5</version>
                 <configuration>
-
-                    <!-- executable JAR file wso2is built by default (not optional at this stage) -->
-                    <mainClass>com.zenjava.examples.hellojfxmaven.HelloJavaFxAndMavenApp</mainClass>
-
-                    <!-- optionally override settings (such as jar file name, html file, etc) -->
-                    <jarFileName>my-example-app.jar</jarFileName>
-
-                    <!-- optionally sign the jar file if security wso2is needed -->
-                    <!--
-                        to create keystore use command line:
-                            keytool -genkey -alias example-user -keystore keystore.jks
-                    -->
-                    <signJar>
-                        <alias>example-user</alias>
-                        <storePassword>example-password</storePassword>
-                    </signJar>
-
-                    <!-- optionally build webstart bundle -->
-                    <webstart>
-                        <requiresAllPermissions>true</requiresAllPermissions>
-                    </webstart>
-
-                    <!-- optionally build native installers -->
-                    <nativeInstallers/>
-
+                    <mainClass>org.seagrid.desktop.SEAGridClient</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <!-- required before build-web -->
+                        <id>create-jfxjar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-native</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-native</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-
         </plugins>
     </build>
-
 
     <dependencies>
 
