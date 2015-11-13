@@ -21,55 +21,51 @@
 package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.Map;
 
 
-public class UIBulkUIFileUploadTask extends UIFileTask {
-    private final static Logger logger = LoggerFactory.getLogger(UIBulkUIFileUploadTask.class);
+public class GuiFileUploadTask extends GuiFileTask {
+    private final static Logger logger = LoggerFactory.getLogger(GuiFileUploadTask.class);
 
-    private Map<String, File> uploadFiles;
+    private String remoteFilePath, localFilePath;
 
-    public UIBulkUIFileUploadTask(Map<String, File> uploadFiles) throws JSchException {
+    public GuiFileUploadTask(String remoteFilePath, String localFilePath) throws JSchException {
         super();
-        this.uploadFiles = uploadFiles;
+        this.remoteFilePath = remoteFilePath;
+        this.localFilePath = localFilePath;
     }
 
     @Override
     protected Boolean call() throws Exception {
-        return uploadFiles(this.uploadFiles);
+        return uploadFile(remoteFilePath, localFilePath);
     }
 
-    public boolean uploadFiles(Map<String, File> uploadFiles) throws IOException, SftpException {
-        int numberOfFiles = uploadFiles.size();
-        int index = 1;
-        for(String remoteFilePath : uploadFiles.keySet()){
-            createRemoteParentDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
-            OutputStream remoteOutputStream = new BufferedOutputStream(channelSftp.put(remoteFilePath));
-            File localFile = uploadFiles.get(remoteFilePath);
-            InputStream localInputStream = new FileInputStream(localFile);
-            long fileSize = localFile.length();
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
-            int totalBytesRead = 0;
-            double percentCompleted = 0;
+    public Boolean uploadFile(String remoteFilePath, String localFilePath) throws IOException, SftpException {
+        createRemoteParentDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
+        OutputStream remoteOutputStream = new BufferedOutputStream(channelSftp.put(remoteFilePath));
+        File localFile = new File(localFilePath);
+        InputStream localInputStream = new FileInputStream(localFile);
+        long fileSize = localFile.length();
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+        int totalBytesRead = 0;
+        double percentCompleted = 0;
 
-            while ((bytesRead = localInputStream.read(buffer)) != -1) {
-                remoteOutputStream.write(buffer, 0, bytesRead);
-                totalBytesRead += bytesRead;
-                percentCompleted = ((double)totalBytesRead) / fileSize * index / numberOfFiles;
-                updateProgress(percentCompleted, 1);
-            }
-
-            remoteOutputStream.close();
-            localInputStream.close();
-            index++;
+        while ((bytesRead = localInputStream.read(buffer)) != -1) {
+            remoteOutputStream.write(buffer, 0, bytesRead);
+            totalBytesRead += bytesRead;
+            percentCompleted = ((double)totalBytesRead) / fileSize;
+            updateProgress(percentCompleted, 1);
         }
+
+        remoteOutputStream.close();
+        localInputStream.close();
         return true;
     }
 

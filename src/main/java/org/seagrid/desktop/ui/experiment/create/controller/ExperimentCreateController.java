@@ -43,7 +43,7 @@ import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.storage.UIBulkUIFileUploadTask;
+import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -491,7 +491,7 @@ public class ExperimentCreateController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new UIBulkUIFileUploadTask(uploadFiles);
+                    return new GuiBulkFileUploadTask(uploadFiles);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateInputsGridPane.getScene().getWindow(),

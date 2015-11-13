@@ -489,6 +489,10 @@ public class HomeController {
             String localFilePath = (String)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
                     +" was downloaded successfully", createProjectButton.getScene().getWindow());
+        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_UPLOADED)){
+            String localFilePath = (String)event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
+                    +" was uploaded successfully", createProjectButton.getScene().getWindow());
         } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
             ExperimentModel experiment = (ExperimentModel) event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success","Experiment " +

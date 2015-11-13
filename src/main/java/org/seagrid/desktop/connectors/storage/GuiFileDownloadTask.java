@@ -29,12 +29,12 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 
 
-public class UIFileDownloadTask extends UIFileTask {
-    private final static Logger logger = LoggerFactory.getLogger(UIFileDownloadTask.class);
+public class GuiFileDownloadTask extends GuiFileTask {
+    private final static Logger logger = LoggerFactory.getLogger(GuiFileDownloadTask.class);
 
     private String remoteFilePath, localFilePath;
 
-    public UIFileDownloadTask(String remoteFilePath, String localFilePath) throws JSchException {
+    public GuiFileDownloadTask(String remoteFilePath, String localFilePath) throws JSchException {
         super();
         this.remoteFilePath = remoteFilePath;
         this.localFilePath = localFilePath;

@@ -20,31 +20,32 @@
 */
 package org.seagrid.desktop.connectors.storage;
 
-import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.*;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
 
+public abstract class GuiFileTask extends Task<Boolean> {
+    private final static Logger logger = LoggerFactory.getLogger(GuiFileTask.class);
 
-public class UIUIFileUploadTask extends UIFileTask {
-    private final static Logger logger = LoggerFactory.getLogger(UIUIFileUploadTask.class);
+    protected static final int BUFFER_SIZE = 4096;
 
-    private String remoteFilePath, localFilePath;
+    protected Session session = null;
+    protected Channel channel = null;
+    protected ChannelSftp channelSftp = null;
 
-    public UIUIFileUploadTask(String remoteFilePath, String localFilePath) throws JSchException {
-        super();
-        this.remoteFilePath = remoteFilePath;
-        this.localFilePath = localFilePath;
+    public GuiFileTask() throws JSchException {
+        JSch jsch = new JSch();
+        session = jsch.getSession("supun", "gw75.iu.xsede.org", 9000);
+        session.setPassword("password");
+        java.util.Properties config = new java.util.Properties();
+        config.put("StrictHostKeyChecking", "no");
+        session.setConfig(config);
+        session.connect();
+        channel = session.openChannel("sftp");
+        channel.connect();
+        channelSftp = (ChannelSftp) channel;
     }
 
-    @Override
-    protected Boolean call() throws Exception {
-        return uploadFile(remoteFilePath, localFilePath);
-    }
-
-    //TODO
-    public Boolean uploadFile(String remoteFilePath, String localFilePath) throws IOException {
-        return false;
-    }
 }

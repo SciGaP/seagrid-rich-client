@@ -27,7 +27,7 @@ public class SEAGridEvent {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridEvent.class);
 
     public enum SEAGridEventType{
-        EXPERIMENT_CREATED, FILE_DOWNLOADED, EXPERIMENT_LAUNCHED, EXPERIMENT_DELETED, PROJECT_CREATED
+        EXPERIMENT_CREATED, FILE_DOWNLOADED, EXPERIMENT_LAUNCHED, EXPERIMENT_DELETED, FILE_UPLOADED, PROJECT_CREATED
     }
 
     private SEAGridEventType eventType;
