@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.connectors.file;
+package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.*;
 import javafx.concurrent.Task;
@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public abstract class FileTask extends Task<Boolean> {
-    private final static Logger logger = LoggerFactory.getLogger(FileTask.class);
+public abstract class UIFileTask extends Task<Boolean> {
+    private final static Logger logger = LoggerFactory.getLogger(UIFileTask.class);
 
     protected static final int BUFFER_SIZE = 4096;
 
@@ -35,7 +35,7 @@ public abstract class FileTask extends Task<Boolean> {
     protected Channel channel = null;
     protected ChannelSftp channelSftp = null;
 
-    public FileTask() throws JSchException {
+    public UIFileTask() throws JSchException {
         JSch jsch = new JSch();
         session = jsch.getSession("supun", "gw75.iu.xsede.org", 9000);
         session.setPassword("password");

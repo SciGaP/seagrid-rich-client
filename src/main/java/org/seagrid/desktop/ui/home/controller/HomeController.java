@@ -168,11 +168,11 @@ public class HomeController {
                         setText(item.getDisplayName());
                         if(item.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
                             Node experimentIcon = new ImageView(new Image(HomeController.class
-                                    .getResourceAsStream("/images/experiment.png")));
+                                    .getResourceAsStream("/images/file.png")));
                             setGraphic(experimentIcon);
                         }else{
                             Node projectIcon = new ImageView(new Image(HomeController.class
-                                    .getResourceAsStream("/images/project.png")));
+                                    .getResourceAsStream("/images/folder.png")));
                             setGraphic(projectIcon);
                         }
                     }

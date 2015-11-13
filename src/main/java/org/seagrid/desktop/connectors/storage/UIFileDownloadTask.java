@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.connectors.file;
+package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpATTRS;
@@ -29,12 +29,12 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 
 
-public class FileDownloadTask extends FileTask {
-    private final static Logger logger = LoggerFactory.getLogger(FileDownloadTask.class);
+public class UIFileDownloadTask extends UIFileTask {
+    private final static Logger logger = LoggerFactory.getLogger(UIFileDownloadTask.class);
 
     private String remoteFilePath, localFilePath;
 
-    public FileDownloadTask(String remoteFilePath, String localFilePath) throws JSchException {
+    public UIFileDownloadTask(String remoteFilePath, String localFilePath) throws JSchException {
         super();
         this.remoteFilePath = remoteFilePath;
         this.localFilePath = localFilePath;

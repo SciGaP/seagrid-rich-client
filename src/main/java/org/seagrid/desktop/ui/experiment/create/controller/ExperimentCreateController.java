@@ -24,7 +24,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -44,7 +43,7 @@ import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.file.BulkFileUploadTask;
+import org.seagrid.desktop.connectors.storage.UIBulkUIFileUploadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -492,7 +491,7 @@ public class ExperimentCreateController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new BulkFileUploadTask(uploadFiles);
+                    return new UIBulkUIFileUploadTask(uploadFiles);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateInputsGridPane.getScene().getWindow(),

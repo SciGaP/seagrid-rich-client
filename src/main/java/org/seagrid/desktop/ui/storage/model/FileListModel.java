@@ -23,23 +23,34 @@ package org.seagrid.desktop.ui.storage.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileListModel {
+import java.io.Serializable;
+
+public class FileListModel implements Serializable{
     private final static Logger logger = LoggerFactory.getLogger(FileListModel.class);
 
     public static enum FileListModelType{
         FILE, DIR, PARENT_DIR
     }
 
+    public static enum FileLocation{
+        REMOTE, LOCAL
+    }
+
     private String fileName;
     private FileListModelType fileListModelType;
+    private FileLocation fileLocation;
     private long size;
     private long lastModifiedTime;
+    private String filePath;
 
-    public FileListModel(String fileName, FileListModelType fileListModelType, long size, long lastModifiedTime) {
+    public FileListModel(String fileName, FileListModelType fileListModelType, long size, long lastModifiedTime, FileLocation
+                         fileLocation, String filePath) {
         this.fileName = fileName;
         this.fileListModelType = fileListModelType;
         this.size = size;
         this.lastModifiedTime = lastModifiedTime;
+        this.fileLocation = fileLocation;
+        this.filePath = filePath;
     }
 
     public String getFileName() {
@@ -72,5 +83,21 @@ public class FileListModel {
 
     public void setLastModifiedTime(long lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public FileLocation getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setFileLocation(FileLocation fileLocation) {
+        this.fileLocation = fileLocation;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

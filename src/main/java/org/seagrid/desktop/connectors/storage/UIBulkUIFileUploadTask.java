@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.connectors.file;
+package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
@@ -30,12 +30,12 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 
-public class BulkFileUploadTask extends FileTask {
-    private final static Logger logger = LoggerFactory.getLogger(BulkFileUploadTask.class);
+public class UIBulkUIFileUploadTask extends UIFileTask {
+    private final static Logger logger = LoggerFactory.getLogger(UIBulkUIFileUploadTask.class);
 
     private Map<String, File> uploadFiles;
 
-    public BulkFileUploadTask(Map<String,File> uploadFiles) throws JSchException {
+    public UIBulkUIFileUploadTask(Map<String, File> uploadFiles) throws JSchException {
         super();
         this.uploadFiles = uploadFiles;
     }

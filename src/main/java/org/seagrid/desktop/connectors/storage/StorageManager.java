@@ -1,0 +1,73 @@
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/
+package org.seagrid.desktop.connectors.storage;
+
+import com.jcraft.jsch.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+public class StorageManager {
+    private final static Logger logger = LoggerFactory.getLogger(StorageManager.class);
+
+    private static StorageManager instance;
+
+    private Session session = null;
+    private Channel channel = null;
+    private ChannelSftp channelSftp = null;
+
+    private StorageManager() throws JSchException {
+        connect();
+    }
+
+    private void connect() throws JSchException {
+        JSch jsch = new JSch();
+        session = jsch.getSession("supun", "gw75.iu.xsede.org", 9000);
+        session.setPassword("password");
+        java.util.Properties config = new java.util.Properties();
+        config.put("StrictHostKeyChecking", "no");
+        session.setConfig(config);
+        session.connect();
+        channel = session.openChannel("sftp");
+        channel.connect();
+        channelSftp = (ChannelSftp) channel;
+    }
+
+    public static StorageManager getInstance() throws JSchException {
+        if(instance==null){
+            instance = new StorageManager();
+        }
+        return instance;
+    }
+
+    public Vector<ChannelSftp.LsEntry> getDirectoryListing(String path) throws SftpException, JSchException {
+        //channel may get timeout
+        if(channelSftp.isClosed()){
+            connect();
+        }
+        channelSftp.cd(path);
+        return channelSftp.ls(path);
+    }
+}

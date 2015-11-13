@@ -46,7 +46,7 @@ import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.file.FileDownloadTask;
+import org.seagrid.desktop.connectors.storage.UIFileDownloadTask;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -323,7 +323,7 @@ public class ExperimentSummaryController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new FileDownloadTask(remotePath.toString(), localPath);
+                    return new UIFileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",experimentInfoGridPane.getScene().getWindow(),

@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.connectors.file;
+package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.JSchException;
 import org.slf4j.Logger;
@@ -27,12 +27,12 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 
 
-public class FileUploadTask extends FileTask {
-    private final static Logger logger = LoggerFactory.getLogger(FileUploadTask.class);
+public class UIUIFileUploadTask extends UIFileTask {
+    private final static Logger logger = LoggerFactory.getLogger(UIUIFileUploadTask.class);
 
     private String remoteFilePath, localFilePath;
 
-    public FileUploadTask(String remoteFilePath, String localFilePath) throws JSchException {
+    public UIUIFileUploadTask(String remoteFilePath, String localFilePath) throws JSchException {
         super();
         this.remoteFilePath = remoteFilePath;
         this.localFilePath = localFilePath;
