@@ -167,15 +167,8 @@ public class HomeController {
             }
         });
         logoutBtn.setOnAction(event -> {
-            logoutBtn.getScene().getWindow().hide();
-            LoginWindow loginWindow = new LoginWindow();
-            try {
-                loginWindow.displayLoginAndWait();
-                ((Stage)logoutBtn.getScene().getWindow()).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
+            ((Stage)logoutBtn.getScene().getWindow()).close();
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
         });
 
     }

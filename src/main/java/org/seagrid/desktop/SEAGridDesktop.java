@@ -20,6 +20,7 @@
 */
 package org.seagrid.desktop;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -28,6 +29,8 @@ import javafx.stage.Stage;
 import org.seagrid.desktop.ui.home.HomeWindow;
 import org.seagrid.desktop.ui.login.LoginWindow;
 import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,10 @@ import java.io.IOException;
 
 public class SEAGridDesktop extends Application{
     private final static Logger logger = LoggerFactory.getLogger(SEAGridDesktop.class);
+
+    public SEAGridDesktop(){
+        SEAGridEventBus.getInstance().register(this);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,6 +61,18 @@ public class SEAGridDesktop extends Application{
                 Platform.exit();
                 System.exit(0);
             });
+        }
+    }
+
+    @Subscribe
+    public void handleSEAGridEvents(SEAGridEvent event){
+        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.LOGOUT)){
+            try {
+                start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
         }
     }
 
