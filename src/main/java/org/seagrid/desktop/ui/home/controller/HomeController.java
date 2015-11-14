@@ -22,6 +22,8 @@ package org.seagrid.desktop.ui.home.controller;
 
 
 import com.google.common.eventbus.Subscribe;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,14 +40,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.connectors.wso2is.AuthResponse;
+import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.experiment.create.ExperimentCreateWindow;
 import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
@@ -121,8 +128,8 @@ public class HomeController {
         initMenuBar();
         initProjectTreeView();
         initExperimentList();
+        initTokenUpdateDaemon();
     }
-
 
     public void initMenuBar(){
         createProjectButton.setOnMouseClicked(event -> {
@@ -477,6 +484,35 @@ public class HomeController {
 
         return root;
     }
+
+
+    private void initTokenUpdateDaemon() {
+        Timeline oauthTokenUpdateTimer = new Timeline(new KeyFrame(
+                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime()-System.currentTimeMillis())/2),
+                ae -> {
+                    AuthenticationManager authenticationManager = new AuthenticationManager();
+                    try {
+                        AuthResponse authResponse = authenticationManager.getRefreshedOAuthToken(SEAGridContext
+                                .getInstance().getRefreshToken());
+                        if(authResponse != null){
+                            SEAGridContext.getInstance().setOAuthToken(authResponse.getAccess_token());
+                            SEAGridContext.getInstance().setRefreshToken(authResponse.getAccess_token());
+                            SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
+                                    + System.currentTimeMillis());
+                        }else{
+                            throw new Exception("AuthResponse is null");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                                "Failed updating OAuth refresh token");
+                        System.exit(-1);
+                    }
+                }));
+        oauthTokenUpdateTimer.setCycleCount(Timeline.INDEFINITE);
+        oauthTokenUpdateTimer.play();
+    }
+
 
     @SuppressWarnings("unused")
     @Subscribe

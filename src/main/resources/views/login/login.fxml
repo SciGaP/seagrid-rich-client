@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
 <StackPane prefWidth="231.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.login.controller.LoginController">
   <children>
     <StackPane>
       <children>
         <VBox spacing="10.0">
           <children>
-            <GridPane>
+            <GridPane id="loginGridPane" VBox.vgrow="ALWAYS">
               <children>
                 <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -27,7 +31,20 @@
             </GridPane>
             <StackPane prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" text="Login" StackPane.alignment="CENTER_RIGHT" />
+                <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="211.0" StackPane.alignment="CENTER_RIGHT">
+                  <children>
+                    <Hyperlink fx:id="dontHaveAccountLink" text="Dont have account?">
+                      <font>
+                        <Font size="10.0" />
+                      </font>
+                      <HBox.margin>
+                        <Insets right="5.0" fx:id="x1" />
+                      </HBox.margin>
+                    </Hyperlink>
+                    <Label fx:id="loginAuthFailed" text="" HBox.margin="$x1" />
+                    <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" text="Login" />
+                  </children>
+                </HBox>
               </children>
             </StackPane>
           </children>

@@ -18,17 +18,19 @@
  * under the License.
  *
 */
-package org.seagrid.desktop.util;
+package org.seagrid.desktop.connectors.wso2is;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class AuthenticationException extends Exception{
 
-public class SEAGridConfig {
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
+    public AuthenticationException(String message) {
+        super (message);
+    }
 
-    public static final String USER_NAME = "user.name";
-    public static final String AUTHENTICATED = "authenticated";
-    public static final String OAUTH_TOKEN = "oauth.token";
-    public static final String OAUTH_REFRESH_TOKEN = "oauth.refresh.token";
-    public static final String OAUTH_TOKEN_EXPIRATION_TIME = "oauth.expiration.time";
+    public AuthenticationException(Throwable cause) {
+        super (cause);
+    }
+
+    public AuthenticationException(String message, Throwable cause) {
+        super (message, cause);
+    }
 }

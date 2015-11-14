@@ -21,6 +21,7 @@
 package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.*;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +45,10 @@ public class StorageManager {
 
     private void connect() throws JSchException {
         JSch jsch = new JSch();
-        session = jsch.getSession("supun", "gw75.iu.xsede.org", 9000);
-        session.setPassword("password");
+        session = jsch.getSession(
+                SEAGridContext.getInstance().getUserName(), "gw75.iu.xsede.org", 9000
+        );
+        session.setPassword(SEAGridContext.getInstance().getOAuthToken());
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);

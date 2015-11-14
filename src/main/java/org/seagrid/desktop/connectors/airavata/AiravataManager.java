@@ -16,6 +16,7 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.seagrid.desktop.util.SEAGridContext;
 
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class AiravataManager {
     }
 
     private AuthzToken getAuthzToken() {
-        return new AuthzToken("");
+        return new AuthzToken(SEAGridContext.getInstance().getOAuthToken());
     }
 
     private String getGatewayId(){
@@ -63,7 +64,7 @@ public class AiravataManager {
     }
 
     private String getUserName(){
-        return "master";
+        return SEAGridContext.getInstance().getUserName();
     }
 
     public synchronized List<ExperimentSummaryModel> getExperimentSummaries(Map<ExperimentSearchFields,String> filters, int limit, int offset){

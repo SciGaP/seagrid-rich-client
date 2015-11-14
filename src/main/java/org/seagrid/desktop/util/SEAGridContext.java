@@ -30,11 +30,10 @@ import java.util.Map;
 public class SEAGridContext {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridContext.class);
 
-    private Map<String,String> properties = new HashMap<>();
+    private Map<String,String> dynamicConfigurations = new HashMap<>();
 
     private static SEAGridContext instance;
-
-    private boolean authenticated = false;
+    private long tokenExpiaryTime;
 
     private SEAGridContext(){}
 
@@ -45,14 +44,6 @@ public class SEAGridContext {
         return SEAGridContext.instance;
     }
 
-    public void setProperty(String key, String value){
-        properties.put(key,value);
-    }
-
-    public String getProperty(String key){
-        return properties.get(key);
-    }
-
     public ZoneOffset getTimeZoneOffset(){
         return ZoneOffset.UTC;
     }
@@ -61,13 +52,42 @@ public class SEAGridContext {
 
     public String getAiravataGatewayId(){ return "default";}
 
-    public String getUserName(){ return "master";}
+    public void setUserName(String userName){ dynamicConfigurations.put(SEAGridConfig.USER_NAME, userName);}
+
+    public String getUserName(){ return dynamicConfigurations.get(SEAGridConfig.USER_NAME);}
 
     public int getMaxRecentExpCount(){ return 20; }
 
     public String getRecentExperimentsDummyId(){ return "$$$$$$"; }
 
-    public void setAuthenticated(boolean authenticated) { this.authenticated = authenticated; }
+    public void setAuthenticated(boolean authenticated) {
+        if(authenticated)
+            dynamicConfigurations.put(SEAGridConfig.AUTHENTICATED, "true");
+    }
 
-    public boolean getAuthenticated() { return this.authenticated; }
+    public boolean getAuthenticated() { return dynamicConfigurations.containsKey(SEAGridConfig.AUTHENTICATED); }
+
+    public void setOAuthToken(String oauthToken) {
+        dynamicConfigurations.put(SEAGridConfig.OAUTH_TOKEN,oauthToken);
+    }
+
+    public String getOAuthToken(){
+        return dynamicConfigurations.get(SEAGridConfig.OAUTH_TOKEN);
+    }
+
+    public void setRefreshToken(String refreshToken){
+        dynamicConfigurations.put(SEAGridConfig.OAUTH_REFRESH_TOKEN, refreshToken);
+    }
+
+    public String getRefreshToken(){
+        return dynamicConfigurations.get(SEAGridConfig.OAUTH_REFRESH_TOKEN);
+    }
+
+    public void setTokenExpiaryTime(long tokenExpiarationTime) {
+        dynamicConfigurations.put(SEAGridConfig.OAUTH_TOKEN_EXPIRATION_TIME, tokenExpiarationTime+"");
+    }
+
+    public long getOAuthTokenExpirationTime(){
+        return Long.parseLong(dynamicConfigurations.get(SEAGridConfig.OAUTH_TOKEN_EXPIRATION_TIME));
+    }
 }
