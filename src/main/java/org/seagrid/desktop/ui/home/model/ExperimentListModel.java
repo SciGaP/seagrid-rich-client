@@ -31,6 +31,7 @@ import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescr
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -78,7 +79,7 @@ public class ExperimentListModel {
         this.createdTime = new SimpleObjectProperty<>(LocalDateTime.now());
     }
 
-    public ExperimentListModel(ExperimentSummaryModel experimentSummaryModel){
+    public ExperimentListModel(ExperimentSummaryModel experimentSummaryModel) throws TException {
         this.id = new SimpleStringProperty(experimentSummaryModel.getExperimentId());
         this.projectId = new SimpleStringProperty(experimentSummaryModel.getProjectId());
         this.checked = new SimpleBooleanProperty();

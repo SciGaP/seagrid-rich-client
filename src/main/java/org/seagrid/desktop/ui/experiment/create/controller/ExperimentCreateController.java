@@ -152,8 +152,10 @@ public class ExperimentCreateController {
                 try {
                     loadAvailableComputeResources();
                     updateExperimentInputs();
-                } catch (AiravataClientException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateAppField.getScene().getWindow(),
+                            "Failed to load experiment create dialog !");
                 }
             });
             expCreateAppField.getSelectionModel().selectFirst();
@@ -206,7 +208,7 @@ public class ExperimentCreateController {
 //                new FileChooser.ExtensionFilter("All Files", "*.*"));
     }
 
-    private void loadAvailableComputeResources() throws AiravataClientException {
+    private void loadAvailableComputeResources() throws TException {
         ApplicationInterfaceDescription selectedApp = (ApplicationInterfaceDescription)expCreateAppField
                 .getSelectionModel().getSelectedItem();
         if(selectedApp != null){

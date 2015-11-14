@@ -219,7 +219,7 @@ public class ExperimentSummaryController {
         }
     }
 
-    private void showStatus(ExperimentModel experimentModel){
+    private void showStatus(ExperimentModel experimentModel) throws TException {
         experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
         switch (experimentModel.getExperimentStatus().getState()){
             case COMPLETED :

@@ -27,7 +27,9 @@ import javafx.scene.control.TreeItem;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
@@ -103,7 +105,7 @@ public class ProjectTreeModel extends TreeItem<TreeModel> {
                                 experimentModel.getName()
                         )) {
                 }).collect(Collectors.toList()));
-            } catch (AiravataClientException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             super.getChildren().setAll(expChildren);

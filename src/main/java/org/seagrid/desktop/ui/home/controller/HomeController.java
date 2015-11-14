@@ -47,8 +47,6 @@ import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.workspace.Project;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.wso2is.AuthResponse;
@@ -127,7 +125,13 @@ public class HomeController {
         SEAGridEventBus.getInstance().register(this);
         initMenuBar();
         initProjectTreeView();
-        initExperimentList();
+        try {
+            initExperimentList();
+        } catch (TException e) {
+            e.printStackTrace();
+            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                    "Failed initialising experiment list !");
+        }
         initTokenUpdateDaemon();
     }
 
@@ -193,10 +197,22 @@ public class HomeController {
                     if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.PROJECT)) {
                         filters.put(ExperimentSearchFields.PROJECT_ID, treeModel.getItemId());
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
-                        updateExperimentList(filters, -1, 0);
+                        try {
+                            updateExperimentList(filters, -1, 0);
+                        } catch (TException e) {
+                            e.printStackTrace();
+                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                                    "Failed to update experiment list !");
+                        }
                     } else if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)) {
                         tabbedPane.getTabs().get(0).setText(treeModel.getDisplayName());
-                        updateExperimentList(filters, SEAGridContext.getInstance().getMaxRecentExpCount(), 0);
+                        try {
+                            updateExperimentList(filters, SEAGridContext.getInstance().getMaxRecentExpCount(), 0);
+                        } catch (TException e) {
+                            e.printStackTrace();
+                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                                    "Failed to update experiment list !");
+                        }
                     } else if (event.getClickCount() == 2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)) {
                         try {
                             ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
@@ -223,7 +239,7 @@ public class HomeController {
     }
 
     //init the right pane with experiment list
-    public void initExperimentList(){
+    public void initExperimentList() throws TException {
         expSummaryTable.setEditable(true);
 
         expSummaryTable.setRowFactory(tv -> {
@@ -375,8 +391,8 @@ public class HomeController {
     }
 
     //update the right pane with experiment list
-    public void updateExperimentList(Map<ExperimentSearchFields, String> filters, int limit, int offset){
-        try {
+    public void updateExperimentList(Map<ExperimentSearchFields, String> filters, int limit, int offset) throws TException {
+
             this.previousExperimentListFilter = filters;
 
             List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
@@ -421,9 +437,6 @@ public class HomeController {
 
             filterField.setText("");
             tabbedPane.getSelectionModel().select(0);
-        } catch (AiravataClientException e) {
-            e.printStackTrace();
-        }
     }
 
     //Creates the project tree model
@@ -472,8 +485,10 @@ public class HomeController {
                                         TreeModel.ITEM_TYPE.PROJECT, project.getProjectID(),
                                         project.getName()
                                 ))).collect(Collectors.toList()));
-                    } catch (AiravataClientException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", projectsTreeView.getScene().getWindow(),
+                                "Failed loading project list !");
                     }
                     super.getChildren().setAll(projChildern);
                 }
@@ -516,7 +531,7 @@ public class HomeController {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void listenSEAGridEvents(SEAGridEvent event) {
+    public void listenSEAGridEvents(SEAGridEvent event) throws TException {
         if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
             Project project = (Project)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success","Project " +

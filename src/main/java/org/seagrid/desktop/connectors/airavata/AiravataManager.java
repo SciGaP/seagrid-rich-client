@@ -38,14 +38,14 @@ public class AiravataManager {
             TProtocol protocol = new TBinaryProtocol(transport);
             this.airavataClient = new Airavata.Client(protocol);
 
-            this.airavataCache = new AiravataCache<>(200,500,6);
+            this.airavataCache = new AiravataCache<>(200, 500, 6);
         } catch (TTransportException e) {
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
         }
     }
 
     public static AiravataManager getInstance() throws AiravataClientException {
-        if(AiravataManager.instance == null){
+        if (AiravataManager.instance == null) {
             AiravataManager.instance = new AiravataManager();
         }
         return AiravataManager.instance;
@@ -59,169 +59,131 @@ public class AiravataManager {
         return new AuthzToken(SEAGridContext.getInstance().getOAuthToken());
     }
 
-    private String getGatewayId(){
+    private String getGatewayId() {
         return "default";
     }
 
-    private String getUserName(){
+    private String getUserName() {
         return SEAGridContext.getInstance().getUserName();
     }
 
-    public synchronized List<ExperimentSummaryModel> getExperimentSummaries(Map<ExperimentSearchFields,String> filters, int limit, int offset){
-        List<ExperimentSummaryModel> exp = new ArrayList<>();
-        try{
-            exp = getClient().searchExperiments(
-                    getAuthzToken(), getGatewayId(), getUserName(), filters, limit, offset);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized List<ExperimentSummaryModel> getExperimentSummaries(Map<ExperimentSearchFields, String> filters,
+                                                                            int limit, int offset) throws TException {
+        List<ExperimentSummaryModel> exp = getClient().searchExperiments(
+                getAuthzToken(), getGatewayId(), getUserName(), filters, limit, offset);
         return exp;
     }
 
-    public synchronized List<ExperimentSummaryModel> getExperimentSummariesInProject(String projectId){
-        List<ExperimentSummaryModel> exp = new ArrayList<>();
-        try{
-            Map<ExperimentSearchFields,String> filters = new HashMap<>();
-            filters.put(ExperimentSearchFields.PROJECT_ID, projectId);
-            exp = getClient().searchExperiments(
-                    getAuthzToken(), getGatewayId(), getUserName(), filters, -1, 0);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized List<ExperimentSummaryModel> getExperimentSummariesInProject(String projectId) throws TException {
+        List<ExperimentSummaryModel> exp;
+        Map<ExperimentSearchFields, String> filters = new HashMap<>();
+        filters.put(ExperimentSearchFields.PROJECT_ID, projectId);
+        exp = getClient().searchExperiments(
+                getAuthzToken(), getGatewayId(), getUserName(), filters, -1, 0);
         return exp;
     }
 
-    public synchronized List<ExperimentSummaryModel> getRecentExperimentSummaries(int limit){
-        List<ExperimentSummaryModel> exp = new ArrayList<>();
-        try{
-            Map<ExperimentSearchFields,String> filters = new HashMap<>();
-            exp = getClient().searchExperiments(
-                    getAuthzToken(), getGatewayId(), getUserName(), filters, limit, 0);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized List<ExperimentSummaryModel> getRecentExperimentSummaries(int limit) throws TException {
+        List<ExperimentSummaryModel> exp;
+
+        Map<ExperimentSearchFields, String> filters = new HashMap<>();
+        exp = getClient().searchExperiments(
+                getAuthzToken(), getGatewayId(), getUserName(), filters, limit, 0);
         return exp;
     }
 
-    public synchronized List<Project> getProjects(){
-        List<Project> projects = new ArrayList<>();
-        try{
-            projects = getClient().getUserProjects(
-                    getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized List<Project> getProjects() throws TException {
+        List<Project> projects;
+        projects = getClient().getUserProjects(
+                getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
         return projects;
     }
 
-    public synchronized Project createProject(String projectName, String projectDescription) {
-        Project project = null;
-        try{
-            project = new Project("no-id",getUserName(),projectName);
-            if(projectDescription !=null)
-                project.setDescription(projectDescription);
-            String projectId = getClient().createProject(
-                    getAuthzToken(), getGatewayId(), project);
-            project.setProjectID(projectId);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized Project createProject(String projectName, String projectDescription) throws TException {
+        Project project;
+        project = new Project("no-id", getUserName(), projectName);
+        if (projectDescription != null)
+            project.setDescription(projectDescription);
+        String projectId = getClient().createProject(
+                getAuthzToken(), getGatewayId(), project);
+        project.setProjectID(projectId);
+
         return project;
     }
 
     public synchronized ExperimentModel getExperiment(String experimentId) throws TException {
-        return getClient().getExperiment(getAuthzToken(),experimentId);
+        return getClient().getExperiment(getAuthzToken(), experimentId);
     }
 
-    public synchronized ComputeResourceDescription getComputeResource(String resourceId){
-        ComputeResourceDescription computeResourceDescription = null;
-        try{
-            if(airavataCache.get(resourceId) != null) {
-                computeResourceDescription = (ComputeResourceDescription)airavataCache.get(resourceId);
-            }else{
-                computeResourceDescription = getClient().getComputeResource(getAuthzToken(),resourceId);
-                airavataCache.put(resourceId,computeResourceDescription);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
+    public synchronized ComputeResourceDescription getComputeResource(String resourceId) throws TException {
+        ComputeResourceDescription computeResourceDescription;
+
+        if (airavataCache.get(resourceId) != null) {
+            computeResourceDescription = (ComputeResourceDescription) airavataCache.get(resourceId);
+        } else {
+            computeResourceDescription = getClient().getComputeResource(getAuthzToken(), resourceId);
+            airavataCache.put(resourceId, computeResourceDescription);
         }
         return computeResourceDescription;
     }
 
-    public synchronized ApplicationInterfaceDescription getApplicationInterface(String interfaceId){
+    public synchronized ApplicationInterfaceDescription getApplicationInterface(String interfaceId) throws TException {
         ApplicationInterfaceDescription applicationInterfaceDescription = null;
-        try{
-            if(airavataCache.get(interfaceId) != null) {
-                applicationInterfaceDescription = (ApplicationInterfaceDescription)airavataCache.get(interfaceId);
-            }else{
-                applicationInterfaceDescription = getClient().getApplicationInterface(getAuthzToken(), interfaceId);
-                airavataCache.put(interfaceId,applicationInterfaceDescription);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
+
+        if (airavataCache.get(interfaceId) != null) {
+            applicationInterfaceDescription = (ApplicationInterfaceDescription) airavataCache.get(interfaceId);
+        } else {
+            applicationInterfaceDescription = getClient().getApplicationInterface(getAuthzToken(), interfaceId);
+            airavataCache.put(interfaceId, applicationInterfaceDescription);
         }
+
         return applicationInterfaceDescription;
     }
 
-    public synchronized Project getProject(String projectId){
-        Project project = null;
-        try{
-            if(airavataCache.get(projectId) != null) {
-                project = (Project)airavataCache.get(projectId);
-            }else{
-                project = getClient().getProject(getAuthzToken(), projectId);
-                airavataCache.put(projectId,project);
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
+    public synchronized Project getProject(String projectId) throws TException {
+        Project project;
+        if (airavataCache.get(projectId) != null) {
+            project = (Project) airavataCache.get(projectId);
+        } else {
+            project = getClient().getProject(getAuthzToken(), projectId);
+            airavataCache.put(projectId, project);
         }
         return project;
     }
 
-    public synchronized Map<String,JobStatus> getJobStatuses(String expId){
-        Map<String,JobStatus> jobStatuses = null;
-        try{
-            jobStatuses = getClient().getJobStatuses(getAuthzToken(),expId);
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized Map<String, JobStatus> getJobStatuses(String expId) throws TException {
+        Map<String, JobStatus> jobStatuses;
+        jobStatuses = getClient().getJobStatuses(getAuthzToken(), expId);
         return jobStatuses;
     }
 
-    public List<ApplicationInterfaceDescription> getAllApplicationInterfaces() {
-        List<ApplicationInterfaceDescription> allApplicationInterfaces = null;
-        try{
-            allApplicationInterfaces = getClient().getAllApplicationInterfaces(getAuthzToken(), getGatewayId());
-            Collections.sort(allApplicationInterfaces, (o1, o2) -> o1.getApplicationName().compareTo(o2.getApplicationName()));
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    public synchronized List<ApplicationInterfaceDescription> getAllApplicationInterfaces() throws TException {
+        List<ApplicationInterfaceDescription> allApplicationInterfaces;
+        allApplicationInterfaces = getClient().getAllApplicationInterfaces(getAuthzToken(), getGatewayId());
+        Collections.sort(allApplicationInterfaces, (o1, o2) -> o1.getApplicationName().compareTo(o2.getApplicationName()));
         return allApplicationInterfaces;
     }
 
-    public List<ComputeResourceDescription> getAvailableComputeResourcesForApp(String applicationInterfaceId) {
-        List<ComputeResourceDescription> availableComputeResources = null;
-        try{
-            Map<String,String> temp = getClient().getAvailableAppInterfaceComputeResources(getAuthzToken(), applicationInterfaceId);
-            availableComputeResources = new ArrayList<>();
-            for(String resourceId : temp.keySet()){
-                availableComputeResources.add(getComputeResource(resourceId));
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
+    public synchronized List<ComputeResourceDescription> getAvailableComputeResourcesForApp(String applicationInterfaceId)
+            throws TException {
+        List<ComputeResourceDescription> availableComputeResources;
+        Map<String, String> temp = getClient().getAvailableAppInterfaceComputeResources(getAuthzToken(), applicationInterfaceId);
+        availableComputeResources = new ArrayList<>();
+        for (String resourceId : temp.keySet()) {
+            availableComputeResources.add(getComputeResource(resourceId));
         }
         return availableComputeResources;
     }
 
-    public String createExperiment(ExperimentModel experimentModel) throws TException {
+    public synchronized String createExperiment(ExperimentModel experimentModel) throws TException {
         return getClient().createExperiment(getAuthzToken(), getGatewayId(), experimentModel);
     }
 
-    public void launchExperiment(String experimentId) throws TException {
-        getClient().launchExperiment(getAuthzToken(),experimentId, getGatewayId());
+    public synchronized void launchExperiment(String experimentId) throws TException {
+        getClient().launchExperiment(getAuthzToken(), experimentId, getGatewayId());
     }
 
-    public void deleteExperiment(String experimentId) throws TException {
-        getClient().deleteExperiment(getAuthzToken(),experimentId);
+    public synchronized void deleteExperiment(String experimentId) throws TException {
+        getClient().deleteExperiment(getAuthzToken(), experimentId);
     }
 }
