@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
+
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.home.controller.HomeController">
   <center>
     <SplitPane disable="false" dividerPositions="0.35218508997429304" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
@@ -143,7 +146,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>
             </Region>
-            <Button mnemonicParsing="false" prefHeight="24.0" text="Log Out">
+            <Button fx:id="logoutBtn" mnemonicParsing="false" prefHeight="24.0" text="Log Out">
               <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>

@@ -94,7 +94,7 @@ public class LoginController {
                 SEAGridContext.getInstance().setAuthenticated(true);
                 SEAGridContext.getInstance().setUserName(username);
                 SEAGridContext.getInstance().setOAuthToken(authResponse.getAccess_token());
-                SEAGridContext.getInstance().setRefreshToken(authResponse.getAccess_token());
+                SEAGridContext.getInstance().setRefreshToken(authResponse.getRefresh_token());
                 SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
                         + System.currentTimeMillis());
                 Stage stage = (Stage) loginButton.getScene().getWindow();
@@ -107,7 +107,7 @@ public class LoginController {
             }
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", loginButton.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", loginButton.getScene().getWindow(),
                     "Login operation failed !");
         }
         return false;

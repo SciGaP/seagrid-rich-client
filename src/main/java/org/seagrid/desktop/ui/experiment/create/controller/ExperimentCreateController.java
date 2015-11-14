@@ -36,7 +36,6 @@ import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
-import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
@@ -154,7 +153,7 @@ public class ExperimentCreateController {
                     updateExperimentInputs();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateAppField.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateAppField.getScene().getWindow(),
                             "Failed to load experiment create dialog !");
                 }
             });
@@ -192,7 +191,7 @@ public class ExperimentCreateController {
 
         }catch (Exception e){
             e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expCreateNameField.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateNameField.getScene().getWindow(),
                     "Failed To Load New Experiment Window !");
         }
     }
@@ -377,7 +376,7 @@ public class ExperimentCreateController {
                             ,experimentModel));
                 }catch (TException e){
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveLaunchButton.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expSaveLaunchButton.getScene().getWindow(),
                             "Experiment launch failed !");
                 }
             }
@@ -385,7 +384,7 @@ public class ExperimentCreateController {
             stage.close();
         } catch (TException e) {
             e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", expSaveButton.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expSaveButton.getScene().getWindow(),
                     "Experiment create failed !");
         }
     }
@@ -496,7 +495,7 @@ public class ExperimentCreateController {
                     return new GuiBulkFileUploadTask(uploadFiles);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",expCreateInputsGridPane.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateInputsGridPane.getScene().getWindow(),
                             "Unable To Connect To File Server !");
                 }
                 return null;
@@ -505,7 +504,7 @@ public class ExperimentCreateController {
         SEAGridDialogHelper.showProgressDialog(service,"Progress Dialog",expCreateInputsGridPane.getScene().getWindow(),
                 "Uploading Experiment Input Files");
         service.setOnFailed((WorkerStateEvent t) -> {
-            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
                     expCreateInputsGridPane.getScene().getWindow(), "File Upload Failed");
         });
         return service;

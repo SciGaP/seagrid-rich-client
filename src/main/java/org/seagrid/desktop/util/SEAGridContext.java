@@ -33,7 +33,6 @@ public class SEAGridContext {
     private Map<String,String> dynamicConfigurations = new HashMap<>();
 
     private static SEAGridContext instance;
-    private long tokenExpiaryTime;
 
     private SEAGridContext(){}
 

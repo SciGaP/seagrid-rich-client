@@ -326,7 +326,7 @@ public class ExperimentSummaryController {
                     return new GuiFileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",experimentInfoGridPane.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", experimentInfoGridPane.getScene().getWindow(),
                             "Unable To Connect To File Server !");
                 }
                 return null;
@@ -335,7 +335,7 @@ public class ExperimentSummaryController {
         SEAGridDialogHelper.showProgressDialog(service,"Progress Dialog",experimentInfoGridPane.getScene().getWindow(),
                 "Downloading File " + remotePath.getFileName());
         service.setOnFailed((WorkerStateEvent t) -> {
-            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
                     experimentInfoGridPane.getScene().getWindow(), "File Download Failed");
         });
         service.setOnSucceeded((WorkerStateEvent t)->{

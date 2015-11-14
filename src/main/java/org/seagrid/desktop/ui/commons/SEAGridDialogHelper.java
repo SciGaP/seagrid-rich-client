@@ -44,7 +44,7 @@ public class SEAGridDialogHelper {
         progressDialog.initModality(Modality.WINDOW_MODAL);
     }
 
-    public static void showExceptionDialog(Throwable e, String title, Window parentWindow, String message){
+    public static void showExceptionDialogAndWait(Throwable e, String title, Window parentWindow, String message){
         ExceptionDialog exceptionDialog = new ExceptionDialog(e);
         exceptionDialog.setTitle(title);
         exceptionDialog.initOwner(parentWindow);
@@ -52,6 +52,16 @@ public class SEAGridDialogHelper {
         exceptionDialog.initModality(Modality.WINDOW_MODAL);
         exceptionDialog.getDialogPane().setMaxWidth(800);
         exceptionDialog.showAndWait();
+    }
+
+    public static void showExceptionDialog(Throwable e, String title, Window parentWindow, String message){
+        ExceptionDialog exceptionDialog = new ExceptionDialog(e);
+        exceptionDialog.setTitle(title);
+        exceptionDialog.initOwner(parentWindow);
+        exceptionDialog.setHeaderText(message);
+        exceptionDialog.initModality(Modality.WINDOW_MODAL);
+        exceptionDialog.getDialogPane().setMaxWidth(800);
+        exceptionDialog.show();
     }
 
     public static void showWarningDialog(String title, String headerText, String contentText){

@@ -108,7 +108,7 @@ public class MassStorageBrowserController {
             fbLocalPath.setAlignment(Pos.BASELINE_LEFT);
             fbRemotePath.setAlignment(Pos.BASELINE_LEFT);
         }catch (Exception e){
-            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", fbLocalPath.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalPath.getScene().getWindow(),
                     "Failed opening mass storage browser");
             ((Stage)fbLocalPath.getScene().getWindow()).close();
         }
@@ -312,7 +312,7 @@ public class MassStorageBrowserController {
                     populateRemoteFileTable();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",fbRemoteFileTable.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbRemoteFileTable.getScene().getWindow(),
                             "Failed to load remote directory information");
                 }
             }
@@ -390,7 +390,7 @@ public class MassStorageBrowserController {
                     return new GuiFileUploadTask(remotePath, localFile);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",fbRemoteFileTable.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbRemoteFileTable.getScene().getWindow(),
                             "Unable To Connect To File Server !");
                 }
                 return null;
@@ -399,7 +399,7 @@ public class MassStorageBrowserController {
         SEAGridDialogHelper.showProgressDialog(service, "Progress Dialog", fbRemoteFileTable.getScene().getWindow(),
                 "Uploading File " + upldFileModel.getFileName());
         service.setOnFailed((WorkerStateEvent t) -> {
-            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
                     fbRemoteFileTable.getScene().getWindow(), "File Upload Failed");
         });
         service.setOnSucceeded((WorkerStateEvent t)->{
@@ -427,7 +427,7 @@ public class MassStorageBrowserController {
                     return new GuiFileDownloadTask(remoteFile, localFile);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",fbLocalFileTable.getScene().getWindow(),
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalFileTable.getScene().getWindow(),
                             "Unable To Connect To File Server !");
                 }
                 return null;
@@ -436,7 +436,7 @@ public class MassStorageBrowserController {
         SEAGridDialogHelper.showProgressDialog(service, "Progress Dialog", fbLocalFileTable.getScene().getWindow(),
                 "Downloading File " + downFileModel.getFileName());
         service.setOnFailed((WorkerStateEvent t) -> {
-            SEAGridDialogHelper.showExceptionDialog(service.getException(), "Exception Dialog",
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
                     fbLocalFileTable.getScene().getWindow(), "File Download Failed");
         });
         service.setOnSucceeded((WorkerStateEvent t)->{

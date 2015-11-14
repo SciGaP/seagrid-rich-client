@@ -29,6 +29,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -39,9 +41,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
@@ -57,6 +59,7 @@ import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
+import org.seagrid.desktop.ui.login.LoginWindow;
 import org.seagrid.desktop.ui.project.ProjectWindow;
 import org.seagrid.desktop.ui.storage.MassStorageBrowserWindow;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -118,6 +121,9 @@ public class HomeController {
     @FXML
     private TabPane tabbedPane;
 
+    @FXML
+    private Button logoutBtn;
+
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
     @SuppressWarnings("unused")
@@ -129,7 +135,7 @@ public class HomeController {
             initExperimentList();
         } catch (TException e) {
             e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                     "Failed initialising experiment list !");
         }
         initTokenUpdateDaemon();
@@ -158,8 +164,19 @@ public class HomeController {
                 massStorageBrowserWindow.displayFileBrowseAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",browseMassStorageBtn.getScene().getWindow(),
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", browseMassStorageBtn.getScene().getWindow(),
                         "Failed to open Mass Storage Browser");
+            }
+        });
+        logoutBtn.setOnAction(event -> {
+            logoutBtn.getScene().getWindow().hide();
+            LoginWindow loginWindow = new LoginWindow();
+            try {
+                loginWindow.displayLoginAndWait();
+                ((Stage)logoutBtn.getScene().getWindow()).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(-1);
             }
         });
 
@@ -201,7 +218,7 @@ public class HomeController {
                             updateExperimentList(filters, -1, 0);
                         } catch (TException e) {
                             e.printStackTrace();
-                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                                     "Failed to update experiment list !");
                         }
                     } else if (treeModel.getItemType().equals(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS)) {
@@ -210,7 +227,7 @@ public class HomeController {
                             updateExperimentList(filters, SEAGridContext.getInstance().getMaxRecentExpCount(), 0);
                         } catch (TException e) {
                             e.printStackTrace();
-                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                                     "Failed to update experiment list !");
                         }
                     } else if (event.getClickCount() == 2 && treeModel.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)) {
@@ -223,7 +240,7 @@ public class HomeController {
                             tabbedPane.getSelectionModel().select(experimentTab);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                                     "Cannot open experiment information");
                         }
                     }
@@ -256,7 +273,7 @@ public class HomeController {
                         tabbedPane.getSelectionModel().select(experimentTab);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                        SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                                 "Cannot open experiment information");
                     }
                 }
@@ -319,7 +336,7 @@ public class HomeController {
                 }
             } catch (TException e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene()
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expSummaryTable.getScene()
                         .getWindow(), "Experiment launch failed");
             }
         });
@@ -338,7 +355,7 @@ public class HomeController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                         "Cannot open experiment information");
             }
         });
@@ -353,7 +370,7 @@ public class HomeController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                         "Cannot open experiment information");
             }
         });
@@ -369,7 +386,7 @@ public class HomeController {
                 }
             } catch (TException e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene()
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expSummaryTable.getScene()
                         .getWindow(), "Experiment delete failed");
             }
         });
@@ -487,7 +504,7 @@ public class HomeController {
                                 ))).collect(Collectors.toList()));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", projectsTreeView.getScene().getWindow(),
+                        SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", projectsTreeView.getScene().getWindow(),
                                 "Failed loading project list !");
                     }
                     super.getChildren().setAll(projChildern);
@@ -503,7 +520,7 @@ public class HomeController {
 
     private void initTokenUpdateDaemon() {
         Timeline oauthTokenUpdateTimer = new Timeline(new KeyFrame(
-                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime()-System.currentTimeMillis())/2),
+                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime()-System.currentTimeMillis())*5/6),
                 ae -> {
                     AuthenticationManager authenticationManager = new AuthenticationManager();
                     try {
@@ -521,7 +538,6 @@ public class HomeController {
                         e.printStackTrace();
                         SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
                                 "Failed updating OAuth refresh token");
-                        System.exit(-1);
                     }
                 }));
         oauthTokenUpdateTimer.setCycleCount(Timeline.INDEFINITE);

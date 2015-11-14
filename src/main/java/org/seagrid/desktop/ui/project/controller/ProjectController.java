@@ -26,7 +26,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.workspace.Project;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
@@ -67,7 +66,7 @@ public class ProjectController {
                 SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.PROJECT_CREATED,project));
             } catch (Exception e) {
                 e.printStackTrace();
-                SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",saveButton.getScene().getWindow(),
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", saveButton.getScene().getWindow(),
                         "Failed tp save project !");
             }
         });
