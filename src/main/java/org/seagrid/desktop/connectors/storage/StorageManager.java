@@ -46,7 +46,8 @@ public class StorageManager {
     private void connect() throws JSchException {
         JSch jsch = new JSch();
         session = jsch.getSession(
-                SEAGridContext.getInstance().getUserName(), "gw75.iu.xsede.org", 9000
+                SEAGridContext.getInstance().getUserName(), SEAGridContext.getInstance().getSFTPHost(),
+                SEAGridContext.getInstance().getSFTPPort()
         );
         session.setPassword(SEAGridContext.getInstance().getOAuthToken());
         java.util.Properties config = new java.util.Properties();

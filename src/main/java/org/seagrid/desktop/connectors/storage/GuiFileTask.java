@@ -22,6 +22,7 @@ package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.*;
 import javafx.concurrent.Task;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,8 @@ public abstract class GuiFileTask extends Task<Boolean> {
 
     public GuiFileTask() throws JSchException {
         JSch jsch = new JSch();
-        session = jsch.getSession("supun", "gw75.iu.xsede.org", 9000);
+        session = jsch.getSession(SEAGridContext.getInstance().getUserName(),
+                SEAGridContext.getInstance().getSFTPHost(), SEAGridContext.getInstance().getSFTPPort());
         session.setPassword("password");
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");

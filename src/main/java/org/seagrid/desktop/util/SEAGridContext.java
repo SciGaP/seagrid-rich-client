@@ -23,18 +23,33 @@ package org.seagrid.desktop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
 
 public class SEAGridContext {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridContext.class);
 
     private Map<String,String> dynamicConfigurations = new HashMap<>();
 
+    private Properties properties = new Properties();
+    private static final String PROPERTY_FILE_NAME = "/seagrid.properties";
+
     private static SEAGridContext instance;
 
-    private SEAGridContext(){}
+    private SEAGridContext(){
+        InputStream inputStream = SEAGridContext.class.getResourceAsStream(PROPERTY_FILE_NAME);
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static SEAGridContext getInstance(){
         if(SEAGridContext.instance == null){
@@ -44,12 +59,13 @@ public class SEAGridContext {
     }
 
     public ZoneOffset getTimeZoneOffset(){
-        return ZoneOffset.UTC;
+        LocalDateTime dt = LocalDateTime.now();
+        return dt.atZone(TimeZone.getDefault().toZoneId()).getOffset();
     }
 
-    public String getFileDownloadLocation(){ return "/Users/supun/Desktop";}
+    public String getFileDownloadLocation(){ return properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);}
 
-    public String getAiravataGatewayId(){ return "default";}
+    public String getAiravataGatewayId(){ return properties.getProperty(SEAGridConfig.AIRAVATA_GATEWAY_ID);}
 
     public void setUserName(String userName){ dynamicConfigurations.put(SEAGridConfig.USER_NAME, userName);}
 
@@ -83,10 +99,46 @@ public class SEAGridContext {
     }
 
     public void setTokenExpiaryTime(long tokenExpiarationTime) {
-        dynamicConfigurations.put(SEAGridConfig.OAUTH_TOKEN_EXPIRATION_TIME, tokenExpiarationTime+"");
+        dynamicConfigurations.put(SEAGridConfig.OAUTH_TOKEN_EXPIRATION_TIME, tokenExpiarationTime + "");
     }
 
     public long getOAuthTokenExpirationTime(){
         return Long.parseLong(dynamicConfigurations.get(SEAGridConfig.OAUTH_TOKEN_EXPIRATION_TIME));
+    }
+
+    public String getAiravataHost() {
+        return properties.getProperty(SEAGridConfig.AIRAVATA_HOST);
+    }
+
+    public int getAiravataPort() {
+        return Integer.parseInt(properties.getProperty(SEAGridConfig.AIRAVATA_PORT));
+    }
+
+    public String getSFTPHost() {
+        return properties.getProperty(SEAGridConfig.SFTP_HOST);
+    }
+
+    public int getSFTPPort() {
+        return Integer.parseInt(properties.getProperty(SEAGridConfig.SFTP_PORT));
+    }
+
+    public String getIdpUrl() {
+        return properties.getProperty(SEAGridConfig.IDP_URL);
+    }
+
+    public String[] getAuthorisedUserRoles() {
+        return properties.getProperty(SEAGridConfig.IDP_AUTHORISED_ROLES).split(",");
+    }
+
+    public String getOAuthClientId() {
+        return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_ID);
+    }
+
+    public String getOAuthClientSecret() {
+        return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_SECRET);
+    }
+
+    public String getIdpTenantId() {
+        return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
     }
 }

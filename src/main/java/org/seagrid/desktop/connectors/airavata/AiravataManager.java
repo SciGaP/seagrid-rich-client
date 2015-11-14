@@ -29,8 +29,8 @@ public class AiravataManager {
     private AiravataCache<String, Object> airavataCache;
 
     private AiravataManager() throws AiravataClientException {
-        String host = "gw56.iu.xsede.org";
-        int port = 10930;
+        String host = SEAGridContext.getInstance().getAiravataHost();
+        int port = SEAGridContext.getInstance().getAiravataPort();
         try {
 
             TTransport transport = new TSocket(host, port);
@@ -38,7 +38,7 @@ public class AiravataManager {
             TProtocol protocol = new TBinaryProtocol(transport);
             this.airavataClient = new Airavata.Client(protocol);
 
-            this.airavataCache = new AiravataCache<>(200, 500, 6);
+            this.airavataCache = new AiravataCache<>(200, 500, 50);
         } catch (TTransportException e) {
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
         }
@@ -60,7 +60,7 @@ public class AiravataManager {
     }
 
     private String getGatewayId() {
-        return "default";
+        return SEAGridContext.getInstance().getAiravataGatewayId();
     }
 
     private String getUserName() {

@@ -31,4 +31,15 @@ public class SEAGridConfig {
     public static final String OAUTH_TOKEN = "oauth.token";
     public static final String OAUTH_REFRESH_TOKEN = "oauth.refresh.token";
     public static final String OAUTH_TOKEN_EXPIRATION_TIME = "oauth.expiration.time";
+    public static final String AIRAVATA_HOST = "airavata.host";
+    public static final String AIRAVATA_PORT = "airavata.port";
+    public static final String AIRAVATA_GATEWAY_ID = "airavata.gateway-id";
+    public static final String SFTP_HOST = "sftp.host";
+    public static final String SFTP_PORT = "sftp.port";
+    public static final String IDP_URL = "idp.url";
+    public static final String IDP_TENANT_ID = "idp.tenant.id";
+    public static final String IDP_AUTHORISED_ROLES = "idp.authorised.roles";
+    public static final String IDP_OAUTH_CLIENT_ID = "idp.oauth.client.id";
+    public static final String IDP_OAUTH_CLIENT_SECRET = "idp.oauth.client.secret";
+    public static final String DEFAULT_FILE_DOWNLOAD_PATH = "default.file.download.path";
 }

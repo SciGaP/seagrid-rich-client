@@ -29,6 +29,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,14 @@ import java.util.Map;
 public class AuthenticationManager {
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationManager.class);
 
-    String hostName = "https://idp.scigap.org:9443";
-    String[] allowedUserRoles = new String[]{"sg_user","sg_admin","sg_admin_readonly"};
-    String clientId = "y7xgdnNUx6ifOswJTPcqtzw4aOEa";
-    String clientSecret = "CgfbuupAPhaOBSBPSScZUWHNANwa";
+    String hostName = SEAGridContext.getInstance().getIdpUrl();
+    String[] allowedUserRoles = SEAGridContext.getInstance().getAuthorisedUserRoles();
+    String clientId = SEAGridContext.getInstance().getOAuthClientId();
+    String clientSecret = SEAGridContext.getInstance().getOAuthClientSecret();
 
     public AuthResponse authenticate(String username,String password) throws AuthenticationException {
         try {
-            username = username +"@prod.seagrid";
+            username = username + "@" + SEAGridContext.getInstance().getIdpTenantId();
 
             OAuthClientRequest request = OAuthClientRequest.tokenLocation(hostName+"/oauth2/token").
                     setClientId(clientId).setClientSecret(clientSecret).
