@@ -6,7 +6,6 @@ import nanocad.minimize.uff.uffMinimizeAlgorythm;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Method;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -14,18 +13,6 @@ import java.util.*;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-
-import org.gridchem.client.SubmitJobsWindow;
-import org.gridchem.client.stuffInside;
-import org.gridchem.client.optsComponent;
-import org.gridchem.client.common.Settings;
-import org.gridchem.client.util.Env;
-import org.gridchem.client.Invariants;
-
-import G03Input.OptTable;
-import G03Input.RouteClass;
-import G03Input.showMolEditor;
-import Gamess.gamessGUI.GamessGUI;
 
 public class newNanocad extends Applet implements MouseListener, MouseMotionListener
 {
@@ -53,8 +40,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     private double currentPotential = 0.0;
 
     //lixh_4/27/05
-    public static String applicationDataDir = Env.getApplicationDataDir();
-    public static String fileSeparator = Env.separator(); 
+    public static String applicationDataDir = Settings.getApplicationDataDir();
+    public static String fileSeparator = Settings.fileSeparator;
     public static String txtDir = applicationDataDir + fileSeparator + "txt";
     public static String defaultFile;
     //
@@ -321,13 +308,6 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 	    }
 	else if (e.target == getSetStructure)
 	    {
-		//int i = 0;
-		if(stuffInside.selectedGUI==1)
-    	{   // G03InputGUI selected.. redirect to gaussian out default
-    		System.out.println("gaussian GUI! used  defaulting to Gaussian!: "+stuffInside.selectedGUI);
-    		//getSetStructure.select(6);
-    	}
-		
 		switch (getSetStructure.getSelectedIndex())
 		{
 		default:		break;
@@ -399,70 +379,71 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 			
 			if(clearFlag) 
 				break; 
-			if(optsComponent.selectedFrontPanel==1){
-				//confirmation to save pdb file or not
-				int result = JOptionPane.showConfirmDialog(
-	                    this,
-	                    "This will open the Gaussian GUI, " +
-	                    "and the current molecule will be exported there.\n" +
-	                    "                         Do you want to proceed?",
-	                    "Confirmation Message",
-	                    JOptionPane.YES_NO_OPTION
-	                    );
-				//if yes (save as pdb file and exit nanocad)
-				if (result == 0){
-					stuffInside.selectedGUI=1;
-					
-					RouteClass.keyIndex=0;
-	    	        RouteClass.initCount=0;
-	    	        OptTable.optC=0;
-	    	    	
-	    	        //Call the new Gaussian GUI.    
-					stuffInside.showNewGUI();
-					showMolEditor forString=new showMolEditor();
-					
-					String gaussOut = GaussianOutput(grp.getXYZ());
-					forString.tempmol=gaussOut;
-					JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-							" has been exported correctly. Make sure\n" +
-							"to edit other sections of GUI.",
-							      "GridChem: Gaussian GUI",
-							      JOptionPane.WARNING_MESSAGE);
-					// write to a file now
-	            	boolean append = false;
-	            	try
-					{
-	            		File f = new File(applicationDataDir+fileSeparator
-	            				+ "tmp.txt");
-	            		FileWriter fw = new FileWriter(f, append);
-	            		fw.write(gaussOut);
-	            		System.err.println("gaussOut = ");
-	            		System.err.println(gaussOut);
-	            		fw.close();
-
-	                    exportedApplication = Invariants.APP_NAME_GAUSSIAN;
-					}
-	            	catch (IOException ioe)
-					{
-	            		System.err.println("newNanocad:output Gaussian:" +
-							"IOException");
-	            		System.err.println(ioe.toString());
-	            		ioe.printStackTrace();
-					}
-	    	    	
-				if ( t != null){
-            		t.setVisible(false);
-            	}
-            	this.setVisible(false);
-            	optsComponent.selectedFrontPanel=0;
-            	break;
-				}else{
-					getSetStructure.select(0);
-					optsComponent.selectedFrontPanel=1;
-					break;	
-				}
-				
-			}
+			//FIXME
+//			if(optsComponent.selectedFrontPanel==1){
+//				//confirmation to save pdb file or not
+//				int result = JOptionPane.showConfirmDialog(
+//	                    this,
+//	                    "This will open the Gaussian GUI, " +
+//	                    "and the current molecule will be exported there.\n" +
+//	                    "                         Do you want to proceed?",
+//	                    "Confirmation Message",
+//	                    JOptionPane.YES_NO_OPTION
+//	                    );
+//				//if yes (save as pdb file and exit nanocad)
+//				if (result == 0){
+//					stuffInside.selectedGUI=1;
+//
+//					RouteClass.keyIndex=0;
+//	    	        RouteClass.initCount=0;
+//	    	        OptTable.optC=0;
+//
+//	    	        //Call the new Gaussian GUI.
+//					stuffInside.showNewGUI();
+//					showMolEditor forString=new showMolEditor();
+//
+//					String gaussOut = GaussianOutput(grp.getXYZ());
+//					forString.tempmol=gaussOut;
+//					JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+//							" has been exported correctly. Make sure\n" +
+//							"to edit other sections of GUI.",
+//							      "GridChem: Gaussian GUI",
+//							      JOptionPane.WARNING_MESSAGE);
+//					// write to a file now
+//	            	boolean append = false;
+//	            	try
+//					{
+//	            		File f = new File(applicationDataDir+fileSeparator
+//	            				+ "tmp.txt");
+//	            		FileWriter fw = new FileWriter(f, append);
+//	            		fw.write(gaussOut);
+//	            		System.err.println("gaussOut = ");
+//	            		System.err.println(gaussOut);
+//	            		fw.close();
+//
+//	                    exportedApplication = Invariants.APP_NAME_GAUSSIAN;
+//					}
+//	            	catch (IOException ioe)
+//					{
+//	            		System.err.println("newNanocad:output Gaussian:" +
+//							"IOException");
+//	            		System.err.println(ioe.toString());
+//	            		ioe.printStackTrace();
+//					}
+//
+//				if ( t != null){
+//            		t.setVisible(false);
+//            	}
+//            	this.setVisible(false);
+//            	optsComponent.selectedFrontPanel=0;
+//            	break;
+//				}else{
+//					getSetStructure.select(0);
+//					optsComponent.selectedFrontPanel=1;
+//					break;
+//				}
+//
+//			}
 			else{
                 // runAsApplication 
             	System.out.println(" Case 6 Gaussian Input Template being Generated");
@@ -484,7 +465,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             		System.err.println(gaussOut);
             		fw.close();
 
-                    exportedApplication = Invariants.APP_NAME_GAUSSIAN;
+                    exportedApplication = Settings.APP_NAME_GAUSSIAN;
 				}
             	catch (IOException ioe)
 				{
@@ -507,70 +488,71 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		case 7: // Create a Gamess Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
 				break; 
-			if(optsComponent.selectedFrontPanel==1){
-				//confirmation to save pdb file or not
-				int result = JOptionPane.showConfirmDialog(
-	                    this,
-	                    "This will open the GAMESS GUI, " +
-	                    "and the current molecule will be exported there.\n" +
-	                    "                         Do you want to proceed?",
-	                    "Confirmation Message",
-	                    JOptionPane.YES_NO_OPTION
-	                    );
-				//if yes (save as pdb file and exit nanocad)
-				if (result == 0)
-				{
-					if (!runAsApplication)
-					{
-						tosave = new savewin("Save file", "", false, this);
-						tosave.setVisible(true);
-						String tosavefile = null;
-						String fileName = new String();
-					}
-					else
-					{
-						stuffInside.selectedGUI = 1;
-		    			//Open the Gamess and export the molecule to it
-						String gamessOut = GamessOutput(grp.getXYZ());
-		                // write to a file now
-		                boolean append = false;
-		                try
-						{
-		                	File f = new File(applicationDataDir+fileSeparator
-		                			+ "tmp.txt");
-		                	FileWriter fw = new FileWriter(f, append);
-		                	fw.write(gamessOut);
-		                	System.err.println("gamessOut = ");
-		                	System.err.println(gamessOut);
-		                	fw.close();
-
-		                    exportedApplication = Invariants.APP_NAME_GAMESS;
-		                    GamessGUI.main(null);
-		                    GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
-		                    GamessGUI.molSpec.nanoCadHandler.nanWin.nano = this;
-		                    GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
-						}
-		                catch (IOException ioe)
-						{
-		                	System.err.println("newNanocad:output Gamess:" +
-								"IOException");
-		                	System.err.println(ioe.toString());
-		                	ioe.printStackTrace();
-						}
-					}
-					if ( t != null){
-						t.setVisible(false);
-            		}
-            		this.setVisible(false);
-            		optsComponent.selectedFrontPanel=0;
-            		break;
-				}else{
-					getSetStructure.select(0);
-					optsComponent.selectedFrontPanel=1;
-					break;	
-				}
-				
-			}
+			//FIXME
+//			if(optsComponent.selectedFrontPanel==1){
+//				//confirmation to save pdb file or not
+//				int result = JOptionPane.showConfirmDialog(
+//	                    this,
+//	                    "This will open the GAMESS GUI, " +
+//	                    "and the current molecule will be exported there.\n" +
+//	                    "                         Do you want to proceed?",
+//	                    "Confirmation Message",
+//	                    JOptionPane.YES_NO_OPTION
+//	                    );
+//				//if yes (save as pdb file and exit nanocad)
+//				if (result == 0)
+//				{
+//					if (!runAsApplication)
+//					{
+//						tosave = new savewin("Save file", "", false, this);
+//						tosave.setVisible(true);
+//						String tosavefile = null;
+//						String fileName = new String();
+//					}
+//					else
+//					{
+//						stuffInside.selectedGUI = 1;
+//		    			//Open the Gamess and export the molecule to it
+//						String gamessOut = GamessOutput(grp.getXYZ());
+//		                // write to a file now
+//		                boolean append = false;
+//		                try
+//						{
+//		                	File f = new File(applicationDataDir+fileSeparator
+//		                			+ "tmp.txt");
+//		                	FileWriter fw = new FileWriter(f, append);
+//		                	fw.write(gamessOut);
+//		                	System.err.println("gamessOut = ");
+//		                	System.err.println(gamessOut);
+//		                	fw.close();
+//
+//		                    exportedApplication = Invariants.APP_NAME_GAMESS;
+//		                    GamessGUI.main(null);
+//		                    GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
+//		                    GamessGUI.molSpec.nanoCadHandler.nanWin.nano = this;
+//		                    GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+//						}
+//		                catch (IOException ioe)
+//						{
+//		                	System.err.println("newNanocad:output Gamess:" +
+//								"IOException");
+//		                	System.err.println(ioe.toString());
+//		                	ioe.printStackTrace();
+//						}
+//					}
+//					if ( t != null){
+//						t.setVisible(false);
+//            		}
+//            		this.setVisible(false);
+//            		optsComponent.selectedFrontPanel=0;
+//            		break;
+//				}else{
+//					getSetStructure.select(0);
+//					optsComponent.selectedFrontPanel=1;
+//					break;
+//				}
+//
+//			}
 			else{
 			if (clearFlag == true) break;
             else
@@ -596,7 +578,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                 	System.err.println(gamessOut);
                 	fw.close();
 
-                    exportedApplication = Invariants.APP_NAME_GAMESS;
+                    exportedApplication = Settings.APP_NAME_GAMESS;
 				}
                 catch (IOException ioe)
 				{
@@ -618,56 +600,57 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		case 8: // Create a NWchem Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
 				break; 
-			if(optsComponent.selectedFrontPanel==1){
-				//confirmation to save pdb file or not
-				int result = JOptionPane.showConfirmDialog(
-	                    this,
-	                    "Exporting to NWChem is not possible from here. Go to Nanocad through Submit Jobs to use this option.\n" +
-	                    "                  Do you want to save current Nanocad workspace as a PDB file and close Nanocad?",
-	                    "Confirmation Message",
-	                    JOptionPane.YES_NO_OPTION
-	                    );
-				//if yes (save as pdb file and exit nanocad)
-				if (result == 0){
-				if (!runAsApplication)
-				{
-					tosave = new savewin("Save file", "", false, this);
-					tosave.setVisible(true);
-					String tosavefile = null;
-					String fileName = new String();
-				}
-				else
-				{
-		    		JFileChooser chooser = new JFileChooser();
-		    		chooser.setDialogTitle("Save as pdb file");
-		    		int retVal = chooser.showSaveDialog(null);
-		    		if (retVal == JFileChooser.APPROVE_OPTION)
-		    		{
-						String filename = chooser.getSelectedFile().getAbsolutePath();
-						if (filename != null)
-					    {
-					    	if (filename.indexOf(".pdb") == -1) filename = filename + ".pdb";
-					    	getSetStructure.select(0);
-					    	chooser.setSelectedFile(new File(filename));
-					    	saveFile(filename);
-					    }
-						
-		    		}
-		    		
-					}
-				if ( t != null){
-            		t.setVisible(false);
-            	}
-            	this.setVisible(false);
-            	optsComponent.selectedFrontPanel=0;
-            	break;
-				}else{
-					getSetStructure.select(0);
-					optsComponent.selectedFrontPanel=1;
-					break;	
-				}
-				
-			}	
+			//FIXME
+//			if(optsComponent.selectedFrontPanel==1){
+//				//confirmation to save pdb file or not
+//				int result = JOptionPane.showConfirmDialog(
+//	                    this,
+//	                    "Exporting to NWChem is not possible from here. Go to Nanocad through Submit Jobs to use this option.\n" +
+//	                    "                  Do you want to save current Nanocad workspace as a PDB file and close Nanocad?",
+//	                    "Confirmation Message",
+//	                    JOptionPane.YES_NO_OPTION
+//	                    );
+//				//if yes (save as pdb file and exit nanocad)
+//				if (result == 0){
+//				if (!runAsApplication)
+//				{
+//					tosave = new savewin("Save file", "", false, this);
+//					tosave.setVisible(true);
+//					String tosavefile = null;
+//					String fileName = new String();
+//				}
+//				else
+//				{
+//		    		JFileChooser chooser = new JFileChooser();
+//		    		chooser.setDialogTitle("Save as pdb file");
+//		    		int retVal = chooser.showSaveDialog(null);
+//		    		if (retVal == JFileChooser.APPROVE_OPTION)
+//		    		{
+//						String filename = chooser.getSelectedFile().getAbsolutePath();
+//						if (filename != null)
+//					    {
+//					    	if (filename.indexOf(".pdb") == -1) filename = filename + ".pdb";
+//					    	getSetStructure.select(0);
+//					    	chooser.setSelectedFile(new File(filename));
+//					    	saveFile(filename);
+//					    }
+//
+//		    		}
+//
+//					}
+//				if ( t != null){
+//            		t.setVisible(false);
+//            	}
+//            	this.setVisible(false);
+//            	optsComponent.selectedFrontPanel=0;
+//            	break;
+//				}else{
+//					getSetStructure.select(0);
+//					optsComponent.selectedFrontPanel=1;
+//					break;
+//				}
+//
+//			}
 		else{
 			if (clearFlag == true) break;
             else
@@ -692,7 +675,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                 	System.err.println(nwchemOut);
                 	fw.close();
 
-                    exportedApplication = Invariants.APP_NAME_NWCHEM;
+                    exportedApplication = Settings.APP_NAME_NWCHEM;
 				}
                 catch (IOException ioe)
 				{
@@ -714,56 +697,57 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		case 9: // Create a Molpro Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
 				break; 
-			if(optsComponent.selectedFrontPanel==1){
-				//confirmation to save pdb file or not
-				int result = JOptionPane.showConfirmDialog(
-	                    this,
-	                    "Exporting to Molpro is not possible from here. Go to Nanocad through Submit Jobs to use this option.\n" +
-	                    "                  Do you want to save current Nanocad workspace as a PDB file and close Nanocad?",
-	                    "Confirmation Message",
-	                    JOptionPane.YES_NO_OPTION
-	                    );
-				//if yes (save as pdb file and exit nanocad)
-				if (result == 0){
-				if (!runAsApplication)
-				{
-					tosave = new savewin("Save file", "", false, this);
-					tosave.setVisible(true);
-					String tosavefile = null;
-					String fileName = new String();
-				}
-				else
-				{
-		    		JFileChooser chooser = new JFileChooser();
-		    		chooser.setDialogTitle("Save as pdb file");
-		    		int retVal = chooser.showSaveDialog(null);
-		    		if (retVal == JFileChooser.APPROVE_OPTION)
-		    		{
-						String filename = chooser.getSelectedFile().getAbsolutePath();
-						if (filename != null)
-					    {
-					    	if (filename.indexOf(".pdb") == -1) filename = filename + ".pdb";
-					    	getSetStructure.select(0);
-					    	chooser.setSelectedFile(new File(filename));
-					    	saveFile(filename);
-					    }
-						
-		    		}
-		    		
-					}
-				if ( t != null){
-            		t.setVisible(false);
-            	}
-            	this.setVisible(false);
-            	optsComponent.selectedFrontPanel=0;
-            	break;
-				}else{
-					getSetStructure.select(0);
-					optsComponent.selectedFrontPanel=1;
-					break;	
-				}
-				
-			}
+			//FIXME
+//			if(optsComponent.selectedFrontPanel==1){
+//				//confirmation to save pdb file or not
+//				int result = JOptionPane.showConfirmDialog(
+//	                    this,
+//	                    "Exporting to Molpro is not possible from here. Go to Nanocad through Submit Jobs to use this option.\n" +
+//	                    "                  Do you want to save current Nanocad workspace as a PDB file and close Nanocad?",
+//	                    "Confirmation Message",
+//	                    JOptionPane.YES_NO_OPTION
+//	                    );
+//				//if yes (save as pdb file and exit nanocad)
+//				if (result == 0){
+//				if (!runAsApplication)
+//				{
+//					tosave = new savewin("Save file", "", false, this);
+//					tosave.setVisible(true);
+//					String tosavefile = null;
+//					String fileName = new String();
+//				}
+//				else
+//				{
+//		    		JFileChooser chooser = new JFileChooser();
+//		    		chooser.setDialogTitle("Save as pdb file");
+//		    		int retVal = chooser.showSaveDialog(null);
+//		    		if (retVal == JFileChooser.APPROVE_OPTION)
+//		    		{
+//						String filename = chooser.getSelectedFile().getAbsolutePath();
+//						if (filename != null)
+//					    {
+//					    	if (filename.indexOf(".pdb") == -1) filename = filename + ".pdb";
+//					    	getSetStructure.select(0);
+//					    	chooser.setSelectedFile(new File(filename));
+//					    	saveFile(filename);
+//					    }
+//
+//		    		}
+//
+//					}
+//				if ( t != null){
+//            		t.setVisible(false);
+//            	}
+//            	this.setVisible(false);
+//            	optsComponent.selectedFrontPanel=0;
+//            	break;
+//				}else{
+//					getSetStructure.select(0);
+//					optsComponent.selectedFrontPanel=1;
+//					break;
+//				}
+//
+//			}
 			else{
 			if (clearFlag == true) break;
             else
@@ -788,7 +772,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                 	System.err.println(molproOut);
                 	fw.close();
                     
-                    exportedApplication = Invariants.APP_NAME_MOLPRO;
+                    exportedApplication = Settings.APP_NAME_MOLPRO;
                     
 				}
                 
@@ -1076,7 +1060,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     public void viewVMDJob(){
       	String VMD="";
       	String VMD_mac_linux="";
-      	VMDPathFileLoc = Env.getApplicationDataDir()+File.separator+"VMDPathFile.inp";
+      	VMDPathFileLoc = Settings.getApplicationDataDir()+File.separator+"VMDPathFile.inp";
       	System.out.println("VMDpathfile: "+VMDPathFileLoc);
       	File VMDF = new File(VMDPathFileLoc);
           try {
@@ -1928,7 +1912,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     class PDBorMOL2FileFilter extends FileFilter {
 
         /** Accept only .pdb or .mol2 files.
-         *  @param file The file to be checked.
+         *  @param fileOrDirectory The file to be checked.
          *  @return true if the file is a directory, a .pdb or .mol2 file.
          */
         public boolean accept(File fileOrDirectory) {
@@ -3454,10 +3438,11 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     	//ArrayList molInfsplit = (ArrayList) Arrays.asList(molInfo.split("\n"));
     	
     	//added by Shashank and Sandeep@ CCS,UKY
-    	if(stuffInside.selectedGUI==1)
-    	{   // G03InputGUI selected.. default template should be null
-    		templateTop="";
-    	}
+    	//FIXME
+//		if(stuffInside.selectedGUI==1)
+//    	{   // G03InputGUI selected.. default template should be null
+//    		templateTop="";
+//    	}
     	
     	
     	
@@ -3586,10 +3571,11 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 	    "------- XZ is 1st plane for both bends -------\n" +
 	    " $LIBE  APTS(1)=1.0,0.0,0.0,1.0,0.0,0.0 $END\n";
 
-		if(stuffInside.selectedGUI == 1)
-		{
-			templateTop = templateBottom = "";
-		}
+		//FIXME
+//		if(stuffInside.selectedGUI == 1)
+//		{
+//			templateTop = templateBottom = "";
+//		}
         String text = templateTop;
         StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
         // ignore first line of molInfo

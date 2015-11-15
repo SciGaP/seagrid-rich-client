@@ -68,15 +68,7 @@ package nanocad;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import javax.swing.*;
-
-import org.gridchem.client.Invariants;
-import org.gridchem.client.NanocadTask;
-import org.gridchem.client.Trace;
-import org.gridchem.client.gui.panels.*;
-import org.gridchem.client.gui.panels.myccg.job.JobPanel;
-
 
 public class nanocadFrame2 extends JFrame implements ActionListener
 {
@@ -105,8 +97,7 @@ public class nanocadFrame2 extends JFrame implements ActionListener
     
     public nanocadFrame2()
     {
-        super("Nanocad"+" - "+JobPanel.jobName);
-        Trace.entry();
+        super("Nanocad Editor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 /*        addWindowListener( new java.awt.event.WindowAdapter() {
             public void WindowClosing(WindowEvent e) {
@@ -166,8 +157,6 @@ public class nanocadFrame2 extends JFrame implements ActionListener
 //        frame.repaint();
 //        repaint();
 
-    Trace.exit();
- 
     }
 
     public void actionPerformed(ActionEvent evt)
@@ -190,7 +179,7 @@ public class nanocadFrame2 extends JFrame implements ActionListener
     } 
     
     private Timer getNanocadTimer() {
-        return new Timer(Invariants.ONE_SECOND, new ActionListener() {
+        return new Timer(Settings.ONE_SECOND, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 //progressBar.setValue(0);
                 //Trace.note("nanocadTask.current = " + nanocadTask.getCurrent() );

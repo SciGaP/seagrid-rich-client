@@ -39,14 +39,9 @@ DEALINGS WITH THE SOFTWARE.
 
 package nanocad;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.net.*;
-import java.text.*;
 import java.util.*;
-
-import org.gridchem.client.common.Settings;
 
 public class GetDataFile
 {
