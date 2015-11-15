@@ -1,0 +1,13 @@
+COMPND  permanganate3.pdb       
+HETATM    1 Mn                  -0.209  -0.304  -0.027
+HETATM    2  O                   0.959  -1.117  -1.160
+HETATM    3  O                   0.427   1.341   0.423
+HETATM    4  O                  -1.825  -0.126  -0.845 
+HETATM    5  O                  -0.398  -1.313   1.476   
+CONNECT   1    2    3    4    5
+CONNECT    2    1                  
+CONNECT    3    1                  
+CONNECT    4    1                  
+CONNECT    5    1 
+END   
+ÿ
