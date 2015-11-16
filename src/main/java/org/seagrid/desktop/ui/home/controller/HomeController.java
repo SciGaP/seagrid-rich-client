@@ -29,6 +29,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -39,6 +41,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -57,7 +60,6 @@ import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
-import org.seagrid.desktop.ui.login.LoginWindow;
 import org.seagrid.desktop.ui.project.ProjectWindow;
 import org.seagrid.desktop.ui.storage.MassStorageBrowserWindow;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -122,6 +124,12 @@ public class HomeController {
     @FXML
     private Button logoutBtn;
 
+    @FXML
+    private MenuItem aboutMenuItem;
+
+    @FXML
+    private MenuItem appExitMenuItem;
+
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
     @SuppressWarnings("unused")
@@ -170,7 +178,44 @@ public class HomeController {
             ((Stage)logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
         });
+        aboutMenuItem.setOnAction(event -> {
+            String imgtext = "<img src=\"File:///" + HomeController.class.getResource("/images/logo.png").getPath()
+                    + "\" height=50 width=50>";
+            String textinfo1 = "<div style=\"background-color:#E7EEF6; color:#000000\">" +
+                    "<div style=\"background-color:#A7B3C7; color:#FFFFFF;\">" +
+                    imgtext + "<font size=5> Welcome to Science and Engineering Applications Grid (SEAGrid) !!" +
+                    "</font>" +
+                    "<br></div>" +
+                    "<p>You are running the " +
+                    "<Font color='green'>SEAGrid Desktop Client </font>" +
+                    "Application. </p>";
+            String textinfo2 = "<p>To use Web Portal and for more information, " +
+                    " visit <a href='https://seagrid.org/'>https://seagrid.org/</a></div></p>";
+            String textinfo3 = "<p>If you do not have SEAGrid account, you may request one on the web portal." +
+                    "</div></p>";
 
+            String textinfo4 = "<br><p><Font color='red'>Note: This version is in active development and will" +
+                    " be auto-updated periodically.</font></p>";
+
+            WebView webView = new WebView();
+            webView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
+            SEAGridDialogHelper.showInformationDialog(
+                "Information Dialog",
+                "SEAGrid Desktop Client",
+                webView,
+                logoutBtn.getScene().getWindow());
+        });
+
+        appExitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                boolean result = SEAGridDialogHelper.showConfirmDialog("Confirmation Dialog", "Confirm your action",
+                        "Are sure you want to exit the application?");
+                if(result){
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     public void initProjectTreeView(){

@@ -23,15 +23,21 @@ package org.seagrid.desktop.ui.commons;
 import javafx.concurrent.Service;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.ExceptionDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 public class SEAGridDialogHelper {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridDialogHelper.class);
@@ -80,5 +86,37 @@ public class SEAGridDialogHelper {
         notification.text(message);
         notification.title(title);
         notification.showInformation();
+    }
+
+    public static boolean showConfirmDialog(String title, String headerText, String contentText){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void showInformationDialog(String title, String headerText, String contentText, Window parent){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.initOwner(parent);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
+    public static void showInformationDialog(String title, String headerText, WebView webView, Window parent){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.initOwner(parent);
+        alert.getDialogPane().setContent(webView);
+        alert.showAndWait();
     }
 }
