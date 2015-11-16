@@ -268,11 +268,13 @@ public class ExperimentSummaryController {
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    Hyperlink hyperlink = new Hyperlink(Paths.get(input.getValue()).getFileName().toString());
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(input.getValue()).getFileName()
+                            .toString());
                     TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
-                        //FIXME the path has different different forms.
-                        String[] bits = input.getValue().split(":");
+                        //FIXME
+                        String dataRoot = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName();
+                        String[] bits = input.getValue().replaceAll(dataRoot,"").split(":");
                         String filePathString = bits[bits.length-1];
                         Path filePath = Paths.get(filePathString);
                         downloadFile(filePath, experimentModel);
@@ -298,10 +300,13 @@ public class ExperimentSummaryController {
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    Hyperlink hyperlink = new Hyperlink(Paths.get(output.getValue()).getFileName().toString());
+                    //FIXME
+                    String dataRoot = "/var/www/portal/experimentData";
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(output.getValue())
+                            .getFileName().toString());
                     TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
-                        downloadFile(Paths.get(output.getValue()), experimentModel);
+                        downloadFile(Paths.get(output.getValue().replaceAll(dataRoot, "")), experimentModel);
                     });
                     experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                     break;

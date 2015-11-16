@@ -341,14 +341,16 @@ public class ExperimentCreateController {
     private void createExperiment(boolean launch){
         if(validateExperimentFields()){
             //FIXME Hardcoded value
-            String remoteDataDir = "/var/www/portal/experimentData/" + UUID.randomUUID().toString() + "/";
+            String randomString = UUID.randomUUID().toString();
+            String remoteDataDir = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName() + "/"
+                    + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir);
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<InputDataObjectType, Object> entry = it.next();
                 if(entry.getKey().getType().equals(DataType.URI)) {
                     File file = (File) entry.getValue();
-                    uploadFiles.put(remoteDataDir + file.getName(), file);
+                    uploadFiles.put("/" + randomString + "/" + file.getName(), file);
                 }
             }
             if(uploadFiles.size() > 0){

@@ -40,7 +40,7 @@ public abstract class GuiFileTask extends Task<Boolean> {
         JSch jsch = new JSch();
         session = jsch.getSession(SEAGridContext.getInstance().getUserName(),
                 SEAGridContext.getInstance().getSFTPHost(), SEAGridContext.getInstance().getSFTPPort());
-        session.setPassword("password");
+        session.setPassword(SEAGridContext.getInstance().getOAuthToken());
         java.util.Properties config = new java.util.Properties();
         config.put("StrictHostKeyChecking", "no");
         session.setConfig(config);

@@ -108,9 +108,10 @@ public class MassStorageBrowserController {
             fbLocalPath.setAlignment(Pos.BASELINE_LEFT);
             fbRemotePath.setAlignment(Pos.BASELINE_LEFT);
         }catch (Exception e){
-            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalPath.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", null,
                     "Failed opening mass storage browser");
-            ((Stage)fbLocalPath.getScene().getWindow()).close();
+            if(fbLocalPath != null && fbLocalPath.getScene() != null && fbLocalPath.getScene().getWindow() != null)
+                ((Stage)fbLocalPath.getScene().getWindow()).close();
         }
     }
 
@@ -251,7 +252,7 @@ public class MassStorageBrowserController {
     }
 
     private void initializeRemoteFileTable() throws SftpException, JSchException {
-        String remoteHome = "/var/www/portal";
+        String remoteHome = "/";
         this.currentRemotePath = Paths.get(remoteHome);
 
         fbRemoteFileTblFileName.setCellValueFactory(cellData-> new SimpleObjectProperty(cellData.getValue()));
@@ -352,8 +353,13 @@ public class MassStorageBrowserController {
             Dragboard db = event.getDragboard();
             if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                 FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
-                uploadFile(draggedFileListModel.getFilePath(),currentRemotePath.toString()+"/"+draggedFileListModel
-                        .getFileName(),draggedFileListModel);
+                if(currentRemotePath.getParent() != null){
+                    uploadFile(draggedFileListModel.getFilePath(),currentRemotePath.toString()+"/"+draggedFileListModel
+                            .getFileName(),draggedFileListModel);
+                }else{
+                    uploadFile(draggedFileListModel.getFilePath(),"/"+draggedFileListModel
+                            .getFileName(),draggedFileListModel);
+                }
                 event.setDropCompleted(true);
                 event.consume();
             }
