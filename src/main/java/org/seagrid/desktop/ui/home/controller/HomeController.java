@@ -45,6 +45,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import nanocad.NanocadMain;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
@@ -130,6 +131,9 @@ public class HomeController {
     @FXML
     private MenuItem appExitMenuItem;
 
+    @FXML
+    private MenuItem nanocadBtn;
+
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
     @SuppressWarnings("unused")
@@ -205,16 +209,15 @@ public class HomeController {
                 webView,
                 logoutBtn.getScene().getWindow());
         });
-
-        appExitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                boolean result = SEAGridDialogHelper.showConfirmDialog("Confirmation Dialog", "Confirm your action",
-                        "Are sure you want to exit the application?");
-                if(result){
-                    System.exit(0);
-                }
+        appExitMenuItem.setOnAction(event -> {
+            boolean result = SEAGridDialogHelper.showConfirmDialog("Confirmation Dialog", "Confirm your action",
+                    "Are sure you want to exit the application?");
+            if(result){
+                System.exit(0);
             }
+        });
+        nanocadBtn.setOnAction(event -> {
+            NanocadMain.showNanocad();
         });
     }
 

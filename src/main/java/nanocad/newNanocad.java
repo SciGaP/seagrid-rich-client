@@ -1069,7 +1069,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
           {
           	int result = JOptionPane.showConfirmDialog(
   		  			null,
-  		  			"It seems GridChem Client does not know location of VMD binary file on your machine.\n"
+  		  			"It seems Nanocad editor does not know location of VMD binary file on your machine.\n"
   		  			+ "Pressing 'OK' button will open a File Browser. Take browser to VMD directory.\n"+
   		  			"Select VMD executable (binary file) and then press open button.\n"+
   		  			"If you dont have VMD program, download and install it first.\n"+ 
