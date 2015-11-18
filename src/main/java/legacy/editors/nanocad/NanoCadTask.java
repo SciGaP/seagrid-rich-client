@@ -20,6 +20,8 @@
 */
 package legacy.editors.nanocad;
 
+import legacy.editors.Settings;
+
 import javax.swing.*;
 import java.io.File;
 /**

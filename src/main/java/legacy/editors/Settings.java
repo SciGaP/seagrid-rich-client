@@ -1,4 +1,4 @@
-package legacy.editors.nanocad;
+package legacy.editors;
 
 import java.io.File;
 

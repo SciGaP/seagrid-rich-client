@@ -46,7 +46,7 @@ DEALINGS WITH THE SOFTWARE.
 
 package legacy.editors.go3input;
 
-import legacy.editors.nanocad.Settings;
+import legacy.editors.Settings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

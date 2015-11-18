@@ -39,6 +39,8 @@ DEALINGS WITH THE SOFTWARE.
 
 package legacy.editors.nanocad;
 
+import legacy.editors.Settings;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;

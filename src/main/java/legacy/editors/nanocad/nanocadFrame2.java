@@ -66,6 +66,8 @@ DEALINGS WITH THE SOFTWARE.
 
 package legacy.editors.nanocad;
 
+import legacy.editors.Settings;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

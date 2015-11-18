@@ -45,7 +45,7 @@ DEALINGS WITH THE SOFTWARE.
 package legacy.editors.go3input;
 
 import legacy.editors.nanocad.newNanocad;
-import legacy.editors.nanocad.Settings;
+import legacy.editors.Settings;
 import legacy.editors.nanocad.nanocadFrame2;
 
 import javax.swing.*;
