@@ -236,7 +236,7 @@ public class GetDataFile
 	    String fName = URLEncoder.encode(dirOnMss+f.getName());
 	    String sys = URLEncoder.encode(system);
 
-        if (Settings.authenticatedGridChem) {
+        if (Settings.authenticated) {
     	    userName = URLEncoder.encode("ccguser");
             outStream.println("IsGridChem=" + URLEncoder.encode("true"));
             System.err.println("GetDataFile:IsGridChem=" + "true");
@@ -246,8 +246,8 @@ public class GetDataFile
         }
 	    outStream.println("Username=" + userName);
 	    System.err.println("GetDataFile:Username=" + userName);
-	    outStream.println("GridChemUsername=" + Settings.gridchemusername);
-	    System.err.println("GetDataFile:GridChemUsername=" + Settings.gridchemusername);
+	    outStream.println("GridChemUsername=" + Settings.username);
+	    System.err.println("GetDataFile:GridChemUsername=" + Settings.username);
 	    outStream.println("System=" + sys);
 	    System.err.println("GetDataFile:System=" + sys);
 	    outStream.println("fileName=" + fName);

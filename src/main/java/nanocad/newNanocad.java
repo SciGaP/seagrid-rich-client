@@ -378,8 +378,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		case 6: // Create a Gaussian Template close and go back to edit mode //lixh_3_4
 			
 			if(clearFlag) 
-				break; 
-			//FIXME
+				break;
+//			FIXME-SEAGrid
 //			if(optsComponent.selectedFrontPanel==1){
 //				//confirmation to save pdb file or not
 //				int result = JOptionPane.showConfirmDialog(
@@ -487,8 +487,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
 		case 7: // Create a Gamess Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
-				break; 
-			//FIXME
+				break;
+//			FIXME-SEAGrid
 //			if(optsComponent.selectedFrontPanel==1){
 //				//confirmation to save pdb file or not
 //				int result = JOptionPane.showConfirmDialog(
@@ -600,7 +600,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		case 8: // Create a NWchem Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
 				break; 
-			//FIXME
+//			FIXME-SEAGrid
 //			if(optsComponent.selectedFrontPanel==1){
 //				//confirmation to save pdb file or not
 //				int result = JOptionPane.showConfirmDialog(
@@ -696,8 +696,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		}
 		case 9: // Create a Molpro Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
-				break; 
-			//FIXME
+				break;
+//			FIXME-SEAGrid
 //			if(optsComponent.selectedFrontPanel==1){
 //				//confirmation to save pdb file or not
 //				int result = JOptionPane.showConfirmDialog(
@@ -3438,7 +3438,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     	//ArrayList molInfsplit = (ArrayList) Arrays.asList(molInfo.split("\n"));
     	
     	//added by Shashank and Sandeep@ CCS,UKY
-    	//FIXME
+//		FIXME-SEAGrid
 //		if(stuffInside.selectedGUI==1)
 //    	{   // G03InputGUI selected.. default template should be null
 //    		templateTop="";
@@ -3571,7 +3571,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 	    "------- XZ is 1st plane for both bends -------\n" +
 	    " $LIBE  APTS(1)=1.0,0.0,0.0,1.0,0.0,0.0 $END\n";
 
-		//FIXME
+//		FIXME-SEAGrid
 //		if(stuffInside.selectedGUI == 1)
 //		{
 //			templateTop = templateBottom = "";

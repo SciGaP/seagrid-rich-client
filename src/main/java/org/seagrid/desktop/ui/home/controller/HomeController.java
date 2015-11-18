@@ -45,7 +45,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import nanocad.NanocadMain;
+import nanocad.nanocadMain;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
@@ -217,7 +217,7 @@ public class HomeController {
             }
         });
         nanocadBtn.setOnAction(event -> {
-            NanocadMain.showNanocad();
+            nanocadMain.showNanocad();
         });
     }
 

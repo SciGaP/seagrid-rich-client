@@ -34,7 +34,7 @@ import java.io.File;
  * perform a time-consuming task.
  *
  */
-public class NanocadTask extends MyLongTask implements MyLongTaskInterface {
+class NanocadTask extends MyLongTask implements MyLongTaskInterface {
 
     public static boolean DEBUG = true;
     private JFrame frame;
