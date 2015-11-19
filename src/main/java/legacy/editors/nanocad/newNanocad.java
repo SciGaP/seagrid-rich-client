@@ -1,7 +1,7 @@
 
  package legacy.editors.nanocad;
 import legacy.editors.Settings;
-import legacy.editors.go3input.*;
+import legacy.editors.g03input.*;
 import legacy.editors.nanocad.minimize.mm3.mm3MinimizeAlgorythm;
 import legacy.editors.nanocad.minimize.uff.uffMinimizeAlgorythm;
 
