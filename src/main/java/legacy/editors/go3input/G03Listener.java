@@ -199,7 +199,7 @@ public class G03Listener implements ActionListener,KeyListener{
 //                        EditJobPanel ejp = new EditJobPanel(InputFile.tempinput,"Gaussian");
 //                        clearButtonFn();
 //                        showMolEditor.tempmol=null;
-//                        SubmitJobsWindow.si.mainFrame.dispose();
+                		G03MenuTree.mainFrame.dispose();
             		}// valid structure is true
                 
         		} // else part of noofelectrons=0

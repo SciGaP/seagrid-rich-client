@@ -409,6 +409,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 				InputfileReader.mulStr = null;
 
 				JFrame go3Frame = new G03MenuTree();
+				G03MenuTree.mainFrame = go3Frame;
 				go3Frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				go3Frame.pack();
 
@@ -449,9 +450,9 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 				}
 
 				if ( t != null){
-					t.setVisible(false);
+//					t.setVisible(false);
 				}
-				this.setVisible(false);
+//				this.setVisible(false);
 				break;
 			}
 		case 7: // Create a Gamess Input Template close and go back to edit mode //lixh_3_4
