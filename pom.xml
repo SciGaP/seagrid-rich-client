@@ -59,6 +59,40 @@
         </plugins>
     </build>
 
+    <!-- Dependencies for legacy Gamess Code-->
+    <profiles>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>jogl</groupId>
+                    <artifactId>jogl_linux_083111</artifactId>
+                    <version>1.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mac-profile</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>jogl</groupId>
+                    <artifactId>jogl_mac_083011</artifactId>
+                    <version>1.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencies>
 
         <!-- Airavata Dependencies-->
@@ -151,7 +185,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
-
     </dependencies>
 
 </project>

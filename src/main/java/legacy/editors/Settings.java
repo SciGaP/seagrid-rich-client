@@ -13,8 +13,8 @@ public class Settings {
     public static String username = "master";
     public static String defaultDirStr = "";
     public static String fileSeparator = File.separator;
-    private static String applicationDataDir = Settings.class.getResource("/legacy.editors/nanocad").getPath();
-    public static String jobDir = Settings.class.getResource("/legacy.editors/nanocad").getPath();
+    private static String applicationDataDir = Settings.class.getResource("/legacy.editors").getPath();
+    public static String jobDir = Settings.class.getResource("/legacy.editors").getPath();
     public static String httpsGateway = "https://ccg-mw1.ncsa.uiuc.edu/cgi-bin/";
 
     public static Settings getInstance() {

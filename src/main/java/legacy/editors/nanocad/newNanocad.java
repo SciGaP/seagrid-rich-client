@@ -42,7 +42,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     private double currentPotential = 0.0;
 
     //lixh_4/27/05
-    public static String applicationDataDir = Settings.getApplicationDataDir();
+    public static String applicationDataDir = Settings.getApplicationDataDir() + File.separator + "nanocad";
     public static String fileSeparator = Settings.fileSeparator;
     public static String txtDir = applicationDataDir + fileSeparator + "txt";
     public static String defaultFile;
@@ -1030,7 +1030,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
     public void viewVMDJob(){
       	String VMD="";
       	String VMD_mac_linux="";
-      	VMDPathFileLoc = Settings.getApplicationDataDir()+File.separator+"VMDPathFile.inp";
+      	VMDPathFileLoc = Settings.getApplicationDataDir()+ File.separator + "nanocad" + File.separator+"VMDPathFile.inp";
       	System.out.println("VMDpathfile: "+VMDPathFileLoc);
       	File VMDF = new File(VMDPathFileLoc);
           try {

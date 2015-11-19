@@ -66,7 +66,8 @@ final class ActualTask {
         if (!((new File(Settings.defaultDirStr + Settings.fileSeparator + "common")).exists()))
         {
             //nanocadFrame2.progressLabel.setText("Retrieve Molecule Database Progress");
-            String zipFileName =  Settings.getApplicationDataDir() + Settings.fileSeparator + "nanocaddata.zip";
+            String zipFileName =  Settings.getApplicationDataDir() + Settings.fileSeparator + "nanocad" + File.separator
+                    + "nanocaddata.zip";
             if (!((new File(zipFileName)).exists()))
             {
                 nanocadFrame2.progressLabel.setText("Progress: Retrieve Molecule database from remote system...");
@@ -81,7 +82,8 @@ final class ActualTask {
         if (!((new File(Settings.defaultDirStr + Settings.fileSeparator + "txt")).exists()))
         {
             //nanocadFrame2.progressLabel.setText("Retrieve .txt files Progress");
-            String zipFileName = Settings.getApplicationDataDir() + Settings.fileSeparator + "txt.zip";
+            String zipFileName = Settings.getApplicationDataDir() + Settings.fileSeparator + "nanocad" + File.separator
+                    + "txt.zip";
             if (!((new File(zipFileName)).exists()))
             {
                 nanocadFrame2.progressLabel.setText("Progress: Retrieve .txt files from remote system...");
