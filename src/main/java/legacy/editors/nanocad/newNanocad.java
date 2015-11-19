@@ -1,6 +1,7 @@
 
  package legacy.editors.nanocad;
 import legacy.editors.Settings;
+import legacy.editors.go3input.*;
 import legacy.editors.nanocad.minimize.mm3.mm3MinimizeAlgorythm;
 import legacy.editors.nanocad.minimize.uff.uffMinimizeAlgorythm;
 
@@ -10,9 +11,9 @@ import java.awt.event.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.Timer;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 public class newNanocad extends Applet implements MouseListener, MouseMotionListener
@@ -380,112 +381,79 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 			
 			if(clearFlag) 
 				break;
-//			FIXME-SEAGrid
-//			if(optsComponent.selectedFrontPanel==1){
-//				//confirmation to save pdb file or not
-//				int result = JOptionPane.showConfirmDialog(
-//	                    this,
-//	                    "This will open the Gaussian GUI, " +
-//	                    "and the current molecule will be exported there.\n" +
-//	                    "                         Do you want to proceed?",
-//	                    "Confirmation Message",
-//	                    JOptionPane.YES_NO_OPTION
-//	                    );
-//				//if yes (save as pdb file and exit nanocad)
-//				if (result == 0){
-//					stuffInside.selectedGUI=1;
-//
-//					RouteClass.keyIndex=0;
-//	    	        RouteClass.initCount=0;
-//	    	        OptTable.optC=0;
-//
-//	    	        //Call the new Gaussian GUI.
-//					stuffInside.showNewGUI();
-//					showMolEditor forString=new showMolEditor();
-//
-//					String gaussOut = GaussianOutput(grp.getXYZ());
-//					forString.tempmol=gaussOut;
-//					JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-//							" has been exported correctly. Make sure\n" +
-//							"to edit other sections of GUI.",
-//							      "GridChem: Gaussian GUI",
-//							      JOptionPane.WARNING_MESSAGE);
-//					// write to a file now
-//	            	boolean append = false;
-//	            	try
-//					{
-//	            		File f = new File(applicationDataDir+fileSeparator
-//	            				+ "tmp.txt");
-//	            		FileWriter fw = new FileWriter(f, append);
-//	            		fw.write(gaussOut);
-//	            		System.err.println("gaussOut = ");
-//	            		System.err.println(gaussOut);
-//	            		fw.close();
-//
-//	                    exportedApplication = Invariants.APP_NAME_GAUSSIAN;
-//					}
-//	            	catch (IOException ioe)
-//					{
-//	            		System.err.println("newNanocad:output Gaussian:" +
-//							"IOException");
-//	            		System.err.println(ioe.toString());
-//	            		ioe.printStackTrace();
-//					}
-//
-//				if ( t != null){
-//            		t.setVisible(false);
-//            	}
-//            	this.setVisible(false);
-//            	optsComponent.selectedFrontPanel=0;
-//            	break;
-//				}else{
-//					getSetStructure.select(0);
-//					optsComponent.selectedFrontPanel=1;
-//					break;
-//				}
-//
-//			}
-			else{
-                // runAsApplication 
-            	System.out.println(" Case 6 Gaussian Input Template being Generated");
-		        // 
-                // call editjobpaneltextwindow and add text to display
-            	// RHB: change the text on the editJobPanel!!!
-            	// This should not take too terribly long to do now that
-            	// I have figured out where it goes
-            	String gaussOut = GaussianOutput(grp.getXYZ());
-            	// write to a file now
-            	boolean append = false;
-            	try
-				{
-            		File f = new File(applicationDataDir+fileSeparator
-            				+ "tmp.txt");
-            		FileWriter fw = new FileWriter(f, append);
-            		fw.write(gaussOut);
-            		System.err.println("gaussOut = ");
-            		System.err.println(gaussOut);
-            		fw.close();
+			//FIXME-SEAGrid
+			int result = JOptionPane.showConfirmDialog(
+					this,
+					"This will open the Gaussian GUI, " +
+					"and the current molecule will be exported there.\n" +
+					"                         Do you want to proceed?",
+					"Confirmation Message",
+					JOptionPane.YES_NO_OPTION
+					);
+			//if yes (save as pdb file and exit nanocad)
+			if (result == 0){
 
-                    exportedApplication = Settings.APP_NAME_GAUSSIAN;
-				}
-            	catch (IOException ioe)
+				RouteClass.keyIndex=0;
+				RouteClass.initCount=0;
+				OptTable.optC=0;
+
+				//Create new Gaussian GUI.
+				JFrame.setDefaultLookAndFeelDecorated(true);
+				JDialog.setDefaultLookAndFeelDecorated(true);
+
+				InputFile.tempinput = new String();
+				InputfileReader.route = new String();
+				showMolEditor.tempmol = new String();
+				InputFile.inputfetched = 0;
+				InputfileReader.chrgStr = null;
+				InputfileReader.mulStr = null;
+
+				JFrame go3Frame = new G03MenuTree();
+				go3Frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				go3Frame.pack();
+
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+				go3Frame.setSize(screenSize.width - 200, screenSize.height - 150);
+				go3Frame.setResizable(true);
+				go3Frame.setVisible(true);
+				showMolEditor forString=new showMolEditor();
+
+				String gaussOut = GaussianOutput(grp.getXYZ());
+				forString.tempmol=gaussOut;
+				JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+						" has been exported correctly. Make sure\n" +
+						"to edit other sections of GUI.",
+							  "GridChem: Gaussian GUI",
+							  JOptionPane.WARNING_MESSAGE);
+				// write to a file now
+				boolean append = false;
+				try
 				{
-            		System.err.println("newNanocad:output Gaussian:" +
+					File f = new File(applicationDataDir+fileSeparator
+							+ "tmp.txt");
+					FileWriter fw = new FileWriter(f, append);
+					fw.write(gaussOut);
+					System.err.println("gaussOut = ");
+					System.err.println(gaussOut);
+					fw.close();
+
+					exportedApplication = Settings.APP_NAME_GAUSSIAN;
+				}
+				catch (IOException ioe)
+				{
+					System.err.println("newNanocad:output Gaussian:" +
 						"IOException");
-            		System.err.println(ioe.toString());
-            		ioe.printStackTrace();
+					System.err.println(ioe.toString());
+					ioe.printStackTrace();
 				}
-            	
-                // close molecular editor
-            	// close the structure panel 
-            	if ( t != null){
-            		t.setVisible(false);
-            	}
-            	this.setVisible(false);
-                break;
-                
-            }
 
+				if ( t != null){
+					t.setVisible(false);
+				}
+				this.setVisible(false);
+				break;
+			}
 		case 7: // Create a Gamess Input Template close and go back to edit mode //lixh_3_4
 			if(clearFlag) 
 				break;
@@ -3442,7 +3410,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //		FIXME-SEAGrid
 //		if(stuffInside.selectedGUI==1)
 //    	{   // G03InputGUI selected.. default template should be null
-//    		templateTop="";
+    		templateTop="";
 //    	}
     	
     	
