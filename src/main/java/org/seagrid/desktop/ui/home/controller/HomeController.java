@@ -124,13 +124,16 @@ public class HomeController {
     private Button logoutBtn;
 
     @FXML
+    private Button nanocadBtn;
+
+    @FXML
     private MenuItem aboutMenuItem;
 
     @FXML
     private MenuItem appExitMenuItem;
 
     @FXML
-    private MenuItem nanocadBtn;
+    private MenuItem nanocadMenuBtn;
 
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
@@ -176,6 +179,7 @@ public class HomeController {
                         "Failed to open Mass Storage Browser");
             }
         });
+        nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
         logoutBtn.setOnAction(event -> {
             ((Stage)logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
@@ -214,9 +218,7 @@ public class HomeController {
                 System.exit(0);
             }
         });
-        nanocadBtn.setOnAction(event -> {
-            nanocadMain.showNanocad();
-        });
+        nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
     }
 
     public void initProjectTreeView(){

@@ -13,7 +13,8 @@ public class nanocadMain
 
     public static void showNanocad() {
         nano = new nanocadFrame2();
-        nano.setBounds(10, 10, 700, 600);
+        nano.setSize(700, 600);
+        nano.setLocationRelativeTo(null);
         nano.setVisible(true);
     }
 }

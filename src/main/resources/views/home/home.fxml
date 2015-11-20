@@ -106,9 +106,16 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
+                <Menu mnemonicParsing="false" text="New">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Experiment" />
+                    <MenuItem mnemonicParsing="false" text="Project" />
+                  </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Open">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadBtn" />
+                    <MenuItem mnemonicParsing="false" text="Mass Storage" fx:id="massStorageMenuButton" />
+                    <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
                   </items>
                 </Menu>
                 <MenuItem mnemonicParsing="false" text="Close" fx:id="appExitMenuItem" />
@@ -121,7 +128,7 @@
             </Menu>
           </menus>
           <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+            <Insets left="5.0" right="5.0" />
           </VBox.margin>
         </MenuBar>
         <HBox minHeight="28.999908447265625" prefHeight="28.999908447265625" prefWidth="790.0">
@@ -136,12 +143,17 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>
             </Button>
-            <Button fx:id="browseMassStorageBtn" mnemonicParsing="false" text="Browse Mass Storage">
+            <Button fx:id="browseMassStorageBtn" mnemonicParsing="false" text="Mass Storage">
               <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>
             </Button>
-            <Region prefHeight="24.0" prefWidth="212.0" HBox.hgrow="ALWAYS">
+            <Button id="browseMassStorageBtn" fx:id="nanocadBtn" mnemonicParsing="false" text="Nanocad">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+              </HBox.margin>
+            </Button>
+            <Region prefHeight="19.0" prefWidth="168.0" HBox.hgrow="ALWAYS">
               <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
               </HBox.margin>

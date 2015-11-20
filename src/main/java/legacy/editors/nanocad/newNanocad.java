@@ -2,7 +2,7 @@
 package legacy.editors.nanocad;
 import legacy.editors.Settings;
 import legacy.editors.g03input.*;
-import legacy.editors.gamess.gamessGUI.GamessGUI;
+import legacy.editors.gamess.GamessGUI;
 import legacy.editors.nanocad.minimize.mm3.mm3MinimizeAlgorythm;
 import legacy.editors.nanocad.minimize.uff.uffMinimizeAlgorythm;
 

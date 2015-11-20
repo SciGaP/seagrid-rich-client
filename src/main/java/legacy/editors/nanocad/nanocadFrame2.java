@@ -155,7 +155,7 @@ public class nanocadFrame2 extends JFrame implements ActionListener
         nano.init();
         nano.start();
 //        frame.setVisible(true);
-        setVisible(true);
+//        setVisible(true);
 //        frame.repaint();
 //        repaint();
 
