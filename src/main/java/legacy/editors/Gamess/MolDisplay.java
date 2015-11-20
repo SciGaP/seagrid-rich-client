@@ -42,23 +42,28 @@ package legacy.editors.gamess;
 
 // Molecular Display - R. Michael Sheetz (Oct 2006)
 
+import com.jogamp.opengl.util.gl2.GLUT;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.lang.*;
 
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
-
-import net.java.games.jogl.*;
-import net.java.games.jogl.util.*;
 
 public class MolDisplay extends JInternalFrame
 {
      static public GLCanvas glcanvas = null;
 
-     GL gl;				// commented by Narendra Kumar for adding "GL4bc"
+     GL4bc gl;				// commented by Narendra Kumar for adding "GL4bc"
      //GL4bc gl;		// added by Narendra Kumar
 
      GLU glu;
@@ -167,16 +172,16 @@ public class MolDisplay extends JInternalFrame
           mdisplay = new MolecularDisplay();
           
           // Step1: choose a GLProfile
-          //GLProfile glp = GLProfile.getDefault();					// added by Narendra Kumar
+          GLProfile glp = GLProfile.getDefault();					// added by Narendra Kumar
           
           // Step2: Configure GLCapabilities
-          GLCapabilities glcaps = new GLCapabilities() ;			// javax.media.opengl package needs an arugment - commented by Narendra Kumar           
+          GLCapabilities glcaps = new GLCapabilities(glp) ;			// javax.media.opengl package needs an arugment - commented by Narendra Kumar
           //GLCapabilities glcaps = new GLCapabilities(glp) ;		// parameter added to constructor method of GLCapabilities - added by Narendra Kumar
           glcaps.setDoubleBuffered(true);
           	
           // Step 3: create a GLCanvas 
-          glcanvas = GLDrawableFactory.getFactory().createGLCanvas(glcaps);	// commented by Narendra Kumar
-          //glcanvas = new GLCanvas (glcaps);								// GLCanvas can be instantiated using GLCapablities object - added by Narendra Kumare
+//          glcanvas = GLDrawableFactory.getFactory().createGLCanvas(glcaps);	// commented by Narendra Kumar
+          glcanvas = new GLCanvas(glcaps);								// GLCanvas can be instantiated using GLCapablities object - added by Narendra Kumare
           
           glcanvas.addGLEventListener(mdisplay);
           glcanvas.addMouseMotionListener(mdisplay);
@@ -595,14 +600,18 @@ public class MolDisplay extends JInternalFrame
          }
          
      }
-     public class MolecularDisplay implements GLEventListener, MouseMotionListener
-     {
-          public void init(GLDrawable gldraw)
+     public class MolecularDisplay implements MouseMotionListener, GLEventListener {
+          public void init(GLAutoDrawable gldraw)
           {
               //parseDataFile(); 
         	  drawMolecule("");
           }
-    	
+
+          @Override
+          public void dispose(GLAutoDrawable glAutoDrawable) {
+
+          }
+
           public boolean drawMolecule(String data)
           {
                bkg_red = 0.0f;
@@ -4112,7 +4121,7 @@ public class MolDisplay extends JInternalFrame
           
           // method definition "display" modified  - 1st parameter changed to GLAutoDrawable from GLDrawable
           //public void display(GLAutoDrawable gldraw)
-          public void display(GLDrawable gldraw)          
+          public void display(GLAutoDrawable gldraw)
           {
                double height, width, aspect;   
                double fov, near, far;
@@ -4124,16 +4133,16 @@ public class MolDisplay extends JInternalFrame
                //Set initial display to true
 //               initDisplay = true;
                
-               gl = gldraw.getGL();				// method call not available - commented by narendra kumar
-               //gl = (GL4bc)gldraw.getGL();			// method call modified - added by narendra kumar
-               //gl = gldraw.getGL().getGL4bc();
+//               gl = gldraw.getGL();				// method call not available - commented by narendra kumar
+               gl = (GL4bc)gldraw.getGL();			// method call modified - added by narendra kumar
+//               gl = gldraw.getGL().getGL4bc();
 
-               glu = gldraw.getGLU();		// commented by Narendra Kumar
-               //glu = new GLU();				// added by Narendra Kumar
+//               glu = gldraw.getGLU();		// commented by Narendra Kumar
+               glu = new GLU();				// added by Narendra Kumar
 
                // Set up camera
-               gl.glMatrixMode(GL.GL_PROJECTION);				// static variable's class call not available - commented by narendra kumar
-               //gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);		// static variable's class call modified - added by narendra kumar
+//               gl.glMatrixMode(GL.GL_PROJECTION);				// static variable's class call not available - commented by narendra kumar
+               gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);		// static variable's class call modified - added by narendra kumar
                gl.glLoadIdentity();
 
                // Aspect ratio
@@ -4147,8 +4156,8 @@ public class MolDisplay extends JInternalFrame
 
                glu.gluPerspective(fov, aspect, near, far);
  
-               gl.glMatrixMode(GL.GL_MODELVIEW);			// commented by narendra kumar
-               //gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);	// static variable's class call modified - added by narendra kumar
+//               gl.glMatrixMode(GL.GL_MODELVIEW);			// commented by narendra kumar
+               gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);	// static variable's class call modified - added by narendra kumar
                gl.glLoadIdentity();
 
                // Set background color of canvas
@@ -4164,22 +4173,22 @@ public class MolDisplay extends JInternalFrame
                float ambient[] = {0.25f, 0.25f, 0.25f, 0.5f};
 
                //add 4th parameter to method call "glLightfv" - param_offsets (int) -- Narendra Kumar
-               gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, position);
-               //gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, position,param_offsets);
+//               gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, position);
+               gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION, position,param_offsets);
                               
                // add 4th parameter to method call "glLightfv" - param_offsets (int) -- Narendra Kumar
-               gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, diffuse);
-               //gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, diffuse,param_offsets);
+//               gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, diffuse);
+               gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE, diffuse,param_offsets);
                               
                // add 4th parameter to method call "glLightfv" - param_offsets (int) -- Narendra Kumar
-               gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, ambient);               
-               //gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, ambient,param_offsets);
+//               gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, ambient);
+               gl.glLightfv(GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_AMBIENT, ambient,param_offsets);
                               
-               gl.glEnable(GL.GL_LIGHTING);		
-               //gl.glEnable(GLLightingFunc.GL_LIGHTING);		// static variable's class call modified - added by narendra kumar
+//               gl.glEnable(GL.GL_LIGHTING);
+               gl.glEnable(GLLightingFunc.GL_LIGHTING);		// static variable's class call modified - added by narendra kumar
                
-               gl.glEnable(GL.GL_LIGHT0);
-               //gl.glEnable(GLLightingFunc.GL_LIGHT0);		// static variable's class call modified - added by narendra kumar
+//               gl.glEnable(GL.GL_LIGHT0);
+               gl.glEnable(GLLightingFunc.GL_LIGHT0);		// static variable's class call modified - added by narendra kumar
                
                gl.glEnable(GL.GL_DEPTH_TEST);	
 
@@ -4193,24 +4202,24 @@ public class MolDisplay extends JInternalFrame
                gl.glLineWidth(3.5f);
 
                // added 4th parameter for method call "glMaterialfv" - param_offsets (int) && class call of static variable modified - narendra kumar               
-               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, x_axismat);
-               //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, x_axismat, param_offsets);
+//               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, x_axismat);
+               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, x_axismat, param_offsets);
                gl.glBegin(GL.GL_LINES);
                gl.glVertex3d(0.0, 0.0, 0.0);
                gl.glVertex3d(1.0, 0.0, 0.0);
                gl.glEnd();
 
                // added 4th parameter for method call "glMaterialfv" - param_offsets (int) && class call of static variable modified - narendra kumar
-               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, y_axismat);
-               //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, y_axismat, param_offsets);
+//               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, y_axismat);
+               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, y_axismat, param_offsets);
                gl.glBegin(GL.GL_LINES);
                gl.glVertex3d(0.0, 0.0, 0.0);
                gl.glVertex3d(0.0, 1.0, 0.0);
                gl.glEnd();
 
                // added 4th parameter for method call "glMaterialfv" - param_offsets (int) && class call of static variable modified - narendra kumar
-               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, z_axismat);
-               //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, z_axismat, param_offsets);
+//               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, z_axismat);
+               gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, z_axismat, param_offsets);
                gl.glBegin(GL.GL_LINES);
                gl.glVertex3d(0.0, 0.0, 0.0);
                gl.glVertex3d(0.0, 0.0, 1.0);
@@ -4235,13 +4244,13 @@ public class MolDisplay extends JInternalFrame
  
           // method definition "drawMolecule" modified  - 1st parameter changed to GLAutoDrawable from GLDrawable
           //public void drawMolecule(GLAutoDrawable gldrawable, double theta, double phi, double[] coords, boolean displayGeom, boolean bondsVisible, boolean bondsColored, int scaleRadius, double scaleFactor, boolean recomputeConnectivity)
-          public void drawMolecule(GLDrawable gldrawable, double theta, double phi, double[] coords, boolean displayGeom, boolean bondsVisible, boolean bondsColored, int scaleRadius, double scaleFactor, boolean recomputeConnectivity)
+          public void drawMolecule(GLAutoDrawable gldrawable, double theta, double phi, double[] coords, boolean displayGeom, boolean bondsVisible, boolean bondsColored, int scaleRadius, double scaleFactor, boolean recomputeConnectivity)
           {
-        	  gl = gldrawable.getGL();		// method call not available - commented by narendra kumar
-        	  //gl = (GL4bc)gldrawable.getGL();	// method call modified - added by narendra kumar
+//        	  gl = gldrawable.getGL();		// method call not available - commented by narendra kumar
+        	  gl = (GL4bc)gldrawable.getGL();	// method call modified - added by narendra kumar
 
-              glu = gldrawable.getGLU();		// commented by Narendra Kumar
-              //glu = new GLU();
+//              glu = gldrawable.getGLU();		// commented by Narendra Kumar
+              glu = new GLU();
 
                double radius =0 ;
                
@@ -4272,8 +4281,8 @@ public class MolDisplay extends JInternalFrame
                     material[3] = material_alphaValue; 
 
                     // add 4th parameter to method call "glMaterialfv"- param_offsets (int) -- Narendra Kumar
-                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, material);
-                    //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, material,param_offsets);                    
+//                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, material);
+                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, material,param_offsets);
 
                     gl.glPushMatrix();
 
@@ -4291,8 +4300,8 @@ public class MolDisplay extends JInternalFrame
                          }
 
                          // commented by narendra kumar - 1st parameter not allowed for method call "glutSolidSphere"                         
-                         glut.glutSolidSphere(glu, radius, 100, 360);
-                         //glut.glutSolidSphere(radius, 100, 360);                         
+//                         glut.glutSolidSphere(glu, radius, 100, 360);
+                         glut.glutSolidSphere(radius, 100, 360);
                     }
                     else if (scaleRadius == 1)
                     {
@@ -4306,14 +4315,14 @@ public class MolDisplay extends JInternalFrame
                          }
 
                          // commented by narendra kumar - 1st parameter not allowed for method call "glutSolidSphere"                         
-                         glut.glutSolidSphere(glu, radius, 100, 360);
-                         //glut.glutSolidSphere(radius, 100, 360);                         
+//                         glut.glutSolidSphere(glu, radius, 100, 360);
+                         glut.glutSolidSphere(radius, 100, 360);
                     }
                     else if (scaleRadius == 2)
                     {
                         // commented by narendra kumar - 1st parameter not allowed for method call "glutSolidSphere"                         
-                        glut.glutSolidSphere(glu, radius, 100, 360);
-                    	//glut.glutSolidSphere(radius, 100, 360);                         
+//                        glut.glutSolidSphere(glu, radius, 100, 360);
+                    	glut.glutSolidSphere(radius, 100, 360);
                     }
 
                     gl.glPopMatrix();
@@ -4324,8 +4333,8 @@ public class MolDisplay extends JInternalFrame
                {
                     float[] bondmat = {0.9f, 0.9f, 0.9f, 1.0f};
                     // add 4th parameter to method call "glMaterialfv"- param_offsets (int) -- Narendra Kumar                    
-                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondmat);
-                    //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondmat,param_offsets);                                        
+//                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondmat);
+                    gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondmat,param_offsets);
 
                     // VFI atomic radii (from CrystalMaker 1.4.0)
                     double[ ] ar  =  { 0.46, 1.22, 1.55, 1.13, 0.91, 0.77, 0.71, 0.48, 0.42, 1.60, 1.89, 1.60, 1.43, 1.34, 1.30, 0.88, 0.79, 1.92, 2.36, 1.97, 1.64, 1.46, 1.34, 1.40, 1.31, 1.26, 1.25, 1.24, 1.28, 1.27, 1.39, 1.39, 1.48, 1.43, 0.94, 1.98, 2.48, 2.15, 1.81, 1.60, 1.45, 1.39, 1.36, 1.34, 1.34, 1.37, 1.44, 1.56, 1.66, 1.58, 1.61, 1.70, 1.15, 2.18, 2.68, 2.21, 1.87, 1.83, 1.82, 1.82, 2.05, 1.81, 2.02, 1.79, 1.77, 1.77, 1.76, 1.75, 1.75, 1.93, 1.74, 1.59, 1.46, 1.40, 1.37, 1.35, 1.35, 1.38, 1.44, 1.60, 1.71, 1.75, 1.82, 1.35, 1.27, 1.20, 1.00, 1.00, 2.03, 1.80, 1.62, 1.53, 1.50, 1.50, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
@@ -4439,8 +4448,8 @@ public class MolDisplay extends JInternalFrame
                                         gl.glRotated(angle, n11, n22, n33);
  
                                         // add 4th parameter to method call "glMaterialfv"- param_offsets (int) -- Narendra Kumar                                        
-                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, defaultBondMat);                                        
-                                        //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, defaultBondMat,param_offsets);                                           
+//                                        gl.glMaterialfy(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, defaultBondMat);
+                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, defaultBondMat,param_offsets);
                                         glu.gluCylinder(quadric, bondRadius, bondRadius, bd, 20, 20); 
                                    }
                                    else
@@ -4458,8 +4467,8 @@ public class MolDisplay extends JInternalFrame
                                         gl.glRotated(angle, n11, n22, n33);
 
                                         // add 4th parameter to method call "glMaterialfv"- param_offsets (int) -- Narendra Kumar                                        
-                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondMat1);                                        
-                                        //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondMat1,param_offsets);                                                                                   
+//                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondMat1);
+                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondMat1,param_offsets);
                                         glu.gluCylinder(quadric, bondRadius, bondRadius, bd/2, 20, 20);
 
                                         gl.glRotated(-angle, n11, n22, n33);
@@ -4467,8 +4476,8 @@ public class MolDisplay extends JInternalFrame
                                         gl.glRotated(angle, n11, n22, n33);
   
                                         // add 4th parameter to method call "glMaterialfv"- param_offsets (int) -- Narendra Kumar                                        
-                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondMat2);                                        
-                                        //gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondMat2,param_offsets);                                          
+//                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, bondMat2);
+                                        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GLLightingFunc.GL_AMBIENT_AND_DIFFUSE, bondMat2,param_offsets);
 
                                         glu.gluCylinder(quadric, bondRadius, bondRadius, bd/2, 20, 20);
                                    }
@@ -4545,11 +4554,11 @@ public class MolDisplay extends JInternalFrame
           {
           }
 
-          public void reshape(GLDrawable gldraw, int x, int y, int width, int height)
+          public void reshape(GLAutoDrawable gldraw, int x, int y, int width, int height)
           {
           }
 
-          public void displayChanged(GLDrawable gldraw, boolean modeChanged, boolean deviceChanged)
+          public void displayChanged(GLAutoDrawable gldraw, boolean modeChanged, boolean deviceChanged)
           {
           }
           
