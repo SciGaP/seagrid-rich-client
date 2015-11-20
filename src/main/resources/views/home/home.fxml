@@ -49,12 +49,12 @@
                                   <children>
                                     <HBox VBox.vgrow="NEVER">
                                       <children>
-                                        <Button mnemonicParsing="false" text="Launch Selected">
+                                        <Button fx:id="launchSelectedBtn" mnemonicParsing="false" text="Launch Selected">
                                           <HBox.margin>
                                             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" fx:id="x4" />
                                           </HBox.margin>
                                         </Button>
-                                        <Button mnemonicParsing="false" text="Delete Selected" HBox.margin="$x4" />
+                                        <Button id="deleteSelctedBtn" fx:id="deleteSelectedBtn" mnemonicParsing="false" text="Delete Selected" HBox.margin="$x4" />
                                       </children>
                                       <VBox.margin>
                                         <Insets fx:id="x3" />

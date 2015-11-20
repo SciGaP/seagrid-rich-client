@@ -135,6 +135,12 @@ public class HomeController {
     @FXML
     private MenuItem nanocadMenuBtn;
 
+    @FXML
+    private Button launchSelectedBtn;
+
+    @FXML
+    private Button deleteSelectedBtn;
+
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
     @SuppressWarnings("unused")
@@ -219,6 +225,29 @@ public class HomeController {
             }
         });
         nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
+        launchSelectedBtn.setOnAction(event -> expSummaryTable.getItems().stream()
+                .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
+            try {
+                AiravataManager.getInstance().launchExperiment(e.getId());
+                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED,e));
+            } catch (Exception ex) {
+                SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
+                        "Failed to launch experiment!");
+            }
+        }));
+        deleteSelectedBtn.setOnAction(event -> {
+            List<ExperimentListModel> experimentListModels = FXCollections.observableArrayList(expSummaryTable.getItems());
+            experimentListModels.stream()
+                    .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
+                        try {
+                            AiravataManager.getInstance().deleteExperiment(e.getId());
+                            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED,e));
+                        } catch (Exception ex) {
+                            SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
+                                    "Failed to delete experiment!");
+                        }
+                    });
+        });
     }
 
     public void initProjectTreeView(){
