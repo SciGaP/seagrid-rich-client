@@ -14,6 +14,7 @@ public class nanocadMain
     public static void showNanocad() {
         nano = new nanocadFrame2();
         nano.setSize(700, 600);
+        nano.setResizable(false);
         nano.setLocationRelativeTo(null);
         nano.setVisible(true);
     }

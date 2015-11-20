@@ -66,6 +66,8 @@ public class ExperimentSummaryController {
 
     private static final double EXPERIMENT_UPDATE_INTERVAL = 10000;
 
+    private ExperimentModel experimentModel;
+
     @FXML
     private Button expMonitorOutput;
 
@@ -129,10 +131,32 @@ public class ExperimentSummaryController {
     @FXML
     private GridPane experimentInfoGridPane;
 
-    private Timeline expInfpUpdateTimer = null;
+    private Timeline expInfoUpdateTimer = null;
+
+    public void initialize(){
+        expLaunchButton.setOnAction(event -> {
+           try{
+               AiravataManager.getInstance().launchExperiment(experimentModel.getExperimentId());
+               SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED,experimentModel));
+           } catch (Exception e) {
+               SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", experimentInfoGridPane.getScene().getWindow(),
+                       "Failed launching experiment");
+           }
+        });
+
+        expCancelButton.setOnAction(event -> {
+            try{
+                AiravataManager.getInstance().cancelExperiment(experimentModel.getExperimentId());
+                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CANCELLED, experimentModel));
+            } catch (Exception e) {
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", experimentInfoGridPane.getScene().getWindow(),
+                        "Failed cancelling experiment");
+            }
+        });
+    }
 
     public void initExperimentInfo(String experimentId) throws TException{
-        ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+        experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
         if(experimentModel != null){
             experimentIdLabel.setText(experimentModel.getExperimentId());
             experimentNameLabel.setText(experimentModel.getExperimentName());
@@ -184,11 +208,11 @@ public class ExperimentSummaryController {
         //TODO this should replace with a RabbitMQ Listener
         if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
                 || experimentStatusLabel.getText().equals("CANCELLED"))) {
-            expInfpUpdateTimer = new Timeline(new KeyFrame(
+            expInfoUpdateTimer = new Timeline(new KeyFrame(
                     Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
                     ae -> updateExperimentInfo()));
-            expInfpUpdateTimer.setCycleCount(Timeline.INDEFINITE);
-            expInfpUpdateTimer.play();
+            expInfoUpdateTimer.setCycleCount(Timeline.INDEFINITE);
+            expInfoUpdateTimer.play();
         }
     }
 
@@ -205,17 +229,17 @@ public class ExperimentSummaryController {
                     String expState = experimentModel.getExperimentStatus().getState().toString();
                     if(expState.equals("FAILED") || expState.equals("COMPLETED") || expState.equals("CANCELLED")){
                         showExperimentOutputs(experimentModel);
-                        expInfpUpdateTimer.stop();
+                        expInfoUpdateTimer.stop();
                     }
                     logger.debug("Updated Experiment :" + experimentId);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if(this.expInfpUpdateTimer != null)
-                        this.expInfpUpdateTimer.stop();
+                    if(this.expInfoUpdateTimer != null)
+                        this.expInfoUpdateTimer.stop();
                 }
             });
         }else{
-            expInfpUpdateTimer.stop();
+            expInfoUpdateTimer.stop();
         }
     }
 
