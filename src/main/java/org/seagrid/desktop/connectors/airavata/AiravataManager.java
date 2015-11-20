@@ -37,9 +37,11 @@ public class AiravataManager {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             this.airavataClient = new Airavata.Client(protocol);
-
             this.airavataCache = new AiravataCache<>(200, 500, 50);
-        } catch (TTransportException e) {
+
+            //FIXME - To create the default user & project if not exists
+            this.getProjects();
+        } catch (Exception e) {
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
         }
     }
@@ -94,8 +96,15 @@ public class AiravataManager {
 
     public synchronized List<Project> getProjects() throws TException {
         List<Project> projects;
-        projects = getClient().getUserProjects(
-                getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
+        try{
+            projects = getClient().getUserProjects(
+                    getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
+        }catch (Exception ex){
+            //FIXME If the user is new getProjects will fail
+            getClient().createProject(getAuthzToken(),getGatewayId(),new Project("", getUserName(), "Default Project"));
+            projects = getClient().getUserProjects(
+                    getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
+        }
         return projects;
     }
 

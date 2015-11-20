@@ -74,4 +74,11 @@ public class StorageManager {
         channelSftp.cd(path);
         return channelSftp.ls(path);
     }
+
+    public void createSymlink(String oldPath, String newPath) throws JSchException, SftpException {
+        if(channelSftp.isClosed()){
+            connect();
+        }
+        channelSftp.symlink(oldPath, newPath);
+    }
 }
