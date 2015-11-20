@@ -380,10 +380,12 @@ public class ExperimentSummaryController {
                 expMonitorOutput.setDisable(true);
                 break;
             case EXECUTING:
+                expCancelButton.setDisable(false);
+            case CANCELING:
                 expLaunchButton.setDisable(true);
                 expEditButton.setDisable(true);
-                expCancelButton.setDisable(false);
                 expMonitorOutput.setDisable(false);
+                expCancelButton.setDisable(true);
                 break;
             case FAILED:
             case CANCELED:
