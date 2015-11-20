@@ -59,39 +59,6 @@
         </plugins>
     </build>
 
-    <!-- Dependencies for legacy Gamess Code-->
-    <profiles>
-        <profile>
-            <id>linux</id>
-            <activation>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>jogl</groupId>
-                    <artifactId>jogl_linux_083111</artifactId>
-                    <version>1.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>mac-profile</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>jogl</groupId>
-                    <artifactId>jogl_mac_083011</artifactId>
-                    <version>1.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <dependencies>
 
@@ -163,6 +130,19 @@
             <artifactId>guava</artifactId>
             <version>18.0</version>
         </dependency>
+
+        <!--Jogl dependencies for legacy GAMESS editor-->
+        <dependency>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen-rt-main</artifactId>
+            <version>2.0-rc11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.jogl</groupId>
+            <artifactId>jogl-all-main</artifactId>
+            <version>2.0-rc11</version>
+        </dependency>
+
 
         <!-- Logging  -->
         <dependency>
