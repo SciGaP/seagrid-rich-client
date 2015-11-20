@@ -186,4 +186,8 @@ public class AiravataManager {
     public synchronized void deleteExperiment(String experimentId) throws TException {
         getClient().deleteExperiment(getAuthzToken(), experimentId);
     }
+
+    public synchronized void cancelExperiment(String experimentId) throws TException {
+        getClient().terminateExperiment(getAuthzToken(),experimentId, getGatewayId());
+    }
 }
