@@ -717,7 +717,23 @@ public class HomeController {
                                 + experimentListModel.getName(),
                         createProjectButton.getScene().getWindow());
             }
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST)) {
+            if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment summary
+                ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
+                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
+                try {
+                    experimentCreateWindow.displayEditExperimentAndWait(experimentModel);
+                } catch (IOException e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                            "Failed to launch edit experiment dialog");
+                }
+            }
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
+            if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment edit
+                ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
+                SEAGridDialogHelper.showInformationNotification("Success", "Updated experiment "
+                        + experimentModel.getExperimentName(), expSummaryTable.getScene().getWindow());
+            }
         }
     }
-
 }

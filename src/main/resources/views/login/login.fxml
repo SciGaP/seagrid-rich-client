@@ -33,7 +33,7 @@
               <children>
                 <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="211.0" StackPane.alignment="CENTER_RIGHT">
                   <children>
-                    <Hyperlink fx:id="dontHaveAccountLink" text="Dont have account?">
+                    <Hyperlink fx:id="dontHaveAccountLink" text="Don't have account?">
                       <font>
                         <Font size="10.0" />
                       </font>

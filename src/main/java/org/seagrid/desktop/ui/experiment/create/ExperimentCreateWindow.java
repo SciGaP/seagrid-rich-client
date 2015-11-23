@@ -26,6 +26,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.airavata.model.experiment.ExperimentModel;
+import org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController;
 import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,19 @@ public class ExperimentCreateWindow extends Application{
         Parent root = FXMLLoader.load(getClass().getResource("/views/experiment/create/experiment-create.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Create Experiment");
         primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
+    }
+
+    public void displayEditExperimentAndWait(ExperimentModel experimentModel) throws IOException {
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Edit Experiment");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentCreateController controller = loader.getController();
+        controller.initExperimentEdit(experimentModel);
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
     }

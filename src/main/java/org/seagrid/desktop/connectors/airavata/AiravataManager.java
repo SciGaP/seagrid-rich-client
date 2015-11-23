@@ -188,6 +188,10 @@ public class AiravataManager {
         return getClient().createExperiment(getAuthzToken(), getGatewayId(), experimentModel);
     }
 
+    public synchronized void updateExperiment(ExperimentModel experimentModel) throws TException {
+        getClient().updateExperiment(getAuthzToken(), experimentModel.getExperimentId(), experimentModel);
+    }
+
     public synchronized void launchExperiment(String experimentId) throws TException {
         getClient().launchExperiment(getAuthzToken(), experimentId, getGatewayId());
     }

@@ -38,6 +38,7 @@ import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
+import org.apache.airavata.model.process.ProcessModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
@@ -55,6 +56,12 @@ import java.util.*;
 
 public class ExperimentCreateController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateController.class);
+
+    //These attributes are used when edit experiment is called
+    private boolean isEditExperiment = false;
+
+    private ExperimentModel editExperimentModel = null;
+
 
     @FXML
     public GridPane expCreateInputsGridPane;
@@ -150,7 +157,10 @@ public class ExperimentCreateController {
             expCreateAppField.valueProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     loadAvailableComputeResources();
-                    updateExperimentInputs();
+                    ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
+                            .getSelectionModel().getSelectedItem();
+                    List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
+                    updateExperimentInputs(inputDataObjectTypes);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateAppField.getScene().getWindow(),
@@ -194,6 +204,37 @@ public class ExperimentCreateController {
             SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateNameField.getScene().getWindow(),
                     "Failed To Load New Experiment Window !");
         }
+    }
+
+    public void initExperimentEdit(ExperimentModel experimentModel){
+        isEditExperiment = true;
+        editExperimentModel = experimentModel;
+        expCreateNameField.setText(experimentModel.getExperimentName());
+        expCreateDescField.setText(experimentModel.getDescription());
+        expCreateProjField.getItems().stream().filter(p->((Project)p).getProjectID().equals(experimentModel.getProjectId()))
+                .forEach(p -> expCreateProjField.getSelectionModel().select(p));
+        expCreateAppField.getItems().stream().filter(p->((ApplicationInterfaceDescription)p).getApplicationInterfaceId()
+                .equals(experimentModel.getExecutionId())).forEach(p -> expCreateAppField.getSelectionModel().select(p));
+        expCreateAppField.setDisable(true);
+        expCreateAppField.setStyle("-fx-opacity: 1;");
+        expCreateResourceField.getItems().stream().filter(r -> ((ComputeResourceDescription) r).getComputeResourceId()
+                .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()))
+                .forEach(r -> expCreateResourceField.getSelectionModel().select(r));
+        expCreateQueueField.getItems().stream().filter(q -> ((BatchQueue) q).getQueueName()
+                .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getQueueName()))
+                .forEach(q -> expCreateQueueField.getSelectionModel().select(q));
+        expCreateNodeCountField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
+                .getNodeCount()+"");
+        expCreateTotalCoreCountField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
+                .getTotalCPUCount()+"");
+        expCreateWallTimeField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
+                .getWallTimeLimit()+"");
+        expCreatePhysicalMemField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
+                .getTotalPhysicalMemory()+"");
+        if(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getStaticWorkingDir()!= null)
+            expCreateStaticDirField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
+                .getStaticWorkingDir()+"");
+        updateExperimentInputs(experimentModel.getExperimentInputs());
     }
 
     private void initFileChooser(){
@@ -268,73 +309,74 @@ public class ExperimentCreateController {
         }
     }
 
-    private void updateExperimentInputs() {
-        ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
-                .getSelectionModel().getSelectedItem();
-        if(applicationInterfaceDescription != null){
-            this.experimentInputs = new HashMap<>();
-            List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
-            expCreateInputsGridPane.getChildren().clear();
-            expCreateInputsGridPane.getRowConstraints().clear();
-            int index = 0;
-            for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
-                if(inputDataObjectType.getType().equals(DataType.STRING)){
-                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                    TextField stringField = new TextField();
-                    expCreateInputsGridPane.add( stringField, 1, index);
-                    this.experimentInputs.put(inputDataObjectType,null);
-                    stringField.textProperty().addListener((observable, oldValue, newValue) -> {
-                        experimentInputs.put(inputDataObjectType,newValue);
-                    });
-                }else if(inputDataObjectType.getType().equals(DataType.INTEGER)){
-                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                    TextField numericField = new TextField();
-                    numericField.textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (!newValue.matches("\\d*")) {
-                            numericField.setText(oldValue);
-                            experimentInputs.put(inputDataObjectType, oldValue);
-                        } else {
-                            experimentInputs.put(inputDataObjectType, newValue);
-                        }
-                    });
-                    expCreateInputsGridPane.add(numericField, 1, index);
-                }else if(inputDataObjectType.getType().equals(DataType.FLOAT)){
-                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                    TextField floatField = new TextField();
-                    floatField.textProperty().addListener((observable, oldValue, newValue) -> {
-                        if (!newValue.matches("\\f*")) {
-                            floatField.setText(oldValue);
-                            experimentInputs.put(inputDataObjectType, oldValue);
-                        } else {
-                            experimentInputs.put(inputDataObjectType, newValue);
-                        }
-                    });
-                    expCreateInputsGridPane.add(floatField, 1, index);
-                }else if(inputDataObjectType.getType().equals(DataType.URI)){
-                    expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                    HBox hBox = new HBox();
-                    Button filePickBtn = new Button("Select File");
-                    hBox.getChildren().add(0, filePickBtn);
-                    expCreateInputsGridPane.add(hBox, 1, index);
-                    filePickBtn.setOnAction(event -> {
-                        File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
-                        if (selectedFile != null) {
-                            hBox.getChildren().clear();
-                            Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
-                            hyperlink.setOnAction(hyperLinkEvent -> {
-                                //TODO File Click Event
-                            });
-                            hBox.getChildren().add(0, hyperlink);
-                            filePickBtn.setText("Select Different File");
-                            hBox.getChildren().add(1, filePickBtn);
-                            experimentInputs.put(inputDataObjectType, selectedFile);
-                        }
-                    });
-                }
-                //maintaining the grid pane row height
-                expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
-                index++;
+    private void updateExperimentInputs(List<InputDataObjectType> inputDataObjectTypes) {
+        this.experimentInputs = new HashMap<>();
+        expCreateInputsGridPane.getChildren().clear();
+        expCreateInputsGridPane.getRowConstraints().clear();
+        int index = 0;
+        for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
+            if(inputDataObjectType.getType().equals(DataType.STRING)){
+                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                TextField stringField = new TextField();
+                expCreateInputsGridPane.add( stringField, 1, index);
+                this.experimentInputs.put(inputDataObjectType,null);
+                stringField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    experimentInputs.put(inputDataObjectType,newValue);
+                });
+                if(inputDataObjectType.getValue() != null)
+                    stringField.setText(inputDataObjectType.getValue());
+            }else if(inputDataObjectType.getType().equals(DataType.INTEGER)){
+                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                TextField numericField = new TextField();
+                numericField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.matches("\\d*")) {
+                        numericField.setText(oldValue);
+                        experimentInputs.put(inputDataObjectType, oldValue);
+                    } else {
+                        experimentInputs.put(inputDataObjectType, newValue);
+                    }
+                });
+                expCreateInputsGridPane.add(numericField, 1, index);
+                if(inputDataObjectType.getValue() != null)
+                    numericField.setText(inputDataObjectType.getValue());
+            }else if(inputDataObjectType.getType().equals(DataType.FLOAT)){
+                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                TextField floatField = new TextField();
+                floatField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue.matches("\\f*")) {
+                        floatField.setText(oldValue);
+                        experimentInputs.put(inputDataObjectType, oldValue);
+                    } else {
+                        experimentInputs.put(inputDataObjectType, newValue);
+                    }
+                });
+                expCreateInputsGridPane.add(floatField, 1, index);
+                if(inputDataObjectType.getValue() != null)
+                    floatField.setText(inputDataObjectType.getValue());
+            }else if(inputDataObjectType.getType().equals(DataType.URI)){
+                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                HBox hBox = new HBox();
+                Button filePickBtn = new Button("Select File");
+                hBox.getChildren().add(0, filePickBtn);
+                expCreateInputsGridPane.add(hBox, 1, index);
+                filePickBtn.setOnAction(event -> {
+                    File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
+                    if (selectedFile != null) {
+                        hBox.getChildren().clear();
+                        Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
+                        hyperlink.setOnAction(hyperLinkEvent -> {
+                            //TODO File Click Event
+                        });
+                        hBox.getChildren().add(0, hyperlink);
+                        filePickBtn.setText("Select Different File");
+                        hBox.getChildren().add(1, filePickBtn);
+                        experimentInputs.put(inputDataObjectType, selectedFile);
+                    }
+                });
             }
+            //maintaining the grid pane row height
+            expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
+            index++;
         }
     }
 
@@ -354,7 +396,7 @@ public class ExperimentCreateController {
                 }
             }
             if(uploadFiles.size() > 0){
-                Service fileUploadService = getFileUploadService(uploadFiles);
+                Service<Boolean> fileUploadService = getFileUploadService(uploadFiles);
                 fileUploadService.setOnSucceeded(event -> {
                     createExperiment(experimentModel, launch);
                 });
@@ -367,10 +409,19 @@ public class ExperimentCreateController {
 
     private void createExperiment(ExperimentModel experimentModel, boolean launch){
         try {
-            String expId = AiravataManager.getInstance().createExperiment(experimentModel);
-            experimentModel.setExperimentId(expId);
-            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
-                    ,experimentModel));
+            if(!isEditExperiment) {
+                String expId = AiravataManager.getInstance().createExperiment(experimentModel);
+                experimentModel.setExperimentId(expId);
+                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
+                        , experimentModel));
+
+            }else{
+                experimentModel.setExperimentId(editExperimentModel.getExperimentId());
+                AiravataManager.getInstance().updateExperiment(experimentModel);
+                experimentModel = AiravataManager.getInstance().getExperiment(experimentModel.getExperimentId());
+                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED
+                        ,experimentModel));
+            }
             if(launch){
                 try {
                     AiravataManager.getInstance().launchExperiment(experimentModel.getExperimentId());
@@ -489,7 +540,7 @@ public class ExperimentCreateController {
         return true;
     }
 
-    private Service getFileUploadService(Map<String,File> uploadFiles){
+    private Service<Boolean> getFileUploadService(Map<String, File> uploadFiles){
         Service<Boolean> service = new Service<Boolean>() {
             @Override
             protected Task<Boolean> createTask() {

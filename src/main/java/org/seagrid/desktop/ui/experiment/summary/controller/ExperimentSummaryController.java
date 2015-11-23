@@ -20,6 +20,7 @@
 */
 package org.seagrid.desktop.ui.experiment.summary.controller;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -27,9 +28,11 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
@@ -58,8 +61,11 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ExperimentSummaryController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryController.class);
@@ -133,6 +139,10 @@ public class ExperimentSummaryController {
 
     private Timeline expInfoUpdateTimer = null;
 
+
+    //This is the start row of experiment inputs in summary view
+    private int EXPERIMENT_INPUT_START_ROW = 16;
+
     public void initialize(){
         expLaunchButton.setOnAction(event -> {
            try{
@@ -143,7 +153,6 @@ public class ExperimentSummaryController {
                        "Failed launching experiment");
            }
         });
-
         expCancelButton.setOnAction(event -> {
             try{
                 AiravataManager.getInstance().cancelExperiment(experimentModel.getExperimentId());
@@ -153,10 +162,14 @@ public class ExperimentSummaryController {
                         "Failed cancelling experiment");
             }
         });
+        expEditButton.setOnAction(event -> {
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST, experimentModel));
+        });
+
+        SEAGridEventBus.getInstance().register(this);
     }
 
-    public void initExperimentInfo(String experimentId) throws TException{
-        experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+    public void initExperimentInfo(ExperimentModel experimentModel) throws TException{
         if(experimentModel != null){
             experimentIdLabel.setText(experimentModel.getExperimentId());
             experimentNameLabel.setText(experimentModel.getExperimentName());
@@ -186,7 +199,7 @@ public class ExperimentSummaryController {
             experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
                     .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
             experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
-                            .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
+                    .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
             experimentEnableAutoSchedLabel.setText("true");
             experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
                     .getComputationalResourceScheduling().getWallTimeLimit()+"");
@@ -197,23 +210,35 @@ public class ExperimentSummaryController {
             experimentNodeCountLabel.setText(experimentModel.getUserConfigurationData()
                     .getComputationalResourceScheduling().getNodeCount()+"");
 
+            //This is to clear the current grid rows for experiment inputs, outputs and errors
+            //EXPERIMENT_INPUT_START_ROW is a hardcoded constant which the input row starts
+            List<Node> removingNodes = experimentInfoGridPane.getChildren().stream().filter(child ->
+                    experimentInfoGridPane.getRowIndex(child) >= EXPERIMENT_INPUT_START_ROW).collect(Collectors.toList());
+            experimentInfoGridPane.getChildren().removeAll(removingNodes);
+            experimentInfoGridPane.getRowConstraints().remove(EXPERIMENT_INPUT_START_ROW, experimentInfoGridPane
+                    .getRowConstraints().size());
             showExperimentInputs(experimentModel);
             updateButtonOptions(experimentModel);
             if((experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
                     || experimentStatusLabel.getText().equals("CANCELLED"))) {
                 showExperimentOutputs(experimentModel);
             }
-        }
 
-        //TODO this should replace with a RabbitMQ Listener
-        if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
-                || experimentStatusLabel.getText().equals("CANCELLED"))) {
-            expInfoUpdateTimer = new Timeline(new KeyFrame(
-                    Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
-                    ae -> updateExperimentInfo()));
-            expInfoUpdateTimer.setCycleCount(Timeline.INDEFINITE);
-            expInfoUpdateTimer.play();
+            //TODO this should replace with a RabbitMQ Listener
+            if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
+                    || experimentStatusLabel.getText().equals("CANCELLED"))) {
+                expInfoUpdateTimer = new Timeline(new KeyFrame(
+                        Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
+                        ae -> updateExperimentInfo()));
+                expInfoUpdateTimer.setCycleCount(Timeline.INDEFINITE);
+                expInfoUpdateTimer.play();
+            }
         }
+    }
+
+    public void initExperimentInfo(String experimentId) throws TException{
+        experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
+        initExperimentInfo(experimentModel);
     }
 
     //updates the experiment status and outputs in the background
@@ -285,7 +310,7 @@ public class ExperimentSummaryController {
 
     private void showExperimentInputs(ExperimentModel experimentModel){
         List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
-        int rowIndex = 16;
+        int rowIndex = EXPERIMENT_INPUT_START_ROW;
         experimentInfoGridPane.add(new Label("Inputs"), 0, rowIndex);
         for(InputDataObjectType input : inputDataObjectTypes){
             switch (input.getType()){
@@ -393,6 +418,17 @@ public class ExperimentSummaryController {
                 expCancelButton.setDisable(true);
                 expLaunchButton.setDisable(true);
                 expEditButton.setDisable(true);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void listenSEAGridEvents(SEAGridEvent event) throws TException {
+        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
+            ExperimentModel updatedExperimentModel = (ExperimentModel) event.getPayload();
+            if(updatedExperimentModel.getExperimentId().equals(this.experimentModel.getExperimentId())){
+                initExperimentInfo(updatedExperimentModel);
+            }
         }
     }
 }

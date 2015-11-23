@@ -1,6 +1,7 @@
 package org.seagrid.desktop.ui.login;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,10 @@ public class LoginWindow extends Application {
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root, 300, 125));
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
         primaryStage.show();
     }
 
@@ -25,6 +30,10 @@ public class LoginWindow extends Application {
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root, 300, 125));
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
         primaryStage.showAndWait();
     }
 
