@@ -23,6 +23,7 @@ package org.seagrid.desktop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -63,7 +64,8 @@ public class SEAGridContext {
         return dt.atZone(TimeZone.getDefault().toZoneId()).getOffset();
     }
 
-    public String getFileDownloadLocation(){ return properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);}
+    public String getFileDownloadLocation(){ return System.getProperty("user.home") + File.separator
+            + properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);}
 
     public String getAiravataGatewayId(){ return properties.getProperty(SEAGridConfig.AIRAVATA_GATEWAY_ID);}
 
