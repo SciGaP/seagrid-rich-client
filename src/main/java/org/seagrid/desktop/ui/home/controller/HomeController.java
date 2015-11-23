@@ -427,8 +427,25 @@ public class HomeController {
         });
         cm.getItems().add(mi2);
 
-        MenuItem mi3 = new MenuItem("open in new tab");
+        MenuItem mi3 = new MenuItem("edit");
         mi3.setOnAction(event -> {
+            try {
+                ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
+                if (experimentListModel != null) {
+                    ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentListModel.getId());
+                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                            .EXPERIMENT_EDIT_REQUEST, experimentModel));
+                }
+            } catch (TException e) {
+                e.printStackTrace();
+                SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expSummaryTable.getScene()
+                        .getWindow(), "Experiment edit failed");
+            }
+        });
+        cm.getItems().add(mi3);
+
+        MenuItem mi4 = new MenuItem("open in new tab");
+        mi4.setOnAction(event -> {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
                 if(experimentListModel != null) {
@@ -445,9 +462,9 @@ public class HomeController {
                         "Cannot open experiment information");
             }
         });
-        cm.getItems().add(mi3);
-        MenuItem mi4 = new MenuItem("open in new window");
-        mi4.setOnAction(event -> {
+        cm.getItems().add(mi4);
+        MenuItem mi5 = new MenuItem("open in new window");
+        mi5.setOnAction(event -> {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
                 if(experimentListModel != null) {
@@ -460,9 +477,9 @@ public class HomeController {
                         "Cannot open experiment information");
             }
         });
-        cm.getItems().add(mi4);
-        MenuItem mi5 = new MenuItem("delete");
-        mi5.setOnAction(event -> {
+        cm.getItems().add(mi5);
+        MenuItem mi6 = new MenuItem("delete");
+        mi6.setOnAction(event -> {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
                 if (experimentListModel != null) {
@@ -476,24 +493,26 @@ public class HomeController {
                         .getWindow(), "Experiment delete failed");
             }
         });
-        cm.getItems().add(mi5);
+        cm.getItems().add(mi6);
         expSummaryTable.setContextMenu(cm);
 
         expSummaryTable.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.SECONDARY){
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
                 if(experimentListModel != null){
-                    if(!experimentListModel.getStatus().equals("CREATED")){
-                        mi1.setDisable(true);
-                        mi5.setDisable(true);
-                    }
-                    if(experimentListModel.getStatus().equals("EXECUTING")){
+                    mi1.setDisable(true);
+                    mi2.setDisable(true);
+                    mi3.setDisable(true);
+                    mi4.setDisable(false);
+                    mi5.setDisable(false);
+                    mi6.setDisable(true);
+                    if (experimentListModel.getStatus().equals(ExperimentState.CREATED.toString())){
+                        mi1.setDisable(false);
+                        mi3.setDisable(false);
+                        mi6.setDisable(false);
+                    } else if (experimentListModel.getStatus().equals(ExperimentState.EXECUTING.toString())){
                         mi2.setDisable(false);
                     }
-                }else{
-                    mi1.setDisable(false);
-                    mi2.setDisable(true);
-                    mi5.setDisable(false);
                 }
             }
         });
