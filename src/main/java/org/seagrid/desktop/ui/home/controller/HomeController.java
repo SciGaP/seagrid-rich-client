@@ -678,22 +678,7 @@ public class HomeController {
             ExperimentModel experiment = (ExperimentModel) event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success","Experiment " +
                     experiment.getExperimentName() + " created successfully", createProjectButton.getScene().getWindow());
-            ExperimentSummaryModel experimentSummaryModel = new ExperimentSummaryModel();
-            experimentSummaryModel.setExperimentId(experiment.getExperimentId());
-            experimentSummaryModel.setName(experiment.getExperimentName());
-            experimentSummaryModel.setExecutionId(experiment.getExecutionId());
-            experimentSummaryModel.setResourceHostId(experiment.getUserConfigurationData()
-                    .getComputationalResourceScheduling().getResourceHostId());
-            experimentSummaryModel.setProjectId(experiment.getProjectId());
-            experimentSummaryModel.setGatewayId(experiment.getGatewayId());
-            experimentSummaryModel.setUserName(experiment.getUserName());
-            experimentSummaryModel.setDescription(experiment.getDescription());
-            experimentSummaryModel.setExperimentStatus("CREATED");
-            long time = System.currentTimeMillis();
-            experimentSummaryModel.setCreationTime(time);
-            experimentSummaryModel.setStatusUpdateTime(time);
-
-            ExperimentListModel experimentListModel = new ExperimentListModel(experimentSummaryModel);
+            ExperimentListModel experimentListModel = assembleExperimentListModel(experiment);
             if(this.previousExperimentListFilter == null ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(
@@ -761,6 +746,14 @@ public class HomeController {
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Cloned experiment "
                                 + experimentModel.getExperimentName(), createProjectButton.getScene().getWindow());
+                ExperimentListModel experimentListModel = assembleExperimentListModel(experimentModel);
+                if(this.previousExperimentListFilter == null ||
+                        this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
+                        this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(
+                                SEAGridContext.getInstance().getRecentExperimentsDummyId()) ||
+                        this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experimentModel.getProjectId())) {
+                    observableExperimentList.add(0,experimentListModel);
+                }
                 ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
                 try {
                     experimentCreateWindow.displayEditExperimentAndWait(experimentModel);
@@ -770,5 +763,23 @@ public class HomeController {
                 }
             }
         }
+    }
+
+    private ExperimentListModel assembleExperimentListModel(ExperimentModel experiment) throws TException {
+        ExperimentSummaryModel experimentSummaryModel = new ExperimentSummaryModel();
+        experimentSummaryModel.setExperimentId(experiment.getExperimentId());
+        experimentSummaryModel.setName(experiment.getExperimentName());
+        experimentSummaryModel.setExecutionId(experiment.getExecutionId());
+        experimentSummaryModel.setResourceHostId(experiment.getUserConfigurationData()
+                .getComputationalResourceScheduling().getResourceHostId());
+        experimentSummaryModel.setProjectId(experiment.getProjectId());
+        experimentSummaryModel.setGatewayId(experiment.getGatewayId());
+        experimentSummaryModel.setUserName(experiment.getUserName());
+        experimentSummaryModel.setDescription(experiment.getDescription());
+        experimentSummaryModel.setExperimentStatus(experiment.getExperimentStatus().getState().toString());
+        long time = System.currentTimeMillis();
+        experimentSummaryModel.setCreationTime(time);
+        experimentSummaryModel.setStatusUpdateTime(time);
+        return new ExperimentListModel(experimentSummaryModel);
     }
 }

@@ -425,7 +425,7 @@ public class ExperimentCreateController {
         try {
             if(!isEditExperiment) {
                 String expId = AiravataManager.getInstance().createExperiment(experimentModel);
-                experimentModel.setExperimentId(expId);
+                experimentModel = AiravataManager.getInstance().getExperiment(expId);
                 SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED
                         , experimentModel));
 
