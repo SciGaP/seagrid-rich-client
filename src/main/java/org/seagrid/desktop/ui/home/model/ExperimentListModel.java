@@ -33,6 +33,7 @@ import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
@@ -218,17 +219,10 @@ public class ExperimentListModel {
         this.createdTime.set(createdTime);
     }
 
-    @SuppressWarnings("unuseed")
+    @SuppressWarnings("unused")
     @Subscribe
-    private void listenSEAGridEvents(SEAGridEvent event){
-        if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)){
-            if(event.getPayload() instanceof ExperimentListModel){
-                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
-                if(this.getId().equals(experimentListModel.getId()) && this.expStatusUpdateTimer != null){
-                    this.expStatusUpdateTimer.stop();
-                }
-            }
-        }else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
+    public void listenSEAGridEvents(SEAGridEvent event){
+        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
             if(event.getPayload() instanceof ExperimentListModel){
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
                 if(getId().equals(experimentListModel.getId())){
@@ -238,6 +232,24 @@ public class ExperimentListModel {
                 ExperimentModel deletedExpModel = (ExperimentModel) event.getPayload();
                 if(getId().equals(deletedExpModel.getExperimentId())){
                     this.expStatusUpdateTimer.stop();
+                }
+            }
+        }else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
+            if(event.getPayload() instanceof  ExperimentModel){
+                ExperimentModel updatedExperimentModel = (ExperimentModel) event.getPayload();
+                if(getId().equals(updatedExperimentModel.getExperimentId())){
+                    try{
+                        this.setProjectId(updatedExperimentModel.getProjectId());
+                        this.setName(updatedExperimentModel.getExperimentName());
+                        ComputeResourceDescription host  = AiravataManager.getInstance()
+                                .getComputeResource(updatedExperimentModel.getUserConfigurationData()
+                                        .getComputationalResourceScheduling().getResourceHostId());
+                        this.setHost(host.getHostName());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog", null, "Failed updating experiment" +
+                                " information in ExperimentListModel");
+                    }
                 }
             }
         }
