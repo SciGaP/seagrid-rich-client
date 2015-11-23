@@ -361,22 +361,29 @@ public class ExperimentCreateController {
                 expCreateInputsGridPane.add(hBox, 1, index);
                 filePickBtn.setOnAction(event -> {
                     File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
-                    if (selectedFile != null) {
-                        hBox.getChildren().clear();
-                        Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
-                        hyperlink.setOnAction(hyperLinkEvent -> {
-                            //TODO File Click Event
-                        });
-                        hBox.getChildren().add(0, hyperlink);
-                        filePickBtn.setText("Select Different File");
-                        hBox.getChildren().add(1, filePickBtn);
-                        experimentInputs.put(inputDataObjectType, selectedFile);
-                    }
+                    handleExperimentFileSelect(inputDataObjectType, hBox, filePickBtn, selectedFile);
                 });
+                if(inputDataObjectType.getValue() != null && !inputDataObjectType.getValue().isEmpty()){
+                    File selectedFile = new File(inputDataObjectType.getValue());
+                    handleExperimentFileSelect(inputDataObjectType, hBox, filePickBtn, selectedFile);
+                }
             }
             //maintaining the grid pane row height
             expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
             index++;
+        }
+    }
+
+    private void handleExperimentFileSelect(InputDataObjectType inputDataObjectType, HBox hBox, Button filePickBtn, File selectedFile){
+        if (selectedFile != null) {
+            hBox.getChildren().clear();
+            Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
+            hyperlink.setOnAction(hyperLinkEvent -> {
+                //TODO File Click Event
+            });
+            hBox.getChildren().add(0, hyperlink);
+            hBox.getChildren().add(1, filePickBtn);
+            experimentInputs.put(inputDataObjectType, selectedFile);
         }
     }
 
@@ -392,7 +399,9 @@ public class ExperimentCreateController {
                 Map.Entry<InputDataObjectType, Object> entry = it.next();
                 if(entry.getKey().getType().equals(DataType.URI)) {
                     File file = (File) entry.getValue();
-                    uploadFiles.put("/" + randomString + "/" + file.getName(), file);
+                    //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
+                    if(file.exists())
+                        uploadFiles.put("/" + randomString + "/" + file.getName(), file);
                 }
             }
             if(uploadFiles.size() > 0){
@@ -473,8 +482,12 @@ public class ExperimentCreateController {
         List<InputDataObjectType> temp = new ArrayList<>();
         for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
             if(inputDataObjectType.getType().equals(DataType.URI)){
-                inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
-                        .get(inputDataObjectType)).getName());
+                //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
+                if(((File) this.experimentInputs
+                        .get(inputDataObjectType)).exists()) {
+                    inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
+                            .get(inputDataObjectType)).getName());
+                }
             }else{
                 inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
             }
