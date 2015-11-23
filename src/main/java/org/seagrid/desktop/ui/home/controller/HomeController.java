@@ -645,7 +645,7 @@ public class HomeController {
                         }else{
                             throw new Exception("AuthResponse is null");
                         }
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
                                 "Failed updating OAuth refresh token");
@@ -755,6 +755,19 @@ public class HomeController {
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Updated experiment "
                         + experimentModel.getExperimentName(), expSummaryTable.getScene().getWindow());
+            }
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED)) {
+            if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment edit
+                ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
+                SEAGridDialogHelper.showInformationNotification("Success", "Cloned experiment "
+                                + experimentModel.getExperimentName(), createProjectButton.getScene().getWindow());
+                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
+                try {
+                    experimentCreateWindow.displayEditExperimentAndWait(experimentModel);
+                } catch (IOException e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                            "Failed to launch edit experiment dialog");
+                }
             }
         }
     }

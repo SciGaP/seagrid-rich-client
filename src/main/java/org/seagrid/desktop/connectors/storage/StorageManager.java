@@ -25,6 +25,7 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,10 +76,26 @@ public class StorageManager {
         return channelSftp.ls(path);
     }
 
-    public void createSymlink(String oldPath, String newPath) throws JSchException, SftpException {
+    public void createSymLink(String oldPath, String newPath) throws JSchException, SftpException {
         if(channelSftp.isClosed()){
             connect();
         }
+        createRemoteParentDirsIfNotExists((new File(newPath)).getParentFile().getPath());
         channelSftp.symlink(oldPath, newPath);
+    }
+
+    private void createRemoteParentDirsIfNotExists(String parentDirPath) throws SftpException {
+        String[] folders = parentDirPath.split( "/" );
+        for ( String folder : folders ) {
+            if ( folder.length() > 0 ) {
+                try {
+                    channelSftp.cd(folder);
+                }
+                catch ( SftpException e ) {
+                    channelSftp.mkdir( folder );
+                    channelSftp.cd( folder );
+                }
+            }
+        }
     }
 }

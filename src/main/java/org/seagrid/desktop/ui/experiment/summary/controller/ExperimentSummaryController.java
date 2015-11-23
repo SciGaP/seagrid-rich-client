@@ -32,7 +32,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
@@ -41,6 +40,7 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
 import org.apache.airavata.model.error.AiravataClientException;
@@ -50,7 +50,9 @@ import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
+import org.seagrid.desktop.connectors.storage.StorageManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
+import org.seagrid.desktop.ui.home.model.ExperimentListModel;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
@@ -61,10 +63,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ExperimentSummaryController {
@@ -165,7 +164,32 @@ public class ExperimentSummaryController {
         expEditButton.setOnAction(event -> {
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST, experimentModel));
         });
-
+        expCloneButton.setOnAction(event -> {
+            try {
+                List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
+                for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
+                    if(inputDataObjectType.getType().equals(DataType.URI)){
+                        String randomString = UUID.randomUUID().toString();
+                        //FIXME - Hardcoded logic
+                        File remoteSrcFile =  new File(inputDataObjectType.getValue());
+                        String remoteSrcPath = "/" + remoteSrcFile.getParentFile().getName()
+                                + "/" + remoteSrcFile.getName();
+                        String remoteDestFilePath = "/" + randomString + "/" + remoteSrcFile.getName();
+                        StorageManager.getInstance().createSymLink(remoteSrcPath, remoteDestFilePath);
+                    }
+                }
+                String expId = AiravataManager.getInstance().cloneExperiment(experimentModel.getExperimentId(),
+                        "Clone of " + experimentModel.getExperimentName());
+                ExperimentModel clonedExperimentModel = AiravataManager.getInstance().getExperiment(expId);
+                clonedExperimentModel.setExperimentInputs(inputDataObjectTypes);
+                AiravataManager.getInstance().updateExperiment(clonedExperimentModel);
+                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED,
+                        clonedExperimentModel));
+            } catch (Exception e) {
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", experimentInfoGridPane.getScene().getWindow(),
+                        "Failed cloning experiment");
+            }
+        });
         SEAGridEventBus.getInstance().register(this);
     }
 
@@ -428,6 +452,18 @@ public class ExperimentSummaryController {
             ExperimentModel updatedExperimentModel = (ExperimentModel) event.getPayload();
             if(updatedExperimentModel.getExperimentId().equals(this.experimentModel.getExperimentId())){
                 initExperimentInfo(updatedExperimentModel);
+            }
+        }else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
+            if(event.getPayload() instanceof ExperimentListModel){
+                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
+                if(experimentModel.getExperimentId().equals(experimentListModel.getId())){
+                    expInfoUpdateTimer.stop();
+                }
+            }else if(event.getPayload() instanceof  ExperimentModel){
+                ExperimentModel deletedExpModel = (ExperimentModel) event.getPayload();
+                if(experimentModel.getExperimentId().equals(deletedExpModel.getExperimentId())){
+                    expInfoUpdateTimer.stop();
+                }
             }
         }
     }

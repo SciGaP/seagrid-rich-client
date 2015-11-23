@@ -67,6 +67,9 @@ public class ExperimentCreateController {
     public GridPane expCreateInputsGridPane;
 
     @FXML
+    public Label expCreateTitle;
+
+    @FXML
     private Label expCreateWallTimeLabel;
 
     @FXML
@@ -209,6 +212,8 @@ public class ExperimentCreateController {
     public void initExperimentEdit(ExperimentModel experimentModel){
         isEditExperiment = true;
         editExperimentModel = experimentModel;
+        expCreateTitle.setText("Edit Experiment");
+
         expCreateNameField.setText(experimentModel.getExperimentName());
         expCreateDescField.setText(experimentModel.getDescription());
         expCreateProjField.getItems().stream().filter(p->((Project)p).getProjectID().equals(experimentModel.getProjectId()))

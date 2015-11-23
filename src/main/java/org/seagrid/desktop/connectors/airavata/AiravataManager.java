@@ -203,4 +203,8 @@ public class AiravataManager {
     public synchronized void cancelExperiment(String experimentId) throws TException {
         getClient().terminateExperiment(getAuthzToken(),experimentId, getGatewayId());
     }
+
+    public synchronized String cloneExperiment(String experimentId, String newExpName) throws TException {
+        return getClient().cloneExperiment(getAuthzToken(), experimentId, newExpName);
+    }
 }

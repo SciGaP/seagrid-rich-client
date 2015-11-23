@@ -15,7 +15,7 @@
       <children>
         <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="598.0" vgap="3.0" visible="true" VBox.vgrow="SOMETIMES">
           <children>
-            <Label prefWidth="228.0" text="Create Experiment" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label fx:id="expCreateTitle" prefWidth="228.0" text="Create Experiment" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0">
               <font>
                 <Font name="System Bold" size="20.0" />
               </font>

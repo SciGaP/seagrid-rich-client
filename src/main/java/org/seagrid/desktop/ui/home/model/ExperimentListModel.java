@@ -228,6 +228,18 @@ public class ExperimentListModel {
                     this.expStatusUpdateTimer.stop();
                 }
             }
+        }else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
+            if(event.getPayload() instanceof ExperimentListModel){
+                ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
+                if(getId().equals(experimentListModel.getId())){
+                    this.expStatusUpdateTimer.stop();
+                }
+            }else if(event.getPayload() instanceof  ExperimentModel){
+                ExperimentModel deletedExpModel = (ExperimentModel) event.getPayload();
+                if(getId().equals(deletedExpModel.getExperimentId())){
+                    this.expStatusUpdateTimer.stop();
+                }
+            }
         }
     }
 
