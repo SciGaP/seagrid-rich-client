@@ -245,6 +245,8 @@ public class ExperimentCreateController {
         updateExperimentInputs(experimentModel.getExperimentInputs());
     }
 
+    //FIXME This is an application specific initialization method. It is nice if we can come up with a generalizable way to handle
+    //FIXME application specific initializer
     public void initGaussianExperiment(String gaussianInput) throws FileNotFoundException, TException {
         String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in.com";
         PrintWriter out = new PrintWriter(tempFilePath);
