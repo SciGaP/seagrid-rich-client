@@ -24,11 +24,15 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
@@ -45,6 +49,7 @@ import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
+import org.seagrid.desktop.ui.commons.ImageButton;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
@@ -54,7 +59,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentCreateController {
@@ -388,17 +395,32 @@ public class ExperimentCreateController {
                     floatField.setText(inputDataObjectType.getValue());
             }else if(inputDataObjectType.getType().equals(DataType.URI)){
                 expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
-                HBox hBox = new HBox();
-                Button filePickBtn = new Button("Select File");
-                hBox.getChildren().add(0, filePickBtn);
+                HBox hBox = new HBox(2);
+                Button localFilePickBtn = new ImageButton("/images/local-storage.png");
+                localFilePickBtn.setTooltip(new Tooltip("Select local file"));
+                hBox.getChildren().add(0, localFilePickBtn);
+                Button remoteFilePickBtn = new ImageButton("/images/remote-storage.png");
+                remoteFilePickBtn.setTooltip(new Tooltip("Select remote file"));
+                hBox.getChildren().add(1, remoteFilePickBtn);
                 expCreateInputsGridPane.add(hBox, 1, index);
-                filePickBtn.setOnAction(event -> {
+                localFilePickBtn.setOnAction(event -> {
                     File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
-                    handleExperimentFileSelect(inputDataObjectType, hBox, filePickBtn, selectedFile);
+                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, selectedFile);
+                });
+                remoteFilePickBtn.setOnAction(event -> {
+                    try {
+                        String selectedRemoteFilePath = showSelectRemoteFile();
+                        selectedRemoteFilePath = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName()
+                                + selectedRemoteFilePath;
+                        inputDataObjectType.setValue(selectedRemoteFilePath);
+                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(selectedRemoteFilePath));
+                    } catch (IOException e) {
+                        SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", remoteFilePickBtn.getScene().getWindow(),
+                                "Failed to load remote file picker");
+                    }
                 });
                 if(inputDataObjectType.getValue() != null && !inputDataObjectType.getValue().isEmpty()){
-                    File selectedFile = new File(inputDataObjectType.getValue());
-                    handleExperimentFileSelect(inputDataObjectType, hBox, filePickBtn, selectedFile);
+                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
                 }
             }
             //maintaining the grid pane row height
@@ -407,7 +429,8 @@ public class ExperimentCreateController {
         }
     }
 
-    private void handleExperimentFileSelect(InputDataObjectType inputDataObjectType, HBox hBox, Button filePickBtn, File selectedFile){
+    private void handleExperimentFileSelect(InputDataObjectType inputDataObjectType, HBox hBox, Button localFilePickBtn,
+                                            Button remoteFilePickBtn,File selectedFile){
         if (selectedFile != null) {
             hBox.getChildren().clear();
             Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
@@ -415,9 +438,23 @@ public class ExperimentCreateController {
                 //TODO File Click Event
             });
             hBox.getChildren().add(0, hyperlink);
-            hBox.getChildren().add(1, filePickBtn);
+            hBox.getChildren().add(1, localFilePickBtn);
+            hBox.getChildren().add(2, remoteFilePickBtn);
             experimentInputs.put(inputDataObjectType, selectedFile);
         }
+    }
+
+    private String showSelectRemoteFile() throws IOException {
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/views/experiment/create/remote-file-picker.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Select Remote File");
+        primaryStage.setScene(new Scene(root, 400, 600));
+        RemoteFilePickerController controller = loader.getController();
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
+        return controller.getSelectedFilePath();
     }
 
     private void createExperiment(boolean launch){
