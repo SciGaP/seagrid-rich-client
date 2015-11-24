@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public abstract class GuiFileTask extends Task<Boolean> {
     private final static Logger logger = LoggerFactory.getLogger(GuiFileTask.class);
 
-    protected static final int BUFFER_SIZE = 4096;
+    protected static final int BUFFER_SIZE = 512000;
 
     protected Session session = null;
     protected Channel channel = null;
