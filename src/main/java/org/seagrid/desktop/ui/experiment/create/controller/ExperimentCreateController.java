@@ -246,7 +246,8 @@ public class ExperimentCreateController {
     }
 
     public void initGaussianExperiment(String gaussianInput) throws FileNotFoundException, TException {
-        PrintWriter out = new PrintWriter(System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in.com");
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in.com";
+        PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gaussianInput);
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
         ApplicationInterfaceDescription gaussianApp = null;
@@ -262,7 +263,7 @@ public class ExperimentCreateController {
             expCreateAppField.getItems().setAll(gaussianAppList);
             expCreateAppField.getSelectionModel().select(0);
             List<InputDataObjectType> gaussianInputs = gaussianApp.getApplicationInputs();
-            gaussianInputs.get(0).setValue("./gaussian.in.com");
+            gaussianInputs.get(0).setValue(tempFilePath);
             updateExperimentInputs(gaussianInputs);
         }
     }

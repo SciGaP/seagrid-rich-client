@@ -33,6 +33,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -67,6 +70,8 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -670,6 +675,12 @@ public class HomeController {
             String localFilePath = (String)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
                     +" was downloaded successfully", createProjectButton.getScene().getWindow());
+            //Opening the file in system proffered editor
+            try {
+                Desktop.getDesktop().open(new File(localFilePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_UPLOADED)){
             String localFilePath = (String)event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
