@@ -85,6 +85,7 @@ public class StorageManager {
     }
 
     private void createRemoteParentDirsIfNotExists(String parentDirPath) throws SftpException {
+        String pwd = channelSftp.pwd();
         String[] folders = parentDirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {
@@ -97,5 +98,6 @@ public class StorageManager {
                 }
             }
         }
+        channelSftp.cd(pwd);
     }
 }

@@ -701,7 +701,7 @@ public class HomeController {
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
                 ExperimentListModel matchingModel = null;
                 for(ExperimentListModel temp : observableExperimentList){
-                    if(experimentListModel.getId().equals(experimentListModel.getId())){
+                    if(temp.getId().equals(experimentListModel.getId())){
                         matchingModel = temp;
                         break;
                     }
