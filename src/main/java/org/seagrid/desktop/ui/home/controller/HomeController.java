@@ -762,6 +762,17 @@ public class HomeController {
                             "Failed to launch edit experiment dialog");
                 }
             }
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAUSSIAN_EXP)){
+            if(event.getPayload() instanceof String){
+                String gaussianInput = (String) event.getPayload();
+                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
+                try {
+                    experimentCreateWindow.displayCreateGaussianExpAndWait(gaussianInput);
+                } catch (Exception e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                            "Failed to launch gaussian experiment dialog");
+                }
+            }
         }
     }
 

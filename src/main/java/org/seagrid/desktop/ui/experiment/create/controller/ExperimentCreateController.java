@@ -36,6 +36,7 @@ import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
+import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.process.ProcessModel;
@@ -52,6 +53,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class ExperimentCreateController {
@@ -240,6 +243,28 @@ public class ExperimentCreateController {
             expCreateStaticDirField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
                 .getStaticWorkingDir()+"");
         updateExperimentInputs(experimentModel.getExperimentInputs());
+    }
+
+    public void initGaussianExperiment(String gaussianInput) throws FileNotFoundException, TException {
+        PrintWriter out = new PrintWriter(System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in.com");
+        out.println(gaussianInput);
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        ApplicationInterfaceDescription gaussianApp = null;
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().contains(SEAGridContext.getInstance().getGaussianAppName())){
+                gaussianApp = appInter;
+                break;
+            }
+        }
+        if(gaussianApp !=  null){
+            List<ApplicationInterfaceDescription> gaussianAppList = new ArrayList();
+            gaussianAppList.add(gaussianApp);
+            expCreateAppField.getItems().setAll(gaussianAppList);
+            expCreateAppField.getSelectionModel().select(0);
+            List<InputDataObjectType> gaussianInputs = gaussianApp.getApplicationInputs();
+            gaussianInputs.get(0).setValue("./gaussian.in.com");
+            updateExperimentInputs(gaussianInputs);
+        }
     }
 
     private void initFileChooser(){

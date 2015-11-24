@@ -46,7 +46,11 @@ DEALINGS WITH THE SOFTWARE.
 
 package legacy.editors.g03input;
 
+import javafx.application.Platform;
 import legacy.editors.Settings;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -199,7 +203,11 @@ public class G03Listener implements ActionListener,KeyListener{
 //                        EditJobPanel ejp = new EditJobPanel(InputFile.tempinput,"Gaussian");
 //                        clearButtonFn();
 //                        showMolEditor.tempmol=null;
-                		G03MenuTree.mainFrame.dispose();
+						Platform.runLater(() -> {
+                            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+									.EXPORT_GAUSSIAN_EXP, InputFile.tempinput));
+                        });
+						G03MenuTree.mainFrame.dispose();
             		}// valid structure is true
                 
         		} // else part of noofelectrons=0

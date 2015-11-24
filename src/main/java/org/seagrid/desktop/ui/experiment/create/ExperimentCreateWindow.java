@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.airavata.model.experiment.ExperimentModel;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController;
 import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
@@ -69,5 +70,18 @@ public class ExperimentCreateWindow extends Application{
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void displayCreateGaussianExpAndWait(String gaussianInput) throws IOException, TException {
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Create Gaussian Experiment");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentCreateController controller = loader.getController();
+        controller.initGaussianExperiment(gaussianInput);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
     }
 }

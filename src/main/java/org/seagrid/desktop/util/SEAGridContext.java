@@ -143,4 +143,8 @@ public class SEAGridContext {
     public String getIdpTenantId() {
         return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
     }
+
+    public CharSequence getGaussianAppName() {
+        return "gaussian";
+    }
 }
