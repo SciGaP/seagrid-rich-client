@@ -140,7 +140,7 @@ public class ExperimentSummaryController {
 
 
     //This is the start row of experiment inputs in summary view
-    private int EXPERIMENT_INPUT_START_ROW = 16;
+    private int EXPERIMENT_INPUT_START_ROW = 15;
 
     public void initialize(){
         expLaunchButton.setOnAction(event -> {

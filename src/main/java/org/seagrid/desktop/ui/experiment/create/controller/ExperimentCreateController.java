@@ -49,7 +49,6 @@ import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
-import org.seagrid.desktop.SEAGridDesktop;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
 import org.seagrid.desktop.ui.commons.ImageButton;

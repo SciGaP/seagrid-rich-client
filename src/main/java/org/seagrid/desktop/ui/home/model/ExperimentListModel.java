@@ -103,8 +103,8 @@ public class ExperimentListModel {
                 if(interfaceDescription != null){
                     this.application = new SimpleStringProperty(interfaceDescription.getApplicationName());
                 }
-            } catch (AiravataClientException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                logger.error("Failed to load application interface for id: "+ experimentSummaryModel.getExecutionId());
             }
         }
         this.status = new SimpleStringProperty(experimentSummaryModel.getExperimentStatus());
