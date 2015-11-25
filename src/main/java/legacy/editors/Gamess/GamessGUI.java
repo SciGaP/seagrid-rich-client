@@ -107,15 +107,32 @@ public class GamessGUI extends JFrame{
     public MolDisplay molDisp;
     
     TitledBorder textPanelBorder = null;
-    
-    public GamessGUI(String title)
+
+
+    public static void showGamesGUI(){
+        if(frame == null || !frame.isShowing()){
+            frame = new GamessGUI("GAMESS Input GUI");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            screenSize.height -= 32;
+            frame.setSize(screenSize);
+            frame.setLocationRelativeTo(null);
+            frame.setResizable(true);
+            frame.setVisible(true);
+        }
+        frame.toFront();
+        frame.requestFocus();
+    }
+
+    private GamessGUI(String title)
     {
     	this();
     	setTitle(title);
     }
    	  	
     /* CONSTRUCTOR */
-    public GamessGUI() 
+    private GamessGUI()
     {
     	menuBar = new JMenuBar();
     	setJMenuBar(menuBar);
