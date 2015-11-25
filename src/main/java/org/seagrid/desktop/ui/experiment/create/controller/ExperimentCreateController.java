@@ -61,7 +61,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentCreateController {
@@ -258,6 +257,7 @@ public class ExperimentCreateController {
         String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in.com";
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gaussianInput);
+        out.close();
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
         ApplicationInterfaceDescription gaussianApp = null;
         for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
