@@ -110,7 +110,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Open">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Mass Storage" fx:id="massStorageMenuButton" />
+                    <MenuItem mnemonicParsing="false" text="Mass Storage" fx:id="massStorageMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
                     <MenuItem mnemonicParsing="false" text="Gamess" fx:id="gamessMenuBtn" />

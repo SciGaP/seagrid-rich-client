@@ -140,6 +140,9 @@ public class HomeController {
     private MenuItem appExitMenuItem;
 
     @FXML
+    private MenuItem massStorageMenuBtn;
+
+    @FXML
     private MenuItem nanocadMenuBtn;
 
     @FXML
@@ -240,6 +243,14 @@ public class HomeController {
                     "Are sure you want to exit the application?");
             if(result){
                 System.exit(0);
+            }
+        });
+        massStorageMenuBtn.setOnAction(event -> {
+            try {
+                MassStorageBrowserWindow.displayFileBrowse();
+            } catch (IOException e) {
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                        "Failed to open mass storage browser");
             }
         });
         nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
