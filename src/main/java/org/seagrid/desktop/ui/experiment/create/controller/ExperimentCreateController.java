@@ -28,6 +28,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
@@ -40,13 +44,12 @@ import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
-import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
-import org.apache.airavata.model.process.ProcessModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
+import org.seagrid.desktop.SEAGridDesktop;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
 import org.seagrid.desktop.ui.commons.ImageButton;
@@ -57,11 +60,13 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.List;
 
 public class ExperimentCreateController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateController.class);
@@ -435,7 +440,15 @@ public class ExperimentCreateController {
             hBox.getChildren().clear();
             Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
             hyperlink.setOnAction(hyperLinkEvent -> {
-                //TODO File Click Event
+                //FIXME Else it is a remote file. Cannot open locally without downloading it.
+                if(selectedFile.exists()){
+                    try {
+                        Desktop.getDesktop().open(selectedFile);
+                    } catch (IOException e) {
+                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
+                                expCreateInputsGridPane.getScene().getWindow(), "Failed Opening File");
+                    }
+                }
             });
             hBox.getChildren().add(0, hyperlink);
             hBox.getChildren().add(1, localFilePickBtn);
