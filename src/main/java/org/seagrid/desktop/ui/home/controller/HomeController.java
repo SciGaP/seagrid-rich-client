@@ -46,6 +46,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import legacy.editors.g03input.G03MenuTree;
+import legacy.editors.gamess.GamessGUI;
 import legacy.editors.nanocad.nanocadMain;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
@@ -141,10 +143,22 @@ public class HomeController {
     private MenuItem nanocadMenuBtn;
 
     @FXML
+    private MenuItem g03MenuBtn;
+
+    @FXML
+    private MenuItem gamessMenuBtn;
+
+    @FXML
     private Button launchSelectedBtn;
 
     @FXML
     private Button deleteSelectedBtn;
+
+    @FXML
+    private Button gamessBtn;
+
+    @FXML
+    private Button g03Btn;
 
     private Map<ExperimentSearchFields,String> previousExperimentListFilter;
 
@@ -165,25 +179,22 @@ public class HomeController {
 
     public void initMenuBar(){
         createProjectButton.setOnMouseClicked(event -> {
-            ProjectWindow projectWindow = new ProjectWindow();
             try {
-                projectWindow.displayCreateProjectAndWait();
+                ProjectWindow.displayCreateProject();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         createExperimentButton.setOnMouseClicked(event -> {
-            ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
             try {
-                experimentCreateWindow.displayCreateExperimentAndWait();
+                ExperimentCreateWindow.displayCreateExperiment();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         browseMassStorageBtn.setOnMouseClicked(event -> {
-            MassStorageBrowserWindow massStorageBrowserWindow = new MassStorageBrowserWindow();
             try {
-                massStorageBrowserWindow.displayFileBrowseAndWait();
+                MassStorageBrowserWindow.displayFileBrowse();
             } catch (IOException e) {
                 e.printStackTrace();
                 SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", browseMassStorageBtn.getScene().getWindow(),
@@ -191,6 +202,8 @@ public class HomeController {
             }
         });
         nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
+        g03Btn.setOnAction(event1 -> G03MenuTree.showG03MenuTree());
+        gamessBtn.setOnAction(event1 -> GamessGUI.showGamesGUI());
         logoutBtn.setOnAction(event -> {
             ((Stage)logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
@@ -230,6 +243,8 @@ public class HomeController {
             }
         });
         nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
+        g03MenuBtn.setOnAction(event -> G03MenuTree.showG03MenuTree());
+        gamessMenuBtn.setOnAction(event -> GamessGUI.showGamesGUI());
         launchSelectedBtn.setOnAction(event -> expSummaryTable.getItems().stream()
                 .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
             try {
@@ -738,9 +753,8 @@ public class HomeController {
         }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment summary
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
-                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
                 try {
-                    experimentCreateWindow.displayEditExperimentAndWait(experimentModel);
+                    ExperimentCreateWindow.displayEditExperiment(experimentModel);
                 } catch (IOException e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                             "Failed to launch edit experiment dialog");
@@ -765,9 +779,8 @@ public class HomeController {
                         this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experimentModel.getProjectId())) {
                     observableExperimentList.add(0,experimentListModel);
                 }
-                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
                 try {
-                    experimentCreateWindow.displayEditExperimentAndWait(experimentModel);
+                    ExperimentCreateWindow.displayEditExperiment(experimentModel);
                 } catch (IOException e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                             "Failed to launch edit experiment dialog");
@@ -776,9 +789,8 @@ public class HomeController {
         }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAUSSIAN_EXP)){
             if(event.getPayload() instanceof String){
                 String gaussianInput = (String) event.getPayload();
-                ExperimentCreateWindow experimentCreateWindow = new ExperimentCreateWindow();
                 try {
-                    experimentCreateWindow.displayCreateGaussianExpAndWait(gaussianInput);
+                    ExperimentCreateWindow.displayCreateGaussianExp(gaussianInput);
                 } catch (Exception e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                             "Failed to launch gaussian experiment dialog");

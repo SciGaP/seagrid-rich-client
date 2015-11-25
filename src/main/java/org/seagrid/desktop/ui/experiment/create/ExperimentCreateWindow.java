@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController;
-import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +36,8 @@ import java.io.IOException;
 
 public class ExperimentCreateWindow extends Application{
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateWindow.class);
+
+    private static Stage createPrimaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -46,42 +47,52 @@ public class ExperimentCreateWindow extends Application{
         primaryStage.show();
     }
 
-    public void displayCreateExperimentAndWait() throws IOException {
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/views/experiment/create/experiment-create.fxml"));
-        primaryStage.setTitle("SEAGrid Desktop Client - Create Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+    public static void displayCreateExperiment() throws IOException {
+        if(createPrimaryStage == null || !createPrimaryStage.isShowing()) {
+            createPrimaryStage = new Stage();
+            Parent root = FXMLLoader.load(ExperimentCreateWindow.class.getResource("/views/experiment/create/experiment-create.fxml"));
+            createPrimaryStage.setTitle("SEAGrid Desktop Client - Create Experiment");
+            createPrimaryStage.setScene(new Scene(root, 800, 600));
+            createPrimaryStage.initModality(Modality.WINDOW_MODAL);
+            createPrimaryStage.show();
+        }
+        createPrimaryStage.requestFocus();
     }
 
-    public void displayEditExperimentAndWait(ExperimentModel experimentModel) throws IOException {
-        Stage primaryStage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+    public static void displayEditExperiment(ExperimentModel experimentModel) throws IOException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
+        createPrimaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("SEAGrid Desktop Client - Edit Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        createPrimaryStage.setTitle("SEAGrid Desktop Client - Edit Experiment");
+        createPrimaryStage.setScene(new Scene(root, 800, 600));
         ExperimentCreateController controller = loader.getController();
         controller.initExperimentEdit(experimentModel);
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+        createPrimaryStage.initModality(Modality.WINDOW_MODAL);
+        createPrimaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    public void displayCreateGaussianExpAndWait(String gaussianInput) throws IOException, TException {
+    public static void displayCreateGaussianExp(String gaussianInput) throws IOException, TException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
         Stage primaryStage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create Gaussian Experiment");
         primaryStage.setScene(new Scene(root, 800, 600));
         ExperimentCreateController controller = loader.getController();
         controller.initGaussianExperiment(gaussianInput);
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+        primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.show();
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }
