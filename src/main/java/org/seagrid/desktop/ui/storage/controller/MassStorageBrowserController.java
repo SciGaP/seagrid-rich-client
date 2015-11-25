@@ -42,9 +42,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.seagrid.desktop.connectors.storage.GuiFileUploadTask;
-import org.seagrid.desktop.connectors.storage.StorageManager;
-import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
+import org.seagrid.desktop.connectors.storage.*;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.storage.model.FileListModel;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -190,8 +188,9 @@ public class MassStorageBrowserController {
             TableRow<FileListModel> row = new TableRow<>();
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty() && !currentLocalFileList.get(row.getIndex()).getFileName().equals("..")
-                        && currentLocalFileList.get(row.getIndex()).getFileListModelType().equals(FileListModel
-                        .FileListModelType.FILE)){
+                        && (currentLocalFileList.get(row.getIndex()).getFileListModelType().equals(FileListModel
+                        .FileListModelType.FILE) || (currentLocalFileList.get(row.getIndex()).getFileListModelType()
+                        .equals(FileListModel.FileListModelType.DIR)))){
                     FileListModel selectedFileListModel = fbLocalFileTable.getSelectionModel().getSelectedItem();
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
@@ -220,8 +219,13 @@ public class MassStorageBrowserController {
             Dragboard db = event.getDragboard();
             if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                 FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
-                downloadFile(draggedFileListModel.getFilePath(),
-                        currentLocalPath.toString() + File.separator + draggedFileListModel.getFileName(), draggedFileListModel);
+                if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.FILE)) {
+                    downloadFile(draggedFileListModel.getFilePath(),
+                            currentLocalPath.toString() + File.separator + draggedFileListModel.getFileName(), draggedFileListModel);
+                }else if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.DIR)){
+                    downloadDir(draggedFileListModel.getFilePath(),
+                            currentLocalPath.toString() + File.separator + draggedFileListModel.getFileName(), draggedFileListModel);
+                }
                 event.setDropCompleted(true);
                 event.consume();
             }
@@ -323,8 +327,9 @@ public class MassStorageBrowserController {
             TableRow<FileListModel> row = new TableRow<>();
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty() && !currentRemoteFileList.get(row.getIndex()).getFileName().equals("..")
-                        && currentRemoteFileList.get(row.getIndex()).getFileListModelType().equals(FileListModel
-                        .FileListModelType.FILE)) {
+                        && (currentRemoteFileList.get(row.getIndex()).getFileListModelType().equals(FileListModel
+                        .FileListModelType.FILE) || (currentRemoteFileList.get(row.getIndex()).getFileListModelType()
+                        .equals(FileListModel.FileListModelType.DIR)))) {
                     FileListModel selectedFileListModel = fbRemoteFileTable.getSelectionModel().getSelectedItem();
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
@@ -353,12 +358,17 @@ public class MassStorageBrowserController {
             Dragboard db = event.getDragboard();
             if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                 FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
-                if(currentRemotePath.getParent() != null){
-                    uploadFile(draggedFileListModel.getFilePath(),currentRemotePath.toString()+"/"+draggedFileListModel
-                            .getFileName(),draggedFileListModel);
-                }else{
-                    uploadFile(draggedFileListModel.getFilePath(),"/"+draggedFileListModel
-                            .getFileName(),draggedFileListModel);
+                if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.FILE)) {
+                    if (currentRemotePath.getParent() != null) {
+                        uploadFile(draggedFileListModel.getFilePath(), currentRemotePath.toString() + "/" + draggedFileListModel
+                                .getFileName(), draggedFileListModel);
+                    } else {
+                        uploadFile(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
+                                .getFileName(), draggedFileListModel);
+                    }
+                }else if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.DIR)){
+                    uploadDir(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
+                            .getFileName(), draggedFileListModel);
                 }
                 event.setDropCompleted(true);
                 event.consume();
@@ -425,6 +435,43 @@ public class MassStorageBrowserController {
         service.start();
     }
 
+    private void uploadDir(String localDir, String remoteDir, FileListModel upldFileModel){
+        Service<Boolean> service = new Service<Boolean>() {
+            @Override
+            protected Task<Boolean> createTask() {
+                try {
+                    return new GuiDirUploadTask(remoteDir, localDir);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbRemoteFileTable.getScene().getWindow(),
+                            "Unable To Connect To File Server !");
+                }
+                return null;
+            }
+        };
+        SEAGridDialogHelper.showProgressDialog(service, "Progress Dialog", fbRemoteFileTable.getScene().getWindow(),
+                "Uploading Directory " + upldFileModel.getFileName());
+        service.setOnFailed((WorkerStateEvent t) -> {
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
+                    fbRemoteFileTable.getScene().getWindow(), "Directory Upload Failed");
+        });
+        service.setOnSucceeded((WorkerStateEvent t)->{
+            //removing the duplicate file with the same name
+            for(int i=0;i<currentRemoteFileList.size();i++){
+                if(currentRemoteFileList.get(i).getFileName().equals(upldFileModel.getFileName())){
+                    currentRemoteFileList.remove(i);
+                }
+            }
+            upldFileModel.setFileLocation(FileListModel.FileLocation.REMOTE);
+            upldFileModel.setFilePath(currentRemotePath.toString()+"/"+upldFileModel.getFileName());
+            currentRemoteFileList.add(upldFileModel);
+            int dropIndex = fbRemoteFileTable.getItems().size();
+            fbRemoteFileTable.getSelectionModel().select(dropIndex);
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.FILE_UPLOADED,localDir));
+        });
+        service.start();
+    }
+
     private void downloadFile(String remoteFile, String localFile, FileListModel downFileModel){
         Service<Boolean> service = new Service<Boolean>() {
             @Override
@@ -458,6 +505,43 @@ public class MassStorageBrowserController {
             int dropIndex = fbLocalFileTable.getItems().size();
             fbLocalFileTable.getSelectionModel().select(dropIndex);
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED,localFile));
+        });
+        service.start();
+    }
+
+    private void downloadDir(String remoteDir, String localDir, FileListModel downFileModel){
+        Service<Boolean> service = new Service<Boolean>() {
+            @Override
+            protected Task<Boolean> createTask() {
+                try {
+                    return new GuiDirDownloadTask(remoteDir, localDir);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalFileTable.getScene().getWindow(),
+                            "Unable To Connect To File Server !");
+                }
+                return null;
+            }
+        };
+        SEAGridDialogHelper.showProgressDialog(service, "Progress Dialog", fbLocalFileTable.getScene().getWindow(),
+                "Downloading Directory " + downFileModel.getFileName());
+        service.setOnFailed((WorkerStateEvent t) -> {
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
+                    fbLocalFileTable.getScene().getWindow(), "Directory Download Failed");
+        });
+        service.setOnSucceeded((WorkerStateEvent t)->{
+            //removing the duplicate file with the same name
+            for(int i=0;i<currentLocalFileList.size();i++){
+                if(currentLocalFileList.get(i).getFileName().equals(downFileModel.getFileName())){
+                    currentLocalFileList.remove(i);
+                }
+            }
+            downFileModel.setFileLocation(FileListModel.FileLocation.LOCAL);
+            downFileModel.setFilePath(currentLocalPath.toString()+File.separator+downFileModel.getFileName());
+            currentLocalFileList.add(downFileModel);
+            int dropIndex = fbLocalFileTable.getItems().size();
+            fbLocalFileTable.getSelectionModel().select(dropIndex);
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED,localDir));
         });
         service.start();
     }

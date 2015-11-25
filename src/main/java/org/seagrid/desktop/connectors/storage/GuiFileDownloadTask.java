@@ -63,6 +63,7 @@ public class GuiFileDownloadTask extends GuiFileTask {
             localOutputStream.write(buffer, 0, bytesRead);
             totalBytesRead += bytesRead;
             percentCompleted = ((double)totalBytesRead)/ fileSize;
+            updateMessage("Downloaded " + totalBytesRead + " bytes");
             updateProgress(percentCompleted, 1);
         }
 

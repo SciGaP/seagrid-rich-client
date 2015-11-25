@@ -21,7 +21,6 @@
 package org.seagrid.desktop.connectors.storage;
 
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class GuiFileUploadTask extends GuiFileTask {
     }
 
     public Boolean uploadFile(String remoteFilePath, String localFilePath) throws IOException, SftpException {
-        createRemoteParentDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
+        createRemoteDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
         OutputStream remoteOutputStream = new BufferedOutputStream(channelSftp.put(remoteFilePath));
         File localFile = new File(localFilePath);
         InputStream localInputStream = new FileInputStream(localFile);
@@ -61,6 +60,7 @@ public class GuiFileUploadTask extends GuiFileTask {
             remoteOutputStream.write(buffer, 0, bytesRead);
             totalBytesRead += bytesRead;
             percentCompleted = ((double)totalBytesRead) / fileSize;
+            updateMessage("Uploaded " + totalBytesRead + " bytes");
             updateProgress(percentCompleted, 1);
         }
 
@@ -69,7 +69,7 @@ public class GuiFileUploadTask extends GuiFileTask {
         return true;
     }
 
-    private void createRemoteParentDirsIfNotExists(String parentDirPath) throws SftpException {
+    private void createRemoteDirsIfNotExists(String parentDirPath) throws SftpException {
         String[] folders = parentDirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {

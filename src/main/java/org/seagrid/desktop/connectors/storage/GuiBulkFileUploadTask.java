@@ -63,6 +63,7 @@ public class GuiBulkFileUploadTask extends GuiFileTask {
                 remoteOutputStream.write(buffer, 0, bytesRead);
                 totalBytesRead += bytesRead;
                 percentCompleted = ((double)totalBytesRead) / fileSize * index / numberOfFiles;
+                updateMessage("Uploaded " + totalBytesRead + " bytes");
                 updateProgress(percentCompleted, 1);
             }
 
