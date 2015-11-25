@@ -52,6 +52,13 @@ public class SEAGridDialogHelper {
         progressDialog.setTitle(title);
         progressDialog.initOwner(parentWindow);
         progressDialog.setHeaderText(message);
+        ButtonBar buttonBar = (ButtonBar)progressDialog.getDialogPane().getChildren().get(2);
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(event -> {
+            if(showConfirmDialog("Confirm Action", "Do you want cancel", "The transferred data will be lost"))
+            service.cancel();
+        });
+        buttonBar.getButtons().add(cancelButton);
         progressDialog.initModality(Modality.WINDOW_MODAL);
     }
 
