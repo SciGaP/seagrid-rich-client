@@ -183,7 +183,7 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 		if( chargeBoxText.equalsIgnoreCase(chargeBox.getText()) == false || multBoxText.equalsIgnoreCase(multiplicityBox.getText()) == false )
 			isModified = true;
 		
-		String DataContent = InputFileReader.getInstance().Read("DATA");
+		String DataContent = InputFileReader.getInstance().Read("$DATA");
 		if(DataContent == null)
 			return "Invalid group content";
 		else
@@ -215,6 +215,7 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 			symmetryBox.setSelectedItem(Symmetry_N_Vals[0]);
 			
 			DataContent = DataContent.substring(Symmetry_N_Ending + 1).trim();
+			System.out.println("Molecular DataContent: " + DataContent);
 			
 			if(dataFileDisplayArea.getText().trim().equalsIgnoreCase(DataContent) == false)
 				isModified = true;
@@ -363,6 +364,9 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 					{
 						invokeSymmetry = true;
 					}
+					System.out.println("Data File: \n" + dataFile);
+					System.out.println("Charge: " + chargeBox.getText());
+					System.out.println("Multiplicity: " + multiplicityBox.getText());
 					consistent=geom.setStrGeom(dataFile,chargeBox.getText().trim(),multiplicityBox.getText().trim(), invokeSymmetry, symmetryBoxValue, Integer.parseInt(nBox.getSelectedItem().toString()));
 				}
 				catch(Exception ex )
@@ -575,7 +579,8 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 			{
 				System.err.println("load temp file here!");
 				File f = new File(newNanocad.applicationDataDir +
-						Settings.fileSeparator + "tmp.txt");
+						Settings.fileSeparator + "coord.txt");
+						//Settings.fileSeparator + "tmp.txt");
 				if ((f.exists()) )
 				{
 					try

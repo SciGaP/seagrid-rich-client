@@ -485,6 +485,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //						stuffInside.selectedGUI = 1;
 							//Open the Gamess and export the molecule to it
 							String gamessOut = GamessOutput(grp.getXYZ());
+							String gamessCoordOut = GamessCoordOutput(grp.getXYZ());
 							// write to a file now
 							boolean append = false;
 							try
@@ -496,6 +497,14 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 								System.err.println("gamessOut = ");
 								System.err.println(gamessOut);
 								fw.close();
+
+								File fc = new File(applicationDataDir+fileSeparator
+										+ "coord.txt");
+								FileWriter cfw = new FileWriter(fc, append);
+								cfw.write(gamessCoordOut);
+								System.err.println("gamessCoords = ");
+								System.err.println(gamessCoordOut);
+								cfw.close();
 
 								exportedApplication = Settings.APP_NAME_GAMESS;
 								GamessGUI.main(null);
@@ -3548,6 +3557,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //			templateTop = templateBottom = "";
 //		}
 		String text = templateTop;
+		String text1= "";
 		StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
 		// ignore first line of molInfo
 		String line = molTok.nextToken();
@@ -3563,16 +3573,19 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 				{
 					String word = lineTok.nextToken();
 					text = text + " " + word;
+					text1 = text1 + " "+ word;
 					System.err.println(word);
 					if (j == 0)
 					{
 						int atomnum = lookupAtomNum(word);
 						text = text + " " + atomnum;
+						 text1 = text1 + " " + atomnum;
 						System.err.println(atomnum);
 					}
 					j++;
 				}
 				text = text + "\n";
+				text1 = text1 + "\n";
 				System.err.println(line);
 			}
 			i++;
@@ -3580,7 +3593,51 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		text = text + templateBottom;
 		return text;
 	}
+	public String GamessCoordOutput(String molInfo)
+	{
 
+//		FIXME-SEAGrid
+//		if(stuffInside.selectedGUI == 1)
+//		{
+//			templateTop = templateBottom = "";
+//		}
+		//String text = templateTop;
+		String text1= "";
+		StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
+		// ignore first line of molInfo
+		String line = molTok.nextToken();
+		int i = 0;
+		while (molTok.hasMoreTokens())
+		{
+			line = molTok.nextToken();
+			if ((line.length() > 0) && (i > 0))
+			{
+				StringTokenizer lineTok = new StringTokenizer(line);
+				int j = 0;
+				while (lineTok.hasMoreTokens())
+				{
+					String word = lineTok.nextToken();
+					//text = text + " " + word;
+					text1 = text1 + " "+ word;
+					System.err.println(word);
+					if (j == 0)
+					{
+						int atomnum = lookupAtomNum(word);
+						//text = text + " " + atomnum;
+						text1 = text1 + " " + atomnum;
+						System.err.println(atomnum);
+					}
+					j++;
+				}
+				//text = text + "\n";
+				text1 = text1 + "\n";
+				System.err.println(line);
+			}
+			i++;
+		}
+		//text = text + templateBottom;
+		return text1;
+	}
 	public int lookupAtomNum(String atomname)
 	{
 		int ressnum= 0;

@@ -506,8 +506,9 @@ public class MolDisplay extends JInternalFrame
           invokeSymm = _invokeSymmetry;
           symm = _symm;
           naxis = _naxis;
-          
-          boolean consistent= mdisplay.drawMolecule(data);
+          //parse datafile for molecular data with gemoetry before senidng to draw
+
+          boolean consistent = mdisplay.drawMolecule(data);
         
          // System.out.println(CM_consistency);
           return consistent; 	    
@@ -1077,7 +1078,7 @@ public class MolDisplay extends JInternalFrame
                     {
                          alGeomElements = new ArrayList(); 
 
-                         stok2 = new StringTokenizer(geomToken);                     
+                         stok2 = new StringTokenizer(geomToken);
                 
                          while(stok2.hasMoreTokens())
                          {
@@ -1088,10 +1089,10 @@ public class MolDisplay extends JInternalFrame
                     }
                     else
                     {
-                         stok2 = new StringTokenizer(geomToken, "=");             
+                         stok2 = new StringTokenizer(geomToken, "=");
 
                          var = stok2.nextToken();
-                         value = stok2.nextToken();                         
+                         value = stok2.nextToken();
 
                          for (index = 0; index < alGeom.size(); index++)
                          {
@@ -1123,6 +1124,11 @@ public class MolDisplay extends JInternalFrame
 
                
                natoms = alGeom.size();
+               System.out.println("Number of Atoms in the molecule: "+natoms);
+               if (natoms <= 0) {
+                    System.out.println(" Error parsing Atoms in the input! \n Please verify the input");
+                    return false;
+               }
 
                coordFormat = getCoordFormat(alGeom, natoms);
 
