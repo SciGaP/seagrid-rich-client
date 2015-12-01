@@ -414,10 +414,12 @@ public class ExperimentCreateController {
                 remoteFilePickBtn.setOnAction(event -> {
                     try {
                         String selectedRemoteFilePath = showSelectRemoteFile();
-                        selectedRemoteFilePath = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName()
-                                + selectedRemoteFilePath;
-                        inputDataObjectType.setValue(selectedRemoteFilePath);
-                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(selectedRemoteFilePath));
+                        if(selectedRemoteFilePath != null && !selectedRemoteFilePath.isEmpty()) {
+                            selectedRemoteFilePath = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName()
+                                    + selectedRemoteFilePath;
+                            inputDataObjectType.setValue(selectedRemoteFilePath);
+                            handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(selectedRemoteFilePath));
+                        }
                     } catch (IOException e) {
                         SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", remoteFilePickBtn.getScene().getWindow(),
                                 "Failed to load remote file picker");
@@ -472,7 +474,7 @@ public class ExperimentCreateController {
     private void createExperiment(boolean launch){
         if(validateExperimentFields()){
             //FIXME Hardcoded value
-            String randomString = UUID.randomUUID().toString();
+            String randomString = expCreateNameField.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
             String remoteDataDir = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName() + "/"
                     + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir);

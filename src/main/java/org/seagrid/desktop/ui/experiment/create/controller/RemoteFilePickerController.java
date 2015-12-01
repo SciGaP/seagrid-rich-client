@@ -53,8 +53,6 @@ import java.util.Vector;
 public class RemoteFilePickerController {
     private final static Logger logger = LoggerFactory.getLogger(RemoteFilePickerController.class);
 
-    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-
     @FXML
     private TableView<FileListModel> fbRemoteFileTable;
 
@@ -195,7 +193,7 @@ public class RemoteFilePickerController {
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
                     ClipboardContent cc = new ClipboardContent();
-                    cc.put(SERIALIZED_MIME_TYPE, selectedFileListModel);
+                    cc.put(new DataFormat("application/x-java-serialized-object"), selectedFileListModel);
                     db.setContent(cc);
                     event.consume();
                 }

@@ -169,7 +169,7 @@ public class ExperimentSummaryController {
                 List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
                 for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
                     if(inputDataObjectType.getType().equals(DataType.URI)){
-                        String randomString = UUID.randomUUID().toString();
+                        String randomString = experimentNameLabel.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
                         //FIXME - Hardcoded logic
                         File remoteSrcFile =  new File(inputDataObjectType.getValue());
                         String remoteSrcPath = "/" + remoteSrcFile.getParentFile().getName()
