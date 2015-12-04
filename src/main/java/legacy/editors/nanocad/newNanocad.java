@@ -2856,6 +2856,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             constrain(this, structure, 0, 3, 3, 3, GridBagConstraints.BOTH, GridBagConstraints.NORTHWEST, 0.0, 3.0, 3, 3, 3, 3);
 
 //***************ANU TRYING*******************/
+            setLocationRelativeTo(null);
+            setAlwaysOnTop(true);
             setVisible(true);
             add(myMenuBar);
             add(templatecontrols);
