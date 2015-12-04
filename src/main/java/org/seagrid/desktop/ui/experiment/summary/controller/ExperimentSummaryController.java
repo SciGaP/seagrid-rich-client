@@ -29,11 +29,10 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -43,8 +42,10 @@ import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescr
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
+import org.apache.airavata.model.commons.ErrorModel;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
+import org.apache.airavata.model.status.ExperimentState;
 import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
@@ -64,6 +65,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExperimentSummaryController {
@@ -135,6 +137,15 @@ public class ExperimentSummaryController {
 
     @FXML
     private GridPane experimentInfoGridPane;
+
+    @FXML
+    private GridPane experimentErrorGridPane;
+
+    @FXML
+    private TextArea errorTextArea;
+
+    @FXML
+    private VBox experimentSummaryVBox;
 
     private Timeline expInfoUpdateTimer = null;
 
@@ -243,19 +254,23 @@ public class ExperimentSummaryController {
                     .getRowConstraints().size());
             showExperimentInputs(experimentModel);
             updateButtonOptions(experimentModel);
-            if((experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
-                    || experimentStatusLabel.getText().equals("CANCELLED"))) {
+            if((experimentStatusLabel.getText().equals(ExperimentState.FAILED.toString()) || experimentStatusLabel.getText()
+                    .equals(ExperimentState.COMPLETED.toString())
+                    || experimentStatusLabel.getText().equals(ExperimentState.CANCELED.toString()))) {
                 showExperimentOutputs(experimentModel);
-            }
-
-            //TODO this should replace with a RabbitMQ Listener
-            if(!(experimentStatusLabel.getText().equals("FAILED") || experimentStatusLabel.getText().equals("COMPLETED")
-                    || experimentStatusLabel.getText().equals("CANCELLED"))) {
+            }else{
+                //TODO this should replace with a RabbitMQ Listener
                 expInfoUpdateTimer = new Timeline(new KeyFrame(
                         Duration.millis(EXPERIMENT_UPDATE_INTERVAL),
                         ae -> updateExperimentInfo()));
                 expInfoUpdateTimer.setCycleCount(Timeline.INDEFINITE);
                 expInfoUpdateTimer.play();
+            }
+
+            if(experimentStatusLabel.getText().equals(ExperimentState.FAILED.toString())){
+                showExperimentErrors(experimentModel);
+            }else{
+                experimentSummaryVBox.getChildren().remove(experimentErrorGridPane);
             }
         }
     }
@@ -362,6 +377,16 @@ public class ExperimentSummaryController {
             experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
             rowIndex++;
         }
+    }
+
+    private void showExperimentErrors(ExperimentModel experimentModel) {
+        String error = "";
+        for(ErrorModel errorModel : experimentModel.getErrors()){
+            error = error + errorModel.getUserFriendlyMessage() + " : ";
+            error = error + errorModel.getActualErrorMessage() + "\n";
+        }
+        errorTextArea.setText(error);
+        errorTextArea.setWrapText(true);
     }
 
     private void showExperimentOutputs(ExperimentModel experimentModel){

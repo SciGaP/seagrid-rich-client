@@ -29,14 +29,8 @@ public class AiravataManager {
     private AiravataCache<String, Object> airavataCache;
 
     private AiravataManager() throws AiravataClientException {
-        String host = SEAGridContext.getInstance().getAiravataHost();
-        int port = SEAGridContext.getInstance().getAiravataPort();
         try {
-
-            TTransport transport = new TSocket(host, port);
-            transport.open();
-            TProtocol protocol = new TBinaryProtocol(transport);
-            this.airavataClient = new Airavata.Client(protocol);
+            this.airavataClient = createAiravataClient();
             this.airavataCache = new AiravataCache<>(200, 500, 50);
 
             //FIXME - To create the default user & project if not exists
@@ -53,7 +47,21 @@ public class AiravataManager {
         return AiravataManager.instance;
     }
 
-    private Airavata.Client getClient() throws AiravataClientException {
+    private Airavata.Client createAiravataClient() throws TTransportException {
+        String host = SEAGridContext.getInstance().getAiravataHost();
+        int port = SEAGridContext.getInstance().getAiravataPort();
+        TTransport transport = new TSocket(host, port);
+        transport.open();
+        TProtocol protocol = new TBinaryProtocol(transport);
+        return new Airavata.Client(protocol);
+    }
+
+    private Airavata.Client getClient() throws AiravataClientException, TTransportException {
+        try{
+            airavataClient.getAPIVersion(getAuthzToken());
+        } catch (Exception e) {
+            airavataClient = createAiravataClient();
+        }
         return airavataClient;
     }
 

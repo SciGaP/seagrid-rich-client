@@ -122,9 +122,6 @@ public class ExperimentCreateController {
     private TextField expCreatePhysicalMemField;
 
     @FXML
-    private TextField expCreateStaticDirField;
-
-    @FXML
     private Button expSaveButton;
 
     @FXML
@@ -249,9 +246,6 @@ public class ExperimentCreateController {
                 .getWallTimeLimit()+"");
         expCreatePhysicalMemField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
                 .getTotalPhysicalMemory()+"");
-        if(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getStaticWorkingDir()!= null)
-            expCreateStaticDirField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
-                .getStaticWorkingDir()+"");
         updateExperimentInputs(experimentModel.getExperimentInputs());
     }
 

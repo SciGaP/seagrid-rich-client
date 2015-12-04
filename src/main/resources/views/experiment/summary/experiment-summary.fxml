@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
+
 <ScrollPane prefHeight="731.0" prefWidth="726.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController">
   <content>
-    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
+    <VBox id="VBox" fx:id="experimentSummaryVBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
       <children>
         <GridPane fx:id="experimentInfoGridPane" alignment="BASELINE_CENTER" disable="false" focusTraversable="false" gridLinesVisible="false" hgap="3.0" prefHeight="-1.0" prefWidth="-1.0" vgap="3.0" visible="true" VBox.vgrow="ALWAYS">
           <children>
@@ -72,7 +74,23 @@
             <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
           </VBox.margin>
         </GridPane>
-        <HBox alignment="CENTER_LEFT" VBox.margin="$x1" VBox.vgrow="NEVER">
+        <GridPane fx:id="experimentErrorGridPane" disable="false" visible="true" VBox.vgrow="ALWAYS">
+          <children>
+            <Label text="Erros" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextArea id="errorText" fx:id="errorTextArea" editable="false" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" />
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.0" minWidth="10.0" prefWidth="273.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="406.0" minWidth="10.0" prefWidth="403.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="-1.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+          <VBox.margin>
+            <Insets bottom="5.0" left="20.0" right="5.0" top="5.0" />
+          </VBox.margin>
+        </GridPane>
+        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
           <children>
             <Button fx:id="expLaunchButton" cancelButton="false" defaultButton="false" disable="false" mnemonicParsing="false" text="Launch">
               <HBox.margin>
@@ -87,6 +105,9 @@
           <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </padding>
+          <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </VBox.margin>
         </HBox>
       </children>
       <padding>
