@@ -409,16 +409,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 						InputfileReader.chrgStr = null;
 						InputfileReader.mulStr = null;
 
-						JFrame go3Frame = new G03MenuTree();
-						G03MenuTree.mainFrame = go3Frame;
-						go3Frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-						go3Frame.pack();
-
-						Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-						go3Frame.setSize(screenSize.width - 200, screenSize.height - 150);
-						go3Frame.setResizable(true);
-						go3Frame.setVisible(true);
+						G03MenuTree.showG03MenuTree();
 						showMolEditor forString=new showMolEditor();
 
 						String gaussOut = GaussianOutput(grp.getXYZ());
@@ -507,7 +498,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 								cfw.close();
 
 								exportedApplication = Settings.APP_NAME_GAMESS;
-								GamessGUI.main(null);
+								GamessGUI.showGamesGUI();
 								GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
 								GamessGUI.molSpec.nanoCadHandler.nanWin.nano = this;
 								GamessGUI.molSpec.nanoCadHandler.componentHidden(null);

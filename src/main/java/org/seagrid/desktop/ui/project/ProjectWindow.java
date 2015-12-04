@@ -26,10 +26,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 
 public class ProjectWindow extends Application {
+
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -40,14 +43,18 @@ public class ProjectWindow extends Application {
         primaryStage.show();
     }
 
-    public void displayCreateProjectAndWait() throws IOException {
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/views/project/project.fxml"));
-        primaryStage.setTitle("SEAGrid Desktop Client - Create Project");
-        primaryStage.setScene(new Scene(root, 400, 150));
-        primaryStage.setResizable(false);
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+    public static void displayCreateProject() throws IOException {
+        if(primaryStage == null || !primaryStage.isShowing()){
+            primaryStage = new Stage();
+            Parent root = FXMLLoader.load(ProjectWindow.class.getResource("/views/project/project.fxml"));
+            primaryStage.setTitle("SEAGrid Desktop Client - Create Project");
+            primaryStage.setScene(new Scene(root, 400, 150));
+            primaryStage.setResizable(false);
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+        }
+        primaryStage.requestFocus();
+
     }
 
 

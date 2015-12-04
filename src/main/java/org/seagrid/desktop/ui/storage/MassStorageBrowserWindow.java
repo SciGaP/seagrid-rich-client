@@ -34,6 +34,8 @@ import java.io.IOException;
 public class MassStorageBrowserWindow extends Application{
     private final static Logger logger = LoggerFactory.getLogger(MassStorageBrowserWindow.class);
 
+    private static Stage primaryStage;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/views/storage/mass-storage-browser.fxml"));
@@ -42,13 +44,16 @@ public class MassStorageBrowserWindow extends Application{
         primaryStage.show();
     }
 
-    public void displayFileBrowseAndWait() throws IOException {
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/views/storage/mass-storage-browser.fxml"));
-        primaryStage.setTitle("SEAGrid Desktop Client - Mass Storage Browser");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
+    public static void displayFileBrowse() throws IOException {
+        if(primaryStage == null || !primaryStage.isShowing()) {
+            primaryStage = new Stage();
+            Parent root = FXMLLoader.load(MassStorageBrowserWindow.class.getResource("/views/storage/mass-storage-browser.fxml"));
+            primaryStage.setTitle("SEAGrid Desktop Client - Mass Storage Browser");
+            primaryStage.setScene(new Scene(root, 800, 600));
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+        }
+        primaryStage.requestFocus();
     }
 
     public static void main(String[] args) {

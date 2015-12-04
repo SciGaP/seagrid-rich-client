@@ -30,7 +30,6 @@
             <Label fx:id="expCreateCoreCountLabel" text="Total Core Count" GridPane.columnIndex="0" GridPane.rowIndex="8" />
             <Label fx:id="expCreateWallTimeLabel" text="Wall Time Limit" GridPane.columnIndex="0" GridPane.rowIndex="9" />
             <Label text="Total Physical Memory" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-            <Label text="Static Working Directory" GridPane.columnIndex="0" GridPane.rowIndex="11" />
             <TextField fx:id="expCreateNameField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextArea fx:id="expCreateDescField" prefHeight="68.0" prefWidth="402.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="expCreateProjField" prefWidth="-1.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -73,8 +72,7 @@
             <TextField fx:id="expCreateTotalCoreCountField" prefWidth="200.0" text="16" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <TextField fx:id="expCreateWallTimeField" prefWidth="200.0" text="30" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <TextField fx:id="expCreatePhysicalMemField" prefWidth="200.0" text="512" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <TextField fx:id="expCreateStaticDirField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <Label text="Inputs" GridPane.columnIndex="0" GridPane.rowIndex="12">
+            <Label text="Inputs" GridPane.columnIndex="0" GridPane.rowIndex="11">
               <font>
                 <Font name="System Bold" size="16.0" />
               </font>
@@ -87,7 +85,6 @@
           <rowConstraints>
             <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
