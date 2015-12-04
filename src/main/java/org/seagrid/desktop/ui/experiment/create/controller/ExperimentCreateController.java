@@ -51,6 +51,7 @@ import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
+import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
 import org.seagrid.desktop.ui.commons.ImageButton;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -64,6 +65,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -443,6 +446,14 @@ public class ExperimentCreateController {
                         SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
                                 expCreateInputsGridPane.getScene().getWindow(), "Failed Opening File");
                     }
+                }else{
+                    boolean result = SEAGridDialogHelper.showConfirmDialog("Confirm Action", "Remote File Download", "You have selected a remote file." +
+                            " Do you want to download it ?");
+                    if(result){
+                        String remotePath = selectedFile.getPath();
+                        remotePath = remotePath.replaceAll("/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName(), "");
+                        downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
+                    }
                 }
             });
             hBox.getChildren().add(0, hyperlink);
@@ -652,5 +663,32 @@ public class ExperimentCreateController {
                     expCreateInputsGridPane.getScene().getWindow(), "File Upload Failed");
         });
         return service;
+    }
+
+    private void downloadFile(Path remotePath, String destParentPath){
+        String localPath = destParentPath + File.separator + remotePath.getFileName();
+        Service<Boolean> service = new Service<Boolean>() {
+            @Override
+            protected Task<Boolean> createTask() {
+                try {
+                    return new GuiFileDownloadTask(remotePath.toString(), localPath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateNameField.getScene().getWindow(),
+                            "Unable To Connect To File Server !");
+                }
+                return null;
+            }
+        };
+        SEAGridDialogHelper.showProgressDialog(service,"Progress Dialog",expCreateNameField.getScene().getWindow(),
+                "Downloading File " + remotePath.getFileName());
+        service.setOnFailed((WorkerStateEvent t) -> {
+            SEAGridDialogHelper.showExceptionDialogAndWait(service.getException(), "Exception Dialog",
+                    expCreateNameField.getScene().getWindow(), "File Download Failed");
+        });
+        service.setOnSucceeded((WorkerStateEvent t)->{
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED,localPath));
+        });
+        service.start();
     }
 }
