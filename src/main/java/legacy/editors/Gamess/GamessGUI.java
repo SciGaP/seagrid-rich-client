@@ -115,9 +115,9 @@ public class GamessGUI extends JFrame{
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            screenSize.height -= 32;
+            screenSize.height -= 100;
+            screenSize.width -= 100;
             frame.setSize(screenSize);
-            frame.setLocationRelativeTo(null);
             frame.setResizable(true);
             frame.setVisible(true);
         }
@@ -553,11 +553,11 @@ public class GamessGUI extends JFrame{
        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
        
        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-       screenSize.height -= 32;
-       frame.setSize(screenSize);
-
-       frame.setResizable(true);
-       frame.setVisible(true);
+       screenSize.height -= 100;
+        screenSize.width -= 100;
+        frame.setSize(screenSize);
+        frame.setResizable(true);
+        frame.setVisible(true);
     }
     
     public static int getCurrentResolutionHeight(int _1024X768_Resolution)
