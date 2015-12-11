@@ -91,6 +91,22 @@ public class ExperimentCreateWindow extends Application{
         primaryStage.show();
     }
 
+    public static void displayCreateGamessExp(String gamessInput) throws IOException, TException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Create Gamess Experiment");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentCreateController controller = loader.getController();
+        controller.initGamessExperiment(gamessInput);
+        primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

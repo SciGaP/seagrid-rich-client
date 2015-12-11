@@ -415,8 +415,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         }
 //                        this.setVisible(false);
                         nanocadMain.nano.dispose();
-                        break;
                     }
+                    break;
                 case 7: // Create a Gamess Input Template close and go back to edit mode //lixh_3_4
                     if (clearFlag)
                         break;
@@ -532,6 +532,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //                break;
 //            }
                     }
+                    break;
                 case 8: // Create a NWchem Input Template close and go back to edit mode //lixh_3_4
                     if (clearFlag)
                         break;

@@ -807,6 +807,16 @@ public class HomeController {
                             "Failed to launch gaussian experiment dialog");
                 }
             }
+        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAMESS_EXP)){
+            if(event.getPayload() instanceof String){
+                String gamessInput = (String) event.getPayload();
+                try {
+                    ExperimentCreateWindow.displayCreateGamessExp(gamessInput);
+                } catch (Exception e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                            "Failed to launch gamess experiment dialog");
+                }
+            }
         }
     }
 

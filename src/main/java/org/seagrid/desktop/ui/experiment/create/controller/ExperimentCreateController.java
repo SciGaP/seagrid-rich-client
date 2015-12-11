@@ -259,6 +259,21 @@ public class ExperimentCreateController {
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gaussianInput);
         out.close();
+        String[] lines = gaussianInput.split("\n");
+        for(String temp : lines){
+            //These properties are set in the input file we are reusing it.
+            if(temp.contains("%nproc=")){
+                temp = temp.replace("%nproc=", "");
+                expCreateNodeCountField.setText(temp);
+            }else if(temp.contains("%nprocl=")){
+                temp = temp.replace("%nprocl=", "");
+                expCreateTotalCoreCountField.setText(temp);
+            }else if(temp.contains("%mem=")){
+                temp = temp.replace("%mem=", "");
+                temp = temp.replace("MB", "");
+                expCreatePhysicalMemField.setText(temp);
+            }
+        }
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
         ApplicationInterfaceDescription gaussianApp = null;
         for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
@@ -275,6 +290,30 @@ public class ExperimentCreateController {
             List<InputDataObjectType> gaussianInputs = gaussianApp.getApplicationInputs();
             gaussianInputs.get(0).setValue(tempFilePath);
             updateExperimentInputs(gaussianInputs);
+        }
+    }
+
+    public void initGamessExperiment(String gamessInput) throws FileNotFoundException, TException {
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gamess.in";
+        PrintWriter out = new PrintWriter(tempFilePath);
+        out.println(gamessInput);
+        out.close();
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        ApplicationInterfaceDescription gamessApp = null;
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().contains(SEAGridContext.getInstance().getGamessAppName())){
+                gamessApp = appInter;
+                break;
+            }
+        }
+        if(gamessApp !=  null){
+            List<ApplicationInterfaceDescription> gamessAppList = new ArrayList();
+            gamessAppList.add(gamessApp);
+            expCreateAppField.getItems().setAll(gamessAppList);
+            expCreateAppField.getSelectionModel().select(0);
+            List<InputDataObjectType> gamessAppInput = gamessApp.getApplicationInputs();
+            gamessAppInput.get(0).setValue(tempFilePath);
+            updateExperimentInputs(gamessAppInput);
         }
     }
 

@@ -147,4 +147,8 @@ public class SEAGridContext {
     public CharSequence getGaussianAppName() {
         return "gaussian";
     }
+
+    public CharSequence getGamessAppName() {
+        return "gamess";
+    }
 }
