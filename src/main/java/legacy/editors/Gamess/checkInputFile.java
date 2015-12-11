@@ -40,7 +40,12 @@ DEALINGS WITH THE SOFTWARE.
 
 package legacy.editors.gamess;
 
+import javafx.application.Platform;
 import legacy.editors.Settings;
+import legacy.editors.g03input.G03MenuTree;
+import legacy.editors.g03input.InputFile;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -109,7 +114,7 @@ public class checkInputFile implements ActionListener{
 					if (response == JOptionPane.NO_OPTION)
 						return;
 		}
-		JOptionPane.showMessageDialog(GamessGUI.frame, "Your file is submitted." , ":)", JOptionPane.INFORMATION_MESSAGE);
+//		JOptionPane.showMessageDialog(GamessGUI.frame, "Your file is submitted." , ":)", JOptionPane.INFORMATION_MESSAGE);
 		
 //		if(GridChem.oc.sjw == null)
 //            GridChem.oc.doSubmission();
@@ -122,7 +127,12 @@ public class checkInputFile implements ActionListener{
 //        ejp.populateMachineList();
 
 //        ejp.changeInputText(GamessGUI.inputFilePane.getText());
-        //SubmitJobsWindow.si.mainFrame.dispose();
+//        SubmitJobsWindow.si.mainFrame.dispose();
+		Platform.runLater(() -> {
+			SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+					.EXPORT_GAMESS_EXP, GamessGUI.inputFilePane.getText()));
+		});
+		GamessGUI.frame.dispose();
 	}
 	catch(Exception ee)
     {

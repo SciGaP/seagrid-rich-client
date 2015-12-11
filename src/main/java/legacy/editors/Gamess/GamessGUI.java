@@ -496,7 +496,7 @@ public class GamessGUI extends JFrame{
     {
        	submitButtonPanel= new JPanel(new FlowLayout());
        	
-       	submitInputFile = new JButton("SUBMIT");
+       	submitInputFile = new JButton("EXPORT");
        	updateInputFile = new JButton("UPDATE");
        	saveInputFile = new JButton("SAVE");
        	
