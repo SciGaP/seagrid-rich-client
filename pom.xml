@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -23,7 +23,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
@@ -31,45 +30,35 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
             <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.1.4</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
                 <configuration>
-                    <mainClass>org.seagrid.desktop.SEAGridClient</mainClass>
-                    <jfxMainAppJarName>seagrid.jnlp</jfxMainAppJarName>
-                    <allPermissions>true</allPermissions>
-                    <vendor>Indiana University</vendor>
-                    <description>JavaFX Based SEAGrid Desktop Client</description>
-                    <title>SEAGrid Desktop Client</title>
-                    <j2seVersion>1.8+</j2seVersion>
-                    <keyStore>${sign.keystore}</keyStore>
-                    <keyStoreAlias>${sign.alias}</keyStoreAlias>
-                    <keyStorePassword>${sign.storepass}</keyStorePassword>
-                    <keyStoreType>${sign.storetype}</keyStoreType>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>org.seagrid.desktop.SEAGridDesktop</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <!-- required before build-web -->
-                        <id>create-jfxjar</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
-                            <goal>build-jar</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>create-web</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>build-web</goal>
-                        </goals>
+                        <configuration>
+                            <outputDirectory>target/lib</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
 
     <dependencies>
 
@@ -178,4 +167,72 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>jnlp</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>webstart-maven-plugin</artifactId>
+                        <version>1.0-beta-6</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>keytool-api-1.7</artifactId>
+                                <version>1.5</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jnlp</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <resourcesDirectory>${project.basedir}/src/main/resources</resourcesDirectory>
+                            <unsignAlreadySignedJars>true</unsignAlreadySignedJars>
+                            <libPath>lib</libPath>
+                            <jnlp>
+                                <inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath>
+                                <inputTemplate>src/main/resources/template.vm</inputTemplate>
+                                <outputFile>seagrid.jnlp</outputFile>
+                            </jnlp>
+                            <!--pack200>true</pack200-->
+                            <sign>
+                                <keystore>${sign.keystore}</keystore>
+                                <keypass>${sign.keypass}</keypass>
+                                <!-- we need to override passwords easily from the command line. ${keypass} -->
+                                <storepass>${sign.storepass}</storepass>
+                                <!-- ${storepass} -->
+                                <storetype>${sign.storetype}</storetype>
+                                <alias>${sign.alias}</alias>
+
+                                <!--validity>fillme</validity-->
+                                <!-- only required for generating the keystore -->
+                                <!--<dnameCn>fillme</dnameCn>-->
+                                <!--<dnameOu>fillme</dnameOu>-->
+                                <!--<dnameO>fillme</dnameO>-->
+                                <!--<dnameL>fillme</dnameL>-->
+                                <!--<dnameSt>fillme</dnameSt>-->
+                                <!--<dnameC>fillme</dnameC>-->
+                                <!--<verify>fillme</verify>-->
+                                <!-- verify that the signing operation succeeded -->
+                                <!-- KEYSTORE MANAGEMENT -->
+                                <keystoreConfig>
+                                    <delete>false</delete>
+                                    <!-- delete the keystore -->
+                                    <gen>false</gen>
+                                    <!-- optional shortcut to generate the store. -->
+                                </keystoreConfig>
+                            </sign>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
