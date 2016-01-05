@@ -38,13 +38,14 @@
                 <version>8.1.4</version>
                 <configuration>
                     <mainClass>org.seagrid.desktop.SEAGridClient</mainClass>
+                    <vendor>Indiana University</vendor>
+                    <description>JavaFX Based SEAGrid Desktop Client</description>
+                    <title>SEAGrid Desktop Client</title>
+                    <j2seVersion>1.8+</j2seVersion>
                     <keyStore>${sign.keystore}</keyStore>
                     <keyStoreAlias>${sign.alias}</keyStoreAlias>
                     <keyStorePassword>${sign.storepass}</keyStorePassword>
                     <keyStoreType>${sign.storetype}</keyStoreType>
-                    <permissions>
-                        <permission>all-permissions</permission>
-                    </permissions>
                 </configuration>
                 <executions>
                     <execution>
