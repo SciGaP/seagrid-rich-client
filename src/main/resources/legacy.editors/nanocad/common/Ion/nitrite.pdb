@@ -1,9 +1,0 @@
-COMPND  nitrite3.pdb                                                            
-HETATM    1  N                  -0.261   0.090  -0.023                
-HETATM    2  O                  -1.213  -0.538  -0.103                
-HETATM    3  O                   0.929  -0.480  -0.147                
-CONECT    1    2    3                                        
-CONECT    2    1                                             
-CONECT    3    1                                             
-END   
-ÿ
