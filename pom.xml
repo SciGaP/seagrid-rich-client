@@ -38,6 +38,8 @@
                 <version>8.1.4</version>
                 <configuration>
                     <mainClass>org.seagrid.desktop.SEAGridClient</mainClass>
+                    <jfxMainAppJarName>seagrid.jnlp</jfxMainAppJarName>
+                    <allPermissions>true</allPermissions>
                     <vendor>Indiana University</vendor>
                     <description>JavaFX Based SEAGrid Desktop Client</description>
                     <title>SEAGrid Desktop Client</title>
