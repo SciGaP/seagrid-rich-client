@@ -381,12 +381,14 @@ public class ExperimentSummaryController {
 
     private void showExperimentErrors(ExperimentModel experimentModel) {
         String error = "";
-        for(ErrorModel errorModel : experimentModel.getErrors()){
-            error = error + errorModel.getUserFriendlyMessage() + " : ";
-            error = error + errorModel.getActualErrorMessage() + "\n";
+        if(experimentModel.getErrors() != null && !experimentModel.getErrors().isEmpty()) {
+            for (ErrorModel errorModel : experimentModel.getErrors()) {
+                error = error + errorModel.getUserFriendlyMessage() + " : ";
+                error = error + errorModel.getActualErrorMessage() + "\n";
+            }
+            errorTextArea.setText(error);
+            errorTextArea.setWrapText(true);
         }
-        errorTextArea.setText(error);
-        errorTextArea.setWrapText(true);
     }
 
     private void showExperimentOutputs(ExperimentModel experimentModel){

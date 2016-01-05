@@ -594,6 +594,7 @@ public class ExperimentCreateController {
         //FIXME Hard Coded Default Values
         userConfigurationDataModel.setAiravataAutoSchedule(false);
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
+        userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()

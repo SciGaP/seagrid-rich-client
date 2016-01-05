@@ -42,4 +42,5 @@ public class SEAGridConfig {
     public static final String IDP_OAUTH_CLIENT_ID = "idp.oauth.client.id";
     public static final String IDP_OAUTH_CLIENT_SECRET = "idp.oauth.client.secret";
     public static final String DEFAULT_FILE_DOWNLOAD_PATH = "default.file.download.path";
+    public static final java.lang.String GATEWAY_STORAGE_ID = "gateway.storage.resource.id";
 }

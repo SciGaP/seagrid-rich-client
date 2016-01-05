@@ -151,4 +151,8 @@ public class SEAGridContext {
     public CharSequence getGamessAppName() {
         return "gamess";
     }
+
+    public String getGatewayaStorageId(){
+        return properties.getProperty(SEAGridConfig.GATEWAY_STORAGE_ID);
+    }
 }
