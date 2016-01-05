@@ -18,6 +18,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.6.1</slf4j.version>
         <airavata.version>0.16-SNAPSHOT</airavata.version>
+        <sign.keystore>keystore.jks</sign.keystore>
+        <sign.storetype>jks</sign.storetype>
+        <sign.storepass>changeit</sign.storepass>
+        <sign.alias>seagrid-desktop-client</sign.alias>
     </properties>
 
     <build>
@@ -31,31 +35,89 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.1.5</version>
-                <configuration>
-                    <mainClass>org.seagrid.desktop.SEAGridClient</mainClass>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
                 <executions>
                     <execution>
-                        <!-- required before build-web -->
-                        <id>create-jfxjar</id>
                         <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <taskdef name="jfxdeploy" classname="com.sun.javafx.tools.ant.DeployFXTask" classpathref="maven.plugin.classpath" />
+                                <taskdef name="jfxsignjar" classname="com.sun.javafx.tools.ant.FXSignJarTask" classpathref="maven.plugin.classpath" />
+
+                                <jfxdeploy outdir="${project.build.directory}/jnlp"
+                                           outfile="seagrid-desktop-client-jnlp"
+                                           embedJNLP="true">
+
+                                    <info title="SEAGrid Desktop Client JNLP"
+                                          vendor="Indiana University"
+                                          description=""/>
+                                    <application name="${project.name}"
+                                                 mainClass="org.seagrid.desktop.SEAGridClient" />
+                                    <resources>
+                                        <fileset dir="${project.build.directory}" includes="*.jar" />
+                                    </resources>
+
+                                    <permissions elevated="true"/>
+
+                                </jfxdeploy>
+
+                                <!-- Sign all the jars in the deploy directory -->
+                                <jfxsignjar destdir="${project.build.directory}/jnlp"
+                                            keyStore="${sign.keystore}"
+                                            storetype="${sign.storetype}"
+                                            storePass="${sign.storepass}"
+                                            alias="${sign.alias}">
+                                    <fileset dir="${project.build.directory}/jnlp" includes="*.jar" />
+                                </jfxsignjar>
+
+                            </target>
+                        </configuration>
                         <goals>
-                            <goal>build-jar</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>create-native</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>build-native</goal>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>com.oracle</groupId>
+                        <artifactId>ant-javafx</artifactId>
+                        <version>8.0</version>
+                        <systemPath>${java.home}/../lib/ant-javafx.jar</systemPath>
+                        <scope>system</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>com.zenjava</groupId>-->
+                <!--<artifactId>javafx-maven-plugin</artifactId>-->
+                <!--<version>8.1.5</version>-->
+                <!--<configuration>-->
+                    <!--<mainClass>org.seagrid.desktop.SEAGridClient</mainClass>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--&lt;!&ndash; required before build-web &ndash;&gt;-->
+                        <!--<id>create-jfxjar</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>build-jar</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>create-native</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>build-native</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
