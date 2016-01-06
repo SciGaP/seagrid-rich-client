@@ -155,4 +155,8 @@ public class SEAGridContext {
     public String getGatewayaStorageId(){
         return properties.getProperty(SEAGridConfig.GATEWAY_STORAGE_ID);
     }
+
+    public String getGatewayUserDataRoot(){
+        return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_ROOT);
+    }
 }

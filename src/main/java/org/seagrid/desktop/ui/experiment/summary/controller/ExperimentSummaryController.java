@@ -150,6 +150,8 @@ public class ExperimentSummaryController {
     private Timeline expInfoUpdateTimer = null;
 
 
+    private String remoteDataDirRoot = SEAGridContext.getInstance().getGatewayUserDataRoot();
+
     //This is the start row of experiment inputs in summary view
     private int EXPERIMENT_INPUT_START_ROW = 15;
 
@@ -361,7 +363,7 @@ public class ExperimentSummaryController {
                     TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
                         //FIXME
-                        String dataRoot = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName();
+                        String dataRoot = remoteDataDirRoot + SEAGridContext.getInstance().getUserName();
                         String[] bits = input.getValue().replaceAll(dataRoot,"").split(":");
                         String filePathString = bits[bits.length-1];
                         Path filePath = Paths.get(filePathString);
@@ -401,7 +403,7 @@ public class ExperimentSummaryController {
                 case STDERR:
                 case STDOUT:
                     //FIXME
-                    String dataRoot = "/var/www/portal/experimentData";
+                    String dataRoot = remoteDataDirRoot;
                     Hyperlink hyperlink = new Hyperlink(Paths.get(output.getValue())
                             .getFileName().toString());
                     TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);

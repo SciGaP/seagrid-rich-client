@@ -134,6 +134,8 @@ public class ExperimentCreateController {
 
     private Map<InputDataObjectType, Object> experimentInputs;
 
+    private String remoteDataDirRoot = SEAGridContext.getInstance().getGatewayUserDataRoot();
+
     @SuppressWarnings("unused")
     public void initialize() {
         initElements();
@@ -451,7 +453,7 @@ public class ExperimentCreateController {
                     try {
                         String selectedRemoteFilePath = showSelectRemoteFile();
                         if(selectedRemoteFilePath != null && !selectedRemoteFilePath.isEmpty()) {
-                            selectedRemoteFilePath = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName()
+                            selectedRemoteFilePath = remoteDataDirRoot + SEAGridContext.getInstance().getUserName()
                                     + selectedRemoteFilePath;
                             inputDataObjectType.setValue(selectedRemoteFilePath);
                             handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(selectedRemoteFilePath));
@@ -490,7 +492,7 @@ public class ExperimentCreateController {
                             " Do you want to download it ?");
                     if(result){
                         String remotePath = selectedFile.getPath();
-                        remotePath = remotePath.replaceAll("/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName(), "");
+                        remotePath = remotePath.replaceAll(remoteDataDirRoot + SEAGridContext.getInstance().getUserName(), "");
                         downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
                     }
                 }
@@ -519,7 +521,7 @@ public class ExperimentCreateController {
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String randomString = expCreateNameField.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
-            String remoteDataDir = "/var/www/portal/experimentData/" + SEAGridContext.getInstance().getUserName() + "/"
+            String remoteDataDir = remoteDataDirRoot + SEAGridContext.getInstance().getUserName() + "/"
                     + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir);
             Map<String,File> uploadFiles = new HashMap<>();
