@@ -20,6 +20,8 @@
 */
 package org.seagrid.desktop.ui.experiment.create.controller;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -44,6 +46,8 @@ import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
+import org.apache.airavata.model.application.io.OutputDataObjectType;
+import org.apache.airavata.model.commons.ErrorModel;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
@@ -52,6 +56,7 @@ import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
 import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
+import org.seagrid.desktop.connectors.storage.StorageManager;
 import org.seagrid.desktop.ui.commons.ImageButton;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -136,6 +141,8 @@ public class ExperimentCreateController {
 
     private String remoteDataDirRoot = SEAGridContext.getInstance().getGatewayUserDataRoot();
 
+    private List<OutputDataObjectType> outputDataObjectTypes;
+
     @SuppressWarnings("unused")
     public void initialize() {
         initElements();
@@ -178,6 +185,7 @@ public class ExperimentCreateController {
                     ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
                             .getSelectionModel().getSelectedItem();
                     List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
+                    this.outputDataObjectTypes = applicationInterfaceDescription.getApplicationOutputs();
                     updateExperimentInputs(inputDataObjectTypes);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -523,7 +531,8 @@ public class ExperimentCreateController {
             String randomString = expCreateNameField.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
             String remoteDataDir = remoteDataDirRoot + SEAGridContext.getInstance().getUserName() + "/"
                     + randomString  + "/";
-            ExperimentModel experimentModel = assembleExperiment(remoteDataDir);
+            ExperimentModel experimentModel = assembleExperiment(remoteDataDir, SEAGridContext.getInstance().getUserName() + "/"
+                    + randomString  + "/");
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<InputDataObjectType, Object> entry = it.next();
@@ -581,7 +590,7 @@ public class ExperimentCreateController {
         }
     }
 
-    private ExperimentModel assembleExperiment(String remoteDataDir){
+    private ExperimentModel assembleExperiment(String remoteDataDir, String experimentDataDir){
         ExperimentModel experimentModel = new ExperimentModel();
         experimentModel.setExperimentName(expCreateNameField.getText());
         experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
@@ -597,6 +606,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setAiravataAutoSchedule(false);
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
+        userConfigurationDataModel.setExperimentDataDir(experimentDataDir);
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
@@ -625,7 +635,7 @@ public class ExperimentCreateController {
             temp.add(inputDataObjectType);
         }
         experimentModel.setExperimentInputs(temp);
-
+        experimentModel.setExperimentOutputs(outputDataObjectTypes);
         return experimentModel;
     }
 

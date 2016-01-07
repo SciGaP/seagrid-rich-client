@@ -157,6 +157,6 @@ public class SEAGridContext {
     }
 
     public String getGatewayUserDataRoot(){
-        return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_ROOT);
+        return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_ROOT) + getUserName() + "/";
     }
 }
