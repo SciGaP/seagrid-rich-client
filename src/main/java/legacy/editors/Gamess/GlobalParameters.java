@@ -50,7 +50,7 @@ public class GlobalParameters {
 	static String inputDocumentName= Settings.getApplicationDataDir() + "/gamess/GamessMenu.xml";
     static String inputDocumentName1= Settings.getApplicationDataDir() + "/gamess/GamessIncompatibilities.xml";
     static String GamessMenuNew= Settings.getApplicationDataDir() + "/gamess/GamessMenuNew.xml";
-    static String HelpFile = "file:///" + Settings.getApplicationDataDir() + "/gamess/GamessHelp.html";
+    static String HelpFile = Settings.getApplicationDataDir() + "/gamess/GamessHelp.html";
     static public Document doc = null;
     static public Document userNotesAndToolTip = null;
     static public boolean isProvisionalMode = false;

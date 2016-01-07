@@ -41,6 +41,9 @@ package legacy.editors.gamess.Dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import javax.swing.JDialog;
@@ -65,7 +68,14 @@ public class HelpDisplayer extends JDialog {
 		this.setSize(new Dimension(500,600));
 		getContentPane().add(scrlPane , BorderLayout.CENTER);
 		try {
-			hlpedt.setPage(url);
+			String text = "", temp;
+			BufferedReader reader = new BufferedReader(new FileReader(new File(url)));
+			temp = reader.readLine();
+			while(temp != null && !temp.isEmpty()){
+				text += temp;
+				temp = reader.readLine();
+			}
+			hlpedt.setText(text);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
