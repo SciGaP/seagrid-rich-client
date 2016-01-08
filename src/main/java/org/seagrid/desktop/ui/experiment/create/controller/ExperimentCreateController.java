@@ -461,8 +461,8 @@ public class ExperimentCreateController {
                     try {
                         String selectedRemoteFilePath = showSelectRemoteFile();
                         if(selectedRemoteFilePath != null && !selectedRemoteFilePath.isEmpty()) {
-                            selectedRemoteFilePath = remoteDataDirRoot + SEAGridContext.getInstance().getUserName()
-                                    + selectedRemoteFilePath;
+                            selectedRemoteFilePath = remoteDataDirRoot + (selectedRemoteFilePath.startsWith("/")
+                                    ? selectedRemoteFilePath.substring(1) : selectedRemoteFilePath);
                             inputDataObjectType.setValue(selectedRemoteFilePath);
                             handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(selectedRemoteFilePath));
                         }
@@ -500,7 +500,7 @@ public class ExperimentCreateController {
                             " Do you want to download it ?");
                     if(result){
                         String remotePath = selectedFile.getPath();
-                        remotePath = remotePath.replaceAll(remoteDataDirRoot + SEAGridContext.getInstance().getUserName(), "");
+                        remotePath = remotePath.replaceAll(remoteDataDirRoot, "");
                         downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
                     }
                 }
@@ -529,10 +529,9 @@ public class ExperimentCreateController {
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String randomString = expCreateNameField.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
-            String remoteDataDir = remoteDataDirRoot + SEAGridContext.getInstance().getUserName() + "/"
-                    + randomString  + "/";
+            String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir, SEAGridContext.getInstance().getUserName() + "/"
-                    + randomString  + "/");
+                    + randomString + "/");
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<InputDataObjectType, Object> entry = it.next();

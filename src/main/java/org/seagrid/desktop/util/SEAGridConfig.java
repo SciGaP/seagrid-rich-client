@@ -44,4 +44,5 @@ public class SEAGridConfig {
     public static final String DEFAULT_FILE_DOWNLOAD_PATH = "default.file.download.path";
     public static final java.lang.String GATEWAY_STORAGE_ID = "gateway.storage.resource.id";
     public static final java.lang.String REMOTE_DATA_DIR_ROOT = "remote.data.dir.root";
+    public static final java.lang.String REMOTE_DATA_DIR_PREFIX = "remote.data.dir.prefix";
 }
