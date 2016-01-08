@@ -82,7 +82,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/** Controls the home screen */
+/**
+ * Controls the home screen
+ */
 public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
@@ -163,7 +165,15 @@ public class HomeController {
     @FXML
     private Button g03Btn;
 
-    private Map<ExperimentSearchFields,String> previousExperimentListFilter;
+    @FXML
+    public MenuItem projCreateMenuItem;
+
+    @FXML
+    public MenuItem expCreateMenuItem;
+
+    private Map<ExperimentSearchFields, String> previousExperimentListFilter;
+
+    private ContextMenu contextMenu;
 
     @SuppressWarnings("unused")
     public void initialize() {
@@ -180,7 +190,21 @@ public class HomeController {
         initTokenUpdateDaemon();
     }
 
-    public void initMenuBar(){
+    public void initMenuBar() {
+        expCreateMenuItem.setOnAction(event -> {
+            try {
+                ExperimentCreateWindow.displayCreateExperiment();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        projCreateMenuItem.setOnAction(event -> {
+            try {
+                ProjectWindow.displayCreateProject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         createProjectButton.setOnMouseClicked(event -> {
             try {
                 ProjectWindow.displayCreateProject();
@@ -208,8 +232,8 @@ public class HomeController {
         g03Btn.setOnAction(event1 -> G03MenuTree.showG03MenuTree());
         gamessBtn.setOnAction(event1 -> GamessGUI.showGamesGUI());
         logoutBtn.setOnAction(event -> {
-            ((Stage)logoutBtn.getScene().getWindow()).close();
-            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
+            ((Stage) logoutBtn.getScene().getWindow()).close();
+            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
         });
         aboutMenuItem.setOnAction(event -> {
             String imgtext = "<img src=\"File:///" + HomeController.class.getResource("/images/logo.png").getPath()
@@ -233,15 +257,15 @@ public class HomeController {
             WebView webView = new WebView();
             webView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
             SEAGridDialogHelper.showInformationDialog(
-                "Information Dialog",
-                "SEAGrid Desktop Client",
-                webView,
-                logoutBtn.getScene().getWindow());
+                    "Information Dialog",
+                    "SEAGrid Desktop Client",
+                    webView,
+                    logoutBtn.getScene().getWindow());
         });
         appExitMenuItem.setOnAction(event -> {
             boolean result = SEAGridDialogHelper.showConfirmDialog("Confirmation Dialog", "Confirm your action",
                     "Are sure you want to exit the application?");
-            if(result){
+            if (result) {
                 System.exit(0);
             }
         });
@@ -258,46 +282,46 @@ public class HomeController {
         gamessMenuBtn.setOnAction(event -> GamessGUI.showGamesGUI());
         launchSelectedBtn.setOnAction(event -> expSummaryTable.getItems().stream()
                 .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
-            try {
-                AiravataManager.getInstance().launchExperiment(e.getId());
-                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED,e));
-            } catch (Exception ex) {
-                SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
-                        "Failed to launch experiment!");
-            }
-        }));
+                    try {
+                        AiravataManager.getInstance().launchExperiment(e.getId());
+                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED, e));
+                    } catch (Exception ex) {
+                        SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
+                                "Failed to launch experiment!");
+                    }
+                }));
         deleteSelectedBtn.setOnAction(event -> {
             List<ExperimentListModel> experimentListModels = FXCollections.observableArrayList(expSummaryTable.getItems());
             experimentListModels.stream()
                     .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
-                        try {
-                            AiravataManager.getInstance().deleteExperiment(e.getId());
-                            SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED,e));
-                        } catch (Exception ex) {
-                            SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
-                                    "Failed to delete experiment!");
-                        }
-                    });
+                try {
+                    AiravataManager.getInstance().deleteExperiment(e.getId());
+                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED, e));
+                } catch (Exception ex) {
+                    SEAGridDialogHelper.showExceptionDialog(ex, "Exception Dialog", launchSelectedBtn.getScene().getWindow(),
+                            "Failed to delete experiment!");
+                }
+            });
         });
     }
 
-    public void initProjectTreeView(){
+    public void initProjectTreeView() {
         projectsTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         projectsTreeView.setCellFactory(param -> {
-            TreeCell<TreeModel> cell = new TreeCell<TreeModel>(){
+            TreeCell<TreeModel> cell = new TreeCell<TreeModel>() {
                 @Override
                 public void updateItem(TreeModel item, boolean empty) {
-                    super.updateItem(item, empty) ;
+                    super.updateItem(item, empty);
                     if (empty) {
                         setText(null);
                         setGraphic(null);
                     } else {
                         setText(item.getDisplayName());
-                        if(item.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)){
+                        if (item.getItemType().equals(TreeModel.ITEM_TYPE.EXPERIMENT)) {
                             Node experimentIcon = new ImageView(new Image(HomeController.class
                                     .getResourceAsStream("/images/file.png")));
                             setGraphic(experimentIcon);
-                        }else{
+                        } else {
                             Node projectIcon = new ImageView(new Image(HomeController.class
                                     .getResourceAsStream("/images/folder.png")));
                             setGraphic(projectIcon);
@@ -366,7 +390,7 @@ public class HomeController {
                     try {
                         ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
                         Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(rowData.getId());
-                        Tab experimentTab = new Tab(rowData.getName(),parentNode);
+                        Tab experimentTab = new Tab(rowData.getName(), parentNode);
                         experimentTab.setClosable(true);
                         tabbedPane.getTabs().add(experimentTab);
                         tabbedPane.getSelectionModel().select(experimentTab);
@@ -396,14 +420,14 @@ public class HomeController {
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         setText(item);
-                        if(!empty){
+                        if (!empty) {
                             if (item.equals(ExperimentState.COMPLETED.toString())) {
                                 this.setTextFill(Color.GREEN);
-                            }else if(item.equals(ExperimentState.FAILED.toString())){
+                            } else if (item.equals(ExperimentState.FAILED.toString())) {
                                 this.setTextFill(Color.RED);
-                            }else if(item.equals(ExperimentState.CREATED.toString())){
+                            } else if (item.equals(ExperimentState.CREATED.toString())) {
                                 this.setTextFill(Color.BLUE);
-                            }else{
+                            } else {
                                 this.setTextFill(Color.ORANGE);
                             }
                         }
@@ -413,16 +437,22 @@ public class HomeController {
         });
         expCreateTimeColumn.setCellValueFactory(cellData -> cellData.getValue().createdTimeProperty());
 
-        Map<ExperimentSearchFields,String> filters = new HashMap<>();
+        Map<ExperimentSearchFields, String> filters = new HashMap<>();
         tabbedPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         tabbedPane.getTabs().get(0).setText("Recent Experiments");
         tabbedPane.getTabs().get(0).setClosable(false);
-        updateExperimentList(filters,SEAGridContext.getInstance().getMaxRecentExpCount(),0);
+        updateExperimentList(filters, SEAGridContext.getInstance().getMaxRecentExpCount(), 0);
 
-        addContextMenuForExperimentSummaryTable();
+        createContextMenuForExperimentSummaryTable();
+
+        if (expSummaryTable.getItems().size() > 0) {
+            expSummaryTable.setContextMenu(contextMenu);
+        } else {
+            expSummaryTable.setContextMenu(null);
+        }
     }
 
-    private void addContextMenuForExperimentSummaryTable(){
+    private void createContextMenuForExperimentSummaryTable() {
         ContextMenu cm = new ContextMenu();
         MenuItem mi1 = new MenuItem("launch");
         mi1.setOnAction(event -> {
@@ -479,7 +509,7 @@ public class HomeController {
         mi4.setOnAction(event -> {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
-                if(experimentListModel != null) {
+                if (experimentListModel != null) {
                     ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
                     Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(experimentListModel.getId());
                     Tab experimentTab = new Tab(experimentListModel.getName(), parentNode);
@@ -498,7 +528,7 @@ public class HomeController {
         mi5.setOnAction(event -> {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
-                if(experimentListModel != null) {
+                if (experimentListModel != null) {
                     ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
                     experimentSummaryWindow.showExperimentSummaryWindow(experimentListModel.getId());
                 }
@@ -514,9 +544,12 @@ public class HomeController {
             try {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
                 if (experimentListModel != null) {
-                    AiravataManager.getInstance().deleteExperiment(experimentListModel.getId());
-                    SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
-                            .EXPERIMENT_DELETED, experimentListModel));
+                    if(SEAGridDialogHelper.showConfirmDialog("Confirmation Dialog", "Confirm your action",
+                            "Are sure you want to delete the experiment?")){
+                        AiravataManager.getInstance().deleteExperiment(experimentListModel.getId());
+                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                                .EXPERIMENT_DELETED, experimentListModel));
+                    }
                 }
             } catch (TException e) {
                 e.printStackTrace();
@@ -525,23 +558,24 @@ public class HomeController {
             }
         });
         cm.getItems().add(mi6);
-        expSummaryTable.setContextMenu(cm);
+
+        this.contextMenu = cm;
 
         expSummaryTable.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.SECONDARY){
+            if (event.getButton() == MouseButton.SECONDARY) {
                 ExperimentListModel experimentListModel = expSummaryTable.getSelectionModel().getSelectedItem();
-                if(experimentListModel != null){
+                if (experimentListModel != null) {
                     mi1.setDisable(true);
                     mi2.setDisable(true);
                     mi3.setDisable(true);
                     mi4.setDisable(false);
                     mi5.setDisable(false);
                     mi6.setDisable(true);
-                    if (experimentListModel.getStatus().equals(ExperimentState.CREATED.toString())){
+                    if (experimentListModel.getStatus().equals(ExperimentState.CREATED.toString())) {
                         mi1.setDisable(false);
                         mi3.setDisable(false);
                         mi6.setDisable(false);
-                    } else if (experimentListModel.getStatus().equals(ExperimentState.EXECUTING.toString())){
+                    } else if (experimentListModel.getStatus().equals(ExperimentState.EXECUTING.toString())) {
                         mi2.setDisable(false);
                     }
                 }
@@ -552,62 +586,69 @@ public class HomeController {
     //update the right pane with experiment list
     public void updateExperimentList(Map<ExperimentSearchFields, String> filters, int limit, int offset) throws TException {
 
-            this.previousExperimentListFilter = filters;
+        this.previousExperimentListFilter = filters;
 
-            List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
-                    .getExperimentSummaries(filters, limit, offset);
-            observableExperimentList = FXCollections.observableArrayList(new Callback<ExperimentListModel, Observable[]>() {
-                @Override
-                public Observable[] call(ExperimentListModel param) {
-                    return new Observable[]{param.statusProperty()};
-                }
-            });
-            for(ExperimentSummaryModel expModel : experimentSummaryModelList){
-                ExperimentListModel expFXModel = new ExperimentListModel(expModel);
-                observableExperimentList.add(expFXModel);
+        List<ExperimentSummaryModel> experimentSummaryModelList = AiravataManager.getInstance()
+                .getExperimentSummaries(filters, limit, offset);
+        observableExperimentList = FXCollections.observableArrayList(new Callback<ExperimentListModel, Observable[]>() {
+            @Override
+            public Observable[] call(ExperimentListModel param) {
+                return new Observable[]{param.statusProperty()};
             }
-            //Set the filter Predicate whenever the filter changes.
-            FilteredList<ExperimentListModel> filteredExpSummaryData = new FilteredList<>(observableExperimentList, p -> true);
-            filterField.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredExpSummaryData.setPredicate(experiment -> {
-                    // If filter text is empty, display all persons.
-                    if (newValue == null || newValue.isEmpty()) {
-                        return true;
-                    }
+        });
+        for (ExperimentSummaryModel expModel : experimentSummaryModelList) {
+            ExperimentListModel expFXModel = new ExperimentListModel(expModel);
+            observableExperimentList.add(expFXModel);
+        }
+        //Set the filter Predicate whenever the filter changes.
+        FilteredList<ExperimentListModel> filteredExpSummaryData = new FilteredList<>(observableExperimentList, p -> true);
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredExpSummaryData.setPredicate(experiment -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
 
-                    // Compare first name and last name of every person with filter text.
-                    String lowerCaseFilter = newValue.toLowerCase();
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
 
-                    if (experiment.getName().toLowerCase().contains(lowerCaseFilter)) {
-                        return true; // Filter matches first name.
-                    } else if (experiment.getApplication().toLowerCase().contains(lowerCaseFilter)) {
-                        return true; // Filter matches last name.
-                    } else if (experiment.getHost().toLowerCase().contains(lowerCaseFilter)) {
-                        return true; // Filter matches last name.
-                    } else if (experiment.getStatus().toLowerCase().contains(lowerCaseFilter)) {
-                        return true; // Filter matches last name.
-                    }
-                    return false; // Does not match.
-                });
+                if (experiment.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches first name.
+                } else if (experiment.getApplication().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                } else if (experiment.getHost().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                } else if (experiment.getStatus().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                }
+                return false; // Does not match.
             });
-            SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
-            sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
-            expSummaryTable.setItems(filteredExpSummaryData);
+        });
+        SortedList<ExperimentListModel> sortedExperimentListData = new SortedList<>(filteredExpSummaryData);
+        sortedExperimentListData.comparatorProperty().bind(expSummaryTable.comparatorProperty());
+        expSummaryTable.setItems(filteredExpSummaryData);
 
-            filterField.setText("");
-            tabbedPane.getSelectionModel().select(0);
+        filterField.setText("");
+        tabbedPane.getSelectionModel().select(0);
+
+
+        if (expSummaryTable.getItems().size() > 0) {
+            expSummaryTable.setContextMenu(contextMenu);
+        } else {
+            expSummaryTable.setContextMenu(null);
+        }
     }
 
     //Creates the project tree model
-    private TreeItem createProjectTreeModel(){
+    private TreeItem createProjectTreeModel() {
 
         TreeItem root = new TreeItem();
         TreeItem recentExps = new ProjectTreeModel(
-                new TreeModel(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS,"no-id","Recent Experiments"));
+                new TreeModel(TreeModel.ITEM_TYPE.RECENT_EXPERIMENTS, "no-id", "Recent Experiments"));
         root.getChildren().add(recentExps);
 
         TreeItem projectRoot = new TreeItem<TreeModel>(
-                new TreeModel(TreeModel.ITEM_TYPE.PROJECT_ROOT_NODE,"no-id","Projects")){
+                new TreeModel(TreeModel.ITEM_TYPE.PROJECT_ROOT_NODE, "no-id", "Projects")) {
             {
                 SEAGridEventBus.getInstance().register(this);
             }
@@ -617,11 +658,11 @@ public class HomeController {
             @SuppressWarnings("unused")
             @Subscribe
             public void handleNewProjectEvent(SEAGridEvent event) {
-                if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
-                    if(!isFirstTimeChildren){
-                        Project project = (Project)event.getPayload();
+                if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)) {
+                    if (!isFirstTimeChildren) {
+                        Project project = (Project) event.getPayload();
                         getChildren().add(0, new ProjectTreeModel(new TreeModel(TreeModel.ITEM_TYPE.PROJECT,
-                                project.getProjectID(),project.getName())));
+                                project.getProjectID(), project.getName())));
                     }
                 }
             }
@@ -662,27 +703,27 @@ public class HomeController {
 
     private void initTokenUpdateDaemon() {
         Timeline oauthTokenUpdateTimer = new Timeline(new KeyFrame(
-                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime()-System.currentTimeMillis())*5/6),
+                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime() - System.currentTimeMillis()) * 5 / 6),
                 ae -> {
                     AuthenticationManager authenticationManager = new AuthenticationManager();
                     try {
                         AuthResponse authResponse = authenticationManager.getRefreshedOAuthToken(SEAGridContext
                                 .getInstance().getRefreshToken());
-                        if(authResponse != null){
+                        if (authResponse != null) {
                             SEAGridContext.getInstance().setOAuthToken(authResponse.getAccess_token());
                             SEAGridContext.getInstance().setRefreshToken(authResponse.getAccess_token());
                             SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
                                     + System.currentTimeMillis());
-                        }else{
+                        } else {
                             throw new Exception("AuthResponse is null");
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();
-                        SEAGridDialogHelper.showExceptionDialog(e,"Exception Dialog",tabbedPane.getScene().getWindow(),
+                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
                                 "Failed updating OAuth refresh token");
                         //Initiating a logout
-                        ((Stage)logoutBtn.getScene().getWindow()).close();
-                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT,null));
+                        ((Stage) logoutBtn.getScene().getWindow()).close();
+                        SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
                     }
                 }));
         oauthTokenUpdateTimer.setCycleCount(Timeline.INDEFINITE);
@@ -693,75 +734,81 @@ public class HomeController {
     @SuppressWarnings("unused")
     @Subscribe
     public void listenSEAGridEvents(SEAGridEvent event) throws TException {
-        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)){
-            Project project = (Project)event.getPayload();
-            SEAGridDialogHelper.showInformationNotification("Success","Project " +
+        if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.PROJECT_CREATED)) {
+            Project project = (Project) event.getPayload();
+            SEAGridDialogHelper.showInformationNotification("Success", "Project " +
                     project.getName() + " created successfully", createProjectButton.getScene().getWindow());
-        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED)){
-            String localFilePath = (String)event.getPayload();
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_DOWNLOADED)) {
+            String localFilePath = (String) event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
-                    +" was downloaded successfully", createProjectButton.getScene().getWindow());
+                    + " was downloaded successfully", createProjectButton.getScene().getWindow());
             //Opening the file in system proffered editor
             try {
                 Desktop.getDesktop().open(new File(localFilePath));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_UPLOADED)){
-            String localFilePath = (String)event.getPayload();
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_UPLOADED)) {
+            String localFilePath = (String) event.getPayload();
             SEAGridDialogHelper.showInformationNotification("Success", Paths.get(localFilePath).getFileName()
-                    +" was uploaded successfully", createProjectButton.getScene().getWindow());
-        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)){
+                    + " was uploaded successfully", createProjectButton.getScene().getWindow());
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CREATED)) {
             ExperimentModel experiment = (ExperimentModel) event.getPayload();
-            SEAGridDialogHelper.showInformationNotification("Success","Experiment " +
+            SEAGridDialogHelper.showInformationNotification("Success", "Experiment " +
                     experiment.getExperimentName() + " created successfully", createProjectButton.getScene().getWindow());
             ExperimentListModel experimentListModel = assembleExperimentListModel(experiment);
-            if(this.previousExperimentListFilter == null ||
+            if (this.previousExperimentListFilter == null ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(
                             SEAGridContext.getInstance().getRecentExperimentsDummyId()) ||
                     this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experiment.getProjectId())) {
-                observableExperimentList.add(0,experimentListModel);
+                observableExperimentList.add(0, experimentListModel);
             }
-        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED)){
+            if (expSummaryTable.getContextMenu() == null) {
+                expSummaryTable.setContextMenu(contextMenu);
+            }
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_LAUNCHED)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from create and launch experiment
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentModel.getExperimentName(),
                         createProjectButton.getScene().getWindow());
-            } else if (event.getPayload() instanceof  ExperimentListModel){ // This is coming from experiment list in home
+            } else if (event.getPayload() instanceof ExperimentListModel) { // This is coming from experiment list in home
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Launched experiment " + experimentListModel.getName(),
                         createProjectButton.getScene().getWindow());
             }
-        } else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)){
-            if(event.getPayload() instanceof ExperimentListModel){
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
+            if (event.getPayload() instanceof ExperimentListModel) {
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
                 ExperimentListModel matchingModel = null;
-                for(ExperimentListModel temp : observableExperimentList){
-                    if(temp.getId().equals(experimentListModel.getId())){
+                for (ExperimentListModel temp : observableExperimentList) {
+                    if (temp.getId().equals(experimentListModel.getId())) {
                         matchingModel = temp;
                         break;
                     }
                 }
-                if(matchingModel != null){
+                if (matchingModel != null) {
                     observableExperimentList.remove(matchingModel);
+                }
+                if (expSummaryTable.getItems().size() == 0) {
+                    expSummaryTable.setContextMenu(null);
                 }
                 SEAGridDialogHelper.showInformationNotification("Success", "Deleted experiment "
                         + experimentListModel.getName(), createProjectButton.getScene().getWindow());
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CANCELLED)){
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CANCELLED)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment summary
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Cancelled experiment "
                                 + experimentModel.getExperimentName(),
                         createProjectButton.getScene().getWindow());
-            } else if(event.getPayload() instanceof ExperimentListModel) { // This is coming from browse experiment
+            } else if (event.getPayload() instanceof ExperimentListModel) { // This is coming from browse experiment
                 ExperimentListModel experimentListModel = (ExperimentListModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Cancelled experiment "
                                 + experimentListModel.getName(),
                         createProjectButton.getScene().getWindow());
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST)) {
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_EDIT_REQUEST)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment summary
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 try {
@@ -771,24 +818,24 @@ public class HomeController {
                             "Failed to launch edit experiment dialog");
                 }
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment edit
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Updated experiment "
                         + experimentModel.getExperimentName(), expSummaryTable.getScene().getWindow());
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED)) {
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment edit
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Cloned experiment "
-                                + experimentModel.getExperimentName(), createProjectButton.getScene().getWindow());
+                        + experimentModel.getExperimentName(), createProjectButton.getScene().getWindow());
                 ExperimentListModel experimentListModel = assembleExperimentListModel(experimentModel);
-                if(this.previousExperimentListFilter == null ||
+                if (this.previousExperimentListFilter == null ||
                         this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID) == null ||
                         this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(
                                 SEAGridContext.getInstance().getRecentExperimentsDummyId()) ||
                         this.previousExperimentListFilter.get(ExperimentSearchFields.PROJECT_ID).equals(experimentModel.getProjectId())) {
-                    observableExperimentList.add(0,experimentListModel);
+                    observableExperimentList.add(0, experimentListModel);
                 }
                 try {
                     ExperimentCreateWindow.displayEditExperiment(experimentModel);
@@ -797,8 +844,8 @@ public class HomeController {
                             "Failed to launch edit experiment dialog");
                 }
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAUSSIAN_EXP)){
-            if(event.getPayload() instanceof String){
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAUSSIAN_EXP)) {
+            if (event.getPayload() instanceof String) {
                 String gaussianInput = (String) event.getPayload();
                 try {
                     ExperimentCreateWindow.displayCreateGaussianExp(gaussianInput);
@@ -807,8 +854,8 @@ public class HomeController {
                             "Failed to launch gaussian experiment dialog");
                 }
             }
-        }else if(event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAMESS_EXP)){
-            if(event.getPayload() instanceof String){
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_GAMESS_EXP)) {
+            if (event.getPayload() instanceof String) {
                 String gamessInput = (String) event.getPayload();
                 try {
                     ExperimentCreateWindow.displayCreateGamessExp(gamessInput);

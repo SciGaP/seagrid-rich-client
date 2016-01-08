@@ -104,8 +104,8 @@
               <items>
                 <Menu mnemonicParsing="false" text="New">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Experiment" />
-                    <MenuItem mnemonicParsing="false" text="Project" />
+                    <MenuItem mnemonicParsing="false" text="Experiment" fx:id="expCreateMenuItem"/>
+                    <MenuItem mnemonicParsing="false" text="Project" fx:id="projCreateMenuItem"/>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Open">
