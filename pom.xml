@@ -65,6 +65,7 @@
                     <mainClass>org.seagrid.desktop.SEAGridDesktop</mainClass>
                     <verbose>true</verbose>
                     <identifier></identifier>
+                    <jnlpTemplate>src/main/resources/template.vm</jnlpTemplate>
                 </configuration>
                 <executions>
                     <execution>
@@ -76,10 +77,10 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>create-native</id>
+                        <id>create-web</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>build-native</goal>
+                            <goal>build-web</goal>
                         </goals>
                     </execution>
                 </executions>
