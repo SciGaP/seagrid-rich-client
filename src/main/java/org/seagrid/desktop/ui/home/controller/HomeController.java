@@ -32,8 +32,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -746,7 +746,12 @@ public class HomeController {
             try {
                 Desktop.getDesktop().open(new File(localFilePath));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Cannot open file. Opening parent directory");
+                try {
+                    Desktop.getDesktop().open(new File(localFilePath).getParentFile());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.FILE_UPLOADED)) {
             String localFilePath = (String) event.getPayload();

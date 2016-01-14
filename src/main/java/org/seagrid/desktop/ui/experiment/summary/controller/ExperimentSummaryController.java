@@ -363,7 +363,7 @@ public class ExperimentSummaryController {
                     TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
                         //FIXME
-                        String dataRoot = remoteDataDirRoot + SEAGridContext.getInstance().getUserName();
+                        String dataRoot = remoteDataDirRoot;
                         String[] bits = input.getValue().replaceAll(dataRoot,"").split(":");
                         String filePathString = bits[bits.length-1];
                         Path filePath = Paths.get(filePathString);
