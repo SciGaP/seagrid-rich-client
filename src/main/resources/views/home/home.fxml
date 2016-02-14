@@ -113,7 +113,7 @@
                     <MenuItem mnemonicParsing="false" text="Mass Storage" fx:id="massStorageMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="Gamess" fx:id="gamessMenuBtn" />
+                    <MenuItem mnemonicParsing="false" text="Gamess" fx:id="gamessMenuBtn" visible="false"/>
                   </items>
                 </Menu>
                 <SeparatorMenuItem mnemonicParsing="false" />
@@ -149,7 +149,8 @@
                 <Insets bottom="3.0" right="3.0" top="3.0" fx:id="x5" />
               </HBox.margin>
             </Button>
-            <Button id="browseMassStorageBtn" fx:id="gamessBtn" mnemonicParsing="false" prefWidth="71.9998779296875" text="Gamess">
+            <Button id="browseMassStorageBtn" fx:id="gamessBtn" mnemonicParsing="false" prefWidth="71.9998779296875"
+                    text="Gamess" visible="false">
               <HBox.margin>
                 <Insets bottom="3.0" right="3.0" top="3.0" fx:id="x5" />
               </HBox.margin>

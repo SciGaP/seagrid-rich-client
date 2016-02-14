@@ -1519,7 +1519,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         getSetStructure.addItem("View XYZ");
         getSetStructure.addItem("View Native");
         getSetStructure.addItem("Gaussian Input");
-        getSetStructure.addItem("GAMESS Input");
+//        getSetStructure.addItem("GAMESS Input");
 
 //      FIXME-SEAGrid
 //        getSetStructure.addItem("NWChem Input");
