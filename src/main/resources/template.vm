@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
-      codebase="https://seagrid.org/seagrid-rich-client/"
+      codebase="https://dev.seagrid.org/seagrid-rich-client/"
       href="$outputFile">
     <information>
         <title>SEAGrid Science Gateway</title>
