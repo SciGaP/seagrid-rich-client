@@ -262,7 +262,9 @@ public class ExperimentListModel {
                 String experimentId = id.getValue();
                 try {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
-                    this.setStatus(experimentModel.getExperimentStatus().getState().toString());
+                    if(experimentModel.getExperimentStatus() != null) {
+                        this.setStatus(experimentModel.getExperimentStatus().getState().toString());
+                    }
                     logger.debug("Updated Experiment Status for :" + experimentId);
                 } catch (Exception e) {
                     e.printStackTrace();

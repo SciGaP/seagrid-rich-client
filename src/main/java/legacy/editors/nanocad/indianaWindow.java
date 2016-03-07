@@ -172,15 +172,14 @@ public class indianaWindow extends Frame {
                     not_found.setVisible(true);
                 }
             } else {
-                File temp = File.createTempFile(System.currentTimeMillis()+"-mol", ".mol2");
-                BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
-                bw.write(b);
-                bw.close();
-                nano.loadFile(temp.getAbsolutePath(),"");
-//                if (nano.callDatabase == 1)
-//                    nano.drawFile(b, "pdb");
-//                else
-//                    result = new searchResult(b, nano);
+                if (nano.callDatabase == 1) {
+                    File temp = File.createTempFile(System.currentTimeMillis() + "-mol", ".mol2");
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+                    bw.write(b);
+                    bw.close();
+                    nano.loadFile(temp.getAbsolutePath(), "");
+                }else
+                    result = new searchResult(b, nano);
             }
             nano.callDatabase = 0;
         } catch (MalformedURLException mx) {

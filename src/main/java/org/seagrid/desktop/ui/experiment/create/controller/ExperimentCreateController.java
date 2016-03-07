@@ -524,7 +524,9 @@ public class ExperimentCreateController {
     private void createExperiment(boolean launch){
         if(validateExperimentFields()){
             //FIXME Hardcoded value
-            String randomString = expCreateNameField.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
+            String projectId = ((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID();
+            String randomString = projectId.substring(0,projectId.length()-37) + "/"
+                    + expCreateNameField.getText().replaceAll("/[^A-Za-z0-9 ]/","-")+"."+System.currentTimeMillis();
             String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir, SEAGridContext.getInstance().getUserName() + "/"
                     + randomString + "/");

@@ -67,7 +67,7 @@ public class searchResult extends Frame {
                 while (l.hasMoreTokens() == true) {
                     header = l.nextToken();
                     //System.out.println("h:" + header);
-                    if (header.equals("COMPND")) {
+                    if (header.equals("@<TRIPOS>MOLECULE")) {
                         //System.out.println("found file");
                         smallad = l.nextToken();
                         slist.add(smallad);
