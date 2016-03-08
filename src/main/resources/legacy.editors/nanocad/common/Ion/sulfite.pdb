@@ -1,0 +1,11 @@
+COMPND  sulfite3.pdb                                                            
+HETATM    1  S                   0.216  -0.069  -0.687                
+HETATM    2  O                   1.360  -1.010  -0.651                
+HETATM    3  O                  -1.203  -0.945  -0.756                
+HETATM    4  O                   0.235   0.858   0.700                
+CONECT    1    2    3    4                                   
+CONECT    2    1                                             
+CONECT    3    1                                             
+CONECT    4    1                                             
+END   
+ÿ

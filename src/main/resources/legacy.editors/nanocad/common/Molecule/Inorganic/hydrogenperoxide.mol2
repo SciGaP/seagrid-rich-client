@@ -1,0 +1,21 @@
+   
+       @<TRIPOS>MOLECULE
+       hydrogen peroxide
+       4 3 1  0       0
+       SMALL
+       NO_CHARGES
+
+       	@<TRIPOS>ATOM
+
+	1	O1	1.4886 2.0881 4.0148	O	1   	HYDROGEN PEROXIDE 0.000
+	2	O2	2.7633 2.6464 4.4532	O	1   	HYDROGEN PEROXIDE 0.000
+	3	H1	1.4310 2.6422 3.1280	H	1   	HYDROGEN PEROXIDE 0.000
+	4	H2	3.3593 1.8506 4.3697	H	1   	HYDROGEN PEROXIDE 0.000
+	
+	@<TRIPOS>BOND
+       	1       1	2       1
+       	2       1	3       1
+	3	2	4	1
+	
+       @<TRIPOS>SUBSTRUCTURE
+       1       HYDROGEN PEROXIDE 1       PERM    0       ****    ****    0       ROOT

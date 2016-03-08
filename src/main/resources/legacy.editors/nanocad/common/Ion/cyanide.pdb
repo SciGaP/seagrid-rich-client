@@ -1,0 +1,7 @@
+COMPND  cyanide3.pdb                                                            
+HETATM    1  C                  -0.579   0.000   0.000                
+HETATM    2  N                   0.579   0.000   0.000                
+CONECT    1    2                                             
+CONECT    2    1                                             
+END   
+ÿ

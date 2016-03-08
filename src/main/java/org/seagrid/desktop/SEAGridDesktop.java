@@ -34,11 +34,7 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class SEAGridDesktop extends Application{
     private final static Logger logger = LoggerFactory.getLogger(SEAGridDesktop.class);
@@ -81,46 +77,6 @@ public class SEAGridDesktop extends Application{
     }
 
     public static void main(String[] args) throws IOException {
-        extractLegacyEditorResources();
         launch(args);
-    }
-
-    public static void extractLegacyEditorResources() {
-        try {
-            String destParent = "./";
-            byte[] buf = new byte[1024];
-            ZipInputStream zipinputstream;
-            ZipEntry zipentry;
-            zipinputstream = new ZipInputStream(SEAGridDesktop.class.getClassLoader().getResourceAsStream("legacy.editors.zip"));
-
-            zipentry = zipinputstream.getNextEntry();
-            while (zipentry != null) {
-                //for each entry to be extracted
-                String entryName = destParent + zipentry.getName();
-                entryName = entryName.replace('/', File.separatorChar);
-                entryName = entryName.replace('\\', File.separatorChar);
-                logger.info("entryname " + entryName);
-                int n;
-                FileOutputStream fileoutputstream;
-                File newFile = new File(entryName);
-                if (zipentry.isDirectory()) {
-                    if (!newFile.mkdirs()) {
-                        break;
-                    }
-                    zipentry = zipinputstream.getNextEntry();
-                    continue;
-                }
-                fileoutputstream = new FileOutputStream(entryName);
-                while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
-                    fileoutputstream.write(buf, 0, n);
-                }
-                fileoutputstream.close();
-                zipinputstream.closeEntry();
-                zipentry = zipinputstream.getNextEntry();
-            }
-            zipinputstream.close();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 }
