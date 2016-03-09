@@ -2948,6 +2948,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
                 CSDSearch csdSearch = new CSDSearch(new JFrame(), true, nano);
                 csdSearch.setLocationRelativeTo(null);
+                this.dispose();
                 csdSearch.setVisible(true);
             } else if (s.equals("Load saved file")) {
                 if (!runAsApplication) {
