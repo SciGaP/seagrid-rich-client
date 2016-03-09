@@ -7,16 +7,15 @@ import legacy.editors.gamess.GamessGUI;
 import legacy.editors.nanocad.minimize.mm3.mm3MinimizeAlgorythm;
 import legacy.editors.nanocad.minimize.uff.uffMinimizeAlgorythm;
 
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.util.Timer;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.Timer;
 
 public class newNanocad extends Applet implements MouseListener, MouseMotionListener {
     public static final String rcsid =
@@ -2933,19 +2932,23 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
                 //System.out.println("*** I am in CSD ***");
 
-                indiana = new indianaWindow(nano);
-                indiana.setVisible(true);
-                //Now indianaWindow calls a cgi script which will put the appropriate pdb file in /work/csd/temp/csdsearch-<process id>.mol2 so we need toload that file.
+//                indiana = new indianaWindow(nano);
+//                indiana.setVisible(true);
+//                //Now indianaWindow calls a cgi script which will put the appropriate pdb file in /work/csd/temp/csdsearch-<process id>.mol2 so we need toload that file.
+//
+//                this.setVisible(false);
+//                // Check if foll code needed !
+//                addWindowListener(new WindowAdapter() {
+//                    public void windowClosing(WindowEvent e) {
+//                        setVisible(false);
+//                    }
+//                });
+//                structure.paint(structure.getGraphics());
+//                pack();
 
-                this.setVisible(false);
-                // Check if foll code needed !
-                addWindowListener(new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
-                        setVisible(false);
-                    }
-                });
-                structure.paint(structure.getGraphics());
-                pack();
+                CSDSearch csdSearch = new CSDSearch(new JFrame(), true, nano);
+                csdSearch.setLocationRelativeTo(null);
+                csdSearch.setVisible(true);
             } else if (s.equals("Load saved file")) {
                 if (!runAsApplication) {
                     browser = new java.awt.List(50, false);
