@@ -65,7 +65,7 @@
             </build>
         </profile>
         <profile>
-            <id>package</id>
+            <id>update-deployment</id>
             <build>
                 <plugins>
                     <!-- Compile project jar to appdir -->
