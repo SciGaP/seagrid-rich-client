@@ -32,7 +32,8 @@
         <app.url>https://dev.seagrid.org/seagrid-rich-client/</app.url>
 
         <!-- Optional scp target for application artifacts hosted at the above url -->
-        <app.deploy.target>pga@gw54.iu.xsede.org:/var/www/portals/dev-seagrid/public/seagrid-rich-client</app.deploy.target>
+        <app.deploy.target>pga@gw54.iu.xsede.org:/var/www/portals/dev-seagrid/public/seagrid-rich-client
+        </app.deploy.target>
 
         <!-- The app and launcher will be assembled in this folder -->
         <app.dir>${project.build.directory}/app</app.dir>
@@ -43,137 +44,161 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <build>
-        <plugins>
-            <!-- Compile project jar to appdir -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <outputDirectory>${app.dir}</outputDirectory>
-                </configuration>
-            </plugin>
-            <!-- Copy dependencies to appdir -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <configuration>
-                    <excludeScope>provided</excludeScope>
-                    <outputDirectory>${app.dir}</outputDirectory>
-                    <stripVersion>true</stripVersion>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
-                <!-- Generate app.xml manifest -->
-                <executions>
-                    <execution>
-                        <id>create-manifest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.3</version>
                         <configuration>
-                            <mainClass>fxlauncher.CreateManifest</mainClass>
-                            <arguments>
-                                <argument>${app.url}</argument>
-                                <argument>${app.mainClass}</argument>
-                                <argument>${app.dir}</argument>
-                                <argument>${app.parameters}</argument>
-                            </arguments>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
-                    </execution>
-                    <!-- Embed app.xml inside fxlauncher.xml so we don't need to reference app.xml to start the app -->
-                    <execution>
-                        <id>embed-manifest-in-launcher</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>package</id>
+            <build>
+                <plugins>
+                    <!-- Compile project jar to appdir -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.6</version>
                         <configuration>
-                            <executable>jar</executable>
-                            <workingDirectory>${app.dir}</workingDirectory>
-                            <arguments>
-                                <argument>uf</argument>
-                                <argument>fxlauncher.jar</argument>
-                                <argument>app.xml</argument>
-                            </arguments>
+                            <outputDirectory>${app.dir}</outputDirectory>
                         </configuration>
-                    </execution>
-                    <!-- Create native installer. Feel free to add more arguments as needed.
-                     https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javapackager.html
-                     -->
-                    <execution>
-                        <id>installer</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
+                    </plugin>
+                    <!-- Copy dependencies to appdir -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.10</version>
                         <configuration>
-                            <executable>${env.JAVA_HOME}/bin/javapackager</executable>
-                            <arguments>
-                                <argument>-deploy</argument>
-                                <argument>-native</argument>
-                                <argument>-outdir</argument>
-                                <argument>${app.installerdir}</argument>
-                                <argument>-outfile</argument>
-                                <argument>${app.filename}</argument>
-                                <argument>-srcdir</argument>
-                                <argument>${app.dir}</argument>
-                                <argument>-srcfiles</argument>
-                                <argument>fxlauncher.jar</argument>
-                                <argument>-appclass</argument>
-                                <argument>fxlauncher.Launcher</argument>
-                                <argument>-name</argument>
-                                <argument>${project.name}</argument>
-                                <argument>-title</argument>
-                                <argument>${project.name}</argument>
-                                <argument>-vendor</argument>
-                                <argument>${app.vendor}</argument>
-                                <argument>-BappVersion=${app.version}</argument>
-                            </arguments>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>${app.dir}</outputDirectory>
+                            <stripVersion>true</stripVersion>
                         </configuration>
-                    </execution>
-                    <!-- Copy application artifacts to remote site using scp (optional) -->
-                    <execution>
-                        <id>deploy-app</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.4.0</version>
+                        <!-- Generate app.xml manifest -->
+                        <executions>
+                            <execution>
+                                <id>create-manifest</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>fxlauncher.CreateManifest</mainClass>
+                                    <arguments>
+                                        <argument>${app.url}</argument>
+                                        <argument>${app.mainClass}</argument>
+                                        <argument>${app.dir}</argument>
+                                        <argument>${app.parameters}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Embed app.xml inside fxlauncher.xml so we don't need to reference app.xml to start the app -->
+                            <execution>
+                                <id>embed-manifest-in-launcher</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jar</executable>
+                                    <workingDirectory>${app.dir}</workingDirectory>
+                                    <arguments>
+                                        <argument>uf</argument>
+                                        <argument>fxlauncher.jar</argument>
+                                        <argument>app.xml</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Create native installer. Feel free to add more arguments as needed.
+                             https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javapackager.html
+                             -->
+                            <execution>
+                                <id>installer</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>${env.JAVA_HOME}/bin/javapackager</executable>
+                                    <arguments>
+                                        <argument>-deploy</argument>
+                                        <argument>-native</argument>
+                                        <argument>-outdir</argument>
+                                        <argument>${app.installerdir}</argument>
+                                        <argument>-outfile</argument>
+                                        <argument>${app.filename}</argument>
+                                        <argument>-srcdir</argument>
+                                        <argument>${app.dir}</argument>
+                                        <argument>-srcfiles</argument>
+                                        <argument>fxlauncher.jar</argument>
+                                        <argument>-appclass</argument>
+                                        <argument>fxlauncher.Launcher</argument>
+                                        <argument>-name</argument>
+                                        <argument>${project.name}</argument>
+                                        <argument>-title</argument>
+                                        <argument>${project.name}</argument>
+                                        <argument>-vendor</argument>
+                                        <argument>${app.vendor}</argument>
+                                        <argument>-BappVersion=${app.version}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- Copy application artifacts to remote site using scp (optional) -->
+                            <execution>
+                                <id>deploy-app</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>scp</executable>
+                                    <arguments>
+                                        <argument>-r</argument>
+                                        <argument>${app.dir}/.</argument>
+                                        <argument>${app.deploy.target}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.3</version>
                         <configuration>
-                            <executable>scp</executable>
-                            <arguments>
-                                <argument>-r</argument>
-                                <argument>${app.dir}/.</argument>
-                                <argument>${app.deploy.target}</argument>
-                            </arguments>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!--FX Launcher-->
