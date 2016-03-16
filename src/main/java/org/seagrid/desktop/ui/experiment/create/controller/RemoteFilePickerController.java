@@ -23,7 +23,6 @@ package org.seagrid.desktop.ui.experiment.create.controller;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -206,7 +205,7 @@ public class RemoteFilePickerController {
 
     private void populateRemoteFileTable() throws JSchException, SftpException {
         currentRemoteFileList.clear();
-        fbRemotePath.setText(currentRemotePath.toString());
+        fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + "/" + currentRemotePath.toString());
         FileListModel fileListModel;
         if(currentRemotePath.getParent() != null){
             fileListModel = new FileListModel("..", FileListModel.FileListModelType.PARENT_DIR,0,0, FileListModel.FileLocation.REMOTE,
