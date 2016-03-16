@@ -603,7 +603,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setAiravataAutoSchedule(false);
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
-        userConfigurationDataModel.setExperimentDataDir(experimentDataDir);
+        userConfigurationDataModel.setExperimentDataDir(remoteDataDir + experimentDataDir);
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()
