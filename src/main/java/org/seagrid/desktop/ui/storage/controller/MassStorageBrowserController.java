@@ -380,7 +380,7 @@ public class MassStorageBrowserController {
 
     private void populateRemoteFileTable() throws JSchException, SftpException {
         currentRemoteFileList.clear();
-        fbRemotePath.setText(currentRemotePath.toString());
+        fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
         FileListModel fileListModel;
         if(currentRemotePath.getParent() != null){
             fileListModel = new FileListModel("..", FileListModel.FileListModelType.PARENT_DIR,0,0, FileListModel.FileLocation.REMOTE,
