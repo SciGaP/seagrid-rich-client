@@ -16,4 +16,4 @@ The SEAGrid Rich Client Interface is a desktop application developed in JavaFX.
 
 # Build a native installer
 
-	mvn install
+	mvn -P update-deployment install
