@@ -240,6 +240,7 @@ public class ExperimentCreateController {
         expCreateAppField.getItems().stream().filter(p->((ApplicationInterfaceDescription)p).getApplicationInterfaceId()
                 .equals(experimentModel.getExecutionId())).forEach(p -> expCreateAppField.getSelectionModel().select(p));
         expCreateAppField.setDisable(true);
+        expCreateProjField.setDisable(true);
         expCreateAppField.setStyle("-fx-opacity: 1;");
         expCreateResourceField.getItems().stream().filter(r -> ((ComputeResourceDescription) r).getComputeResourceId()
                 .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()))
