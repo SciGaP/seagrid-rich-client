@@ -75,6 +75,7 @@ public class GuiBulkFileUploadTask extends GuiFileTask {
     }
 
     private void createRemoteParentDirsIfNotExists(String parentDirPath) throws SftpException {
+        channelSftp.cd("/");
         String[] folders = parentDirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {
