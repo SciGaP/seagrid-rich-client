@@ -77,7 +77,7 @@ public class LoginController {
 
         dontHaveAccountLink.setOnAction(event -> {
             try {
-                Desktop.getDesktop().browse(new URI("https://seagrid.org/portal/public/create"));
+                Desktop.getDesktop().browse(new URI("https://seagrid.org/create"));
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

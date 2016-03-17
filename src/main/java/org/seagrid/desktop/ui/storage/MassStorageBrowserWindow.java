@@ -39,7 +39,7 @@ public class MassStorageBrowserWindow extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/views/storage/mass-storage-browser.fxml"));
-        primaryStage.setTitle("SEAGrid Desktop Client - Mass Storage Browser");
+        primaryStage.setTitle("SEAGrid Desktop Client - Storage Browser");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
@@ -48,7 +48,7 @@ public class MassStorageBrowserWindow extends Application{
         if(primaryStage == null || !primaryStage.isShowing()) {
             primaryStage = new Stage();
             Parent root = FXMLLoader.load(MassStorageBrowserWindow.class.getResource("/views/storage/mass-storage-browser.fxml"));
-            primaryStage.setTitle("SEAGrid Desktop Client - Mass Storage Browser");
+            primaryStage.setTitle("SEAGrid Desktop Client - Storage Browser");
             primaryStage.setScene(new Scene(root, 800, 600));
             primaryStage.initModality(Modality.WINDOW_MODAL);
             primaryStage.show();

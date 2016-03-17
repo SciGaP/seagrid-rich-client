@@ -225,7 +225,7 @@ public class HomeController {
             } catch (IOException e) {
                 e.printStackTrace();
                 SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", browseMassStorageBtn.getScene().getWindow(),
-                        "Failed to open Mass Storage Browser");
+                        "Failed to open Storage Browser");
             }
         });
         nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
