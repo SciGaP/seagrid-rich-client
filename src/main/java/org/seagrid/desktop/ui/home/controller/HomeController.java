@@ -142,7 +142,7 @@ public class HomeController {
     private MenuItem appExitMenuItem;
 
     @FXML
-    private MenuItem massStorageMenuBtn;
+    private MenuItem storageMenuBtn;
 
     @FXML
     private MenuItem nanocadMenuBtn;
@@ -221,8 +221,8 @@ public class HomeController {
         });
         browseMassStorageBtn.setOnMouseClicked(event -> {
             try {
-                MassStorageBrowserWindow.displayFileBrowse();
-            } catch (IOException e) {
+                MassStorageBrowserWindow.displayFileBrowse(null);
+            } catch (Exception e) {
                 e.printStackTrace();
                 SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", browseMassStorageBtn.getScene().getWindow(),
                         "Failed to open Storage Browser");
@@ -269,10 +269,10 @@ public class HomeController {
                 System.exit(0);
             }
         });
-        massStorageMenuBtn.setOnAction(event -> {
+        storageMenuBtn.setOnAction(event -> {
             try {
-                MassStorageBrowserWindow.displayFileBrowse();
-            } catch (IOException e) {
+                MassStorageBrowserWindow.displayFileBrowse(null);
+            } catch (Exception e) {
                 SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                         "Failed to open mass storage browser");
             }

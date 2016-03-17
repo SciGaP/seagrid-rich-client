@@ -525,11 +525,10 @@ public class ExperimentCreateController {
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String projectId = ((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID();
-            String randomString = projectId.substring(0,projectId.length()-37) + "/"
-                    + expCreateNameField.getText().replaceAll("/[^A-Za-z0-9 ]/","-")+"."+System.currentTimeMillis();
+            String randomString = projectId.substring(0,projectId.length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
+                    + expCreateNameField.getText().replaceAll("[^A-Za-z0-9 ]","_")+"."+System.currentTimeMillis();
             String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
-            ExperimentModel experimentModel = assembleExperiment(remoteDataDir, SEAGridContext.getInstance().getUserName() + "/"
-                    + randomString + "/");
+            ExperimentModel experimentModel = assembleExperiment(remoteDataDir, randomString + "/");
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<InputDataObjectType, Object> entry = it.next();
@@ -603,7 +602,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setAiravataAutoSchedule(false);
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
-        userConfigurationDataModel.setExperimentDataDir(remoteDataDir + experimentDataDir);
+        userConfigurationDataModel.setExperimentDataDir(remoteDataDirRoot + experimentDataDir);
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()

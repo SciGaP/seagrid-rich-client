@@ -100,7 +100,7 @@
             <Button fx:id="expEditButton" mnemonicParsing="false" text="Edit" HBox.margin="$x1" />
             <Button fx:id="expCancelButton" cancelButton="true" mnemonicParsing="false" text="Cancel" HBox.margin="$x1" />
             <Button fx:id="expCloneButton" mnemonicParsing="false" text="Clone" HBox.margin="$x1" />
-            <Button fx:id="expMonitorOutput" mnemonicParsing="false" text="Monitor Output" />
+            <Button fx:id="expStorageDir" mnemonicParsing="false" text="Storage Dir" />
           </children>
           <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />

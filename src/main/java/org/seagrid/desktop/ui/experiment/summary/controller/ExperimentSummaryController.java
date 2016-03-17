@@ -29,7 +29,10 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
@@ -54,6 +57,7 @@ import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
 import org.seagrid.desktop.connectors.storage.StorageManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.home.model.ExperimentListModel;
+import org.seagrid.desktop.ui.storage.MassStorageBrowserWindow;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
@@ -64,8 +68,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ExperimentSummaryController {
@@ -76,7 +80,7 @@ public class ExperimentSummaryController {
     private ExperimentModel experimentModel;
 
     @FXML
-    private Button expMonitorOutput;
+    private Button expStorageDir;
 
     @FXML
     private Button expLaunchButton;
@@ -201,6 +205,16 @@ public class ExperimentSummaryController {
             } catch (Exception e) {
                 SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", experimentInfoGridPane.getScene().getWindow(),
                         "Failed cloning experiment");
+            }
+        });
+        expStorageDir.setOnAction(event -> {
+            try {
+                String path = experimentModel.getUserConfigurationData().getExperimentDataDir();
+                path = path.replaceAll(SEAGridContext.getInstance().getGatewayUserDataRoot(),"");
+                MassStorageBrowserWindow.displayFileBrowse(path);
+            } catch (Exception e) {
+                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expStorageDir.getScene().getWindow(),
+                        "Failed to open mass storage browser");
             }
         });
         SEAGridEventBus.getInstance().register(this);
@@ -455,14 +469,13 @@ public class ExperimentSummaryController {
         switch (experimentModel.getExperimentStatus().getState()){
             case CREATED:
                 expCancelButton.setDisable(true);
-                expMonitorOutput.setDisable(true);
+                expStorageDir.setDisable(false);
                 break;
             case EXECUTING:
                 expCancelButton.setDisable(false);
             case CANCELING:
                 expLaunchButton.setDisable(true);
                 expEditButton.setDisable(true);
-                expMonitorOutput.setDisable(false);
                 expCancelButton.setDisable(true);
                 break;
             case FAILED:

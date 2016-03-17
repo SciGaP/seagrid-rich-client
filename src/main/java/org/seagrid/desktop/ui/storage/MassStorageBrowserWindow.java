@@ -20,12 +20,15 @@
 */
 package org.seagrid.desktop.ui.storage;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.seagrid.desktop.ui.storage.controller.MassStorageBrowserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,7 @@ public class MassStorageBrowserWindow extends Application{
     private final static Logger logger = LoggerFactory.getLogger(MassStorageBrowserWindow.class);
 
     private static Stage primaryStage;
+    private static MassStorageBrowserController controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -44,14 +48,24 @@ public class MassStorageBrowserWindow extends Application{
         primaryStage.show();
     }
 
-    public static void displayFileBrowse() throws IOException {
+    public static void displayFileBrowse(String path) throws IOException, SftpException, JSchException {
         if(primaryStage == null || !primaryStage.isShowing()) {
             primaryStage = new Stage();
-            Parent root = FXMLLoader.load(MassStorageBrowserWindow.class.getResource("/views/storage/mass-storage-browser.fxml"));
+            FXMLLoader loader = new FXMLLoader(MassStorageBrowserWindow.class.getResource(
+                    "/views/storage/mass-storage-browser.fxml"));
+            Parent root = loader.load();
+            controller = loader.getController();
             primaryStage.setTitle("SEAGrid Desktop Client - Storage Browser");
             primaryStage.setScene(new Scene(root, 800, 600));
             primaryStage.initModality(Modality.WINDOW_MODAL);
             primaryStage.show();
+        }
+
+        if(path != null){
+            if(!path.startsWith("/")){
+                path = "/" + path;
+            }
+            controller.gotoRemoteDir(path);
         }
         primaryStage.requestFocus();
     }

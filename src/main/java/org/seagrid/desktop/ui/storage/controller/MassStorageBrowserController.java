@@ -545,4 +545,25 @@ public class MassStorageBrowserController {
         });
         service.start();
     }
+
+    public void gotoRemoteDir(String path) throws JSchException, SftpException {
+        currentRemoteFileList.clear();
+        currentRemotePath = Paths.get(path);
+        fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
+        FileListModel fileListModel;
+        if(currentRemotePath.getParent() != null){
+            fileListModel = new FileListModel("..", FileListModel.FileListModelType.PARENT_DIR,0,0, FileListModel.FileLocation.REMOTE,
+                    currentRemotePath.getParent().toString());
+            currentRemoteFileList.add(fileListModel);
+        }
+        Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
+        for(ChannelSftp.LsEntry lsEntry : children){
+            if(lsEntry.getFilename().equals(".") || lsEntry.getFilename().equals("..")) continue;
+            fileListModel = new FileListModel(lsEntry.getFilename(), lsEntry.getAttrs().isDir() == false
+                    ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, lsEntry.getAttrs().getSize(),
+                    lsEntry.getAttrs().getATime() * 1000L, FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
+                    + "/" + lsEntry.getFilename());
+            currentRemoteFileList.add(fileListModel);
+        }
+    }
 }
