@@ -25,13 +25,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.apache.thrift.TException;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.experiment.summary.controller.ExperimentSummaryController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ExperimentSummaryWindow extends Application {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentSummaryWindow.class);
@@ -49,7 +50,11 @@ public class ExperimentSummaryWindow extends Application {
                 "/views/experiment/summary/experiment-summary.fxml"));
         Parent node = loader.load();
         ExperimentSummaryController controller = loader.getController();
-        controller.initExperimentInfo(experimentId);
+        try {
+            controller.initExperimentInfo(experimentId);
+        } catch (URISyntaxException e) {
+            SEAGridDialogHelper.showExceptionDialog(e,"Exception caught", null, "Unable to open experiment");
+        }
         return node;
     }
 
@@ -61,7 +66,11 @@ public class ExperimentSummaryWindow extends Application {
         primaryStage.setTitle("SEAGrid Desktop Client - Experiment Summary");
         primaryStage.setScene(new Scene(root, 800, 600));
         ExperimentSummaryController controller = loader.getController();
-        controller.initExperimentInfo(experimentId);
+        try {
+            controller.initExperimentInfo(experimentId);
+        } catch (URISyntaxException e) {
+            SEAGridDialogHelper.showExceptionDialog(e, "Exception caught", null, "Unable to open experiment");
+        }
         primaryStage.show();
     }
 }

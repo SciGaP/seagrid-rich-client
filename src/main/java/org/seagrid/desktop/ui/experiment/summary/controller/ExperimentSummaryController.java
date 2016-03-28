@@ -46,6 +46,8 @@ import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
 import org.apache.airavata.model.commons.ErrorModel;
+import org.apache.airavata.model.data.replica.DataReplicaLocationModel;
+import org.apache.airavata.model.data.replica.ReplicaLocationCategory;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.status.ExperimentState;
@@ -65,6 +67,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -220,7 +224,7 @@ public class ExperimentSummaryController {
         SEAGridEventBus.getInstance().register(this);
     }
 
-    public void initExperimentInfo(ExperimentModel experimentModel) throws TException{
+    public void initExperimentInfo(ExperimentModel experimentModel) throws TException, URISyntaxException {
         if(experimentModel != null){
             experimentIdLabel.setText(experimentModel.getExperimentId());
             experimentNameLabel.setText(experimentModel.getExperimentName());
@@ -291,7 +295,7 @@ public class ExperimentSummaryController {
         }
     }
 
-    public void initExperimentInfo(String experimentId) throws TException{
+    public void initExperimentInfo(String experimentId) throws TException, URISyntaxException {
         experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
         initExperimentInfo(experimentModel);
     }
@@ -363,7 +367,7 @@ public class ExperimentSummaryController {
         }
     }
 
-    private void showExperimentInputs(ExperimentModel experimentModel){
+    private void showExperimentInputs(ExperimentModel experimentModel) throws TException, URISyntaxException {
         List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
         int rowIndex = EXPERIMENT_INPUT_START_ROW;
         experimentInfoGridPane.add(new Label("Inputs"), 0, rowIndex);
@@ -372,18 +376,23 @@ public class ExperimentSummaryController {
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    Hyperlink hyperlink = new Hyperlink(Paths.get(input.getValue()).getFileName()
-                            .toString());
-                    TextFlow uriInputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
+                    //FIXME
+                    String dataRoot = remoteDataDirRoot;
+                    List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(input.getValue());
+                    String fileUri = "";
+                    for(DataReplicaLocationModel rpModel : replicas){
+                        if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                            fileUri = rpModel.getFilePath();
+                            break;
+                        }
+                    }
+                    String filePath = (new URI(fileUri)).getPath();
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(filePath).getFileName().toString());
+                    TextFlow uriOutputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
-                        //FIXME
-                        String dataRoot = remoteDataDirRoot;
-                        String[] bits = input.getValue().replaceAll(dataRoot,"").split(":");
-                        String filePathString = bits[bits.length-1];
-                        Path filePath = Paths.get(filePathString);
-                        downloadFile(filePath, experimentModel);
+                        downloadFile(Paths.get(filePath.toString().replaceAll(dataRoot, "")), experimentModel);
                     });
-                    experimentInfoGridPane.add(uriInputLabel, 1, rowIndex);
+                    experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                     break;
                 default :
                     Label outputLabel = new Label();
@@ -407,7 +416,7 @@ public class ExperimentSummaryController {
         }
     }
 
-    private void showExperimentOutputs(ExperimentModel experimentModel){
+    private void showExperimentOutputs(ExperimentModel experimentModel) throws TException, URISyntaxException {
         int rowIndex = experimentInfoGridPane.getRowConstraints().size();
         experimentInfoGridPane.add(new Label("Outputs"), 0, rowIndex);
         List<OutputDataObjectType> outputDataObjectTypes = experimentModel.getExperimentOutputs();
@@ -418,11 +427,19 @@ public class ExperimentSummaryController {
                 case STDOUT:
                     //FIXME
                     String dataRoot = remoteDataDirRoot;
-                    Hyperlink hyperlink = new Hyperlink(Paths.get(output.getValue())
-                            .getFileName().toString());
+                    List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(output.getValue());
+                    String fileUri = "";
+                    for(DataReplicaLocationModel rpModel : replicas){
+                        if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                            fileUri = rpModel.getFilePath();
+                            break;
+                        }
+                    }
+                    String filePath = (new URI(fileUri)).getPath();
+                    Hyperlink hyperlink = new Hyperlink(Paths.get(filePath).getFileName().toString());
                     TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);
                     hyperlink.setOnAction(event -> {
-                        downloadFile(Paths.get(output.getValue().replaceAll(dataRoot, "")), experimentModel);
+                        downloadFile(Paths.get(filePath.toString().replaceAll(dataRoot, "")), experimentModel);
                     });
                     experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                     break;
@@ -493,7 +510,11 @@ public class ExperimentSummaryController {
         if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_UPDATED)) {
             ExperimentModel updatedExperimentModel = (ExperimentModel) event.getPayload();
             if(updatedExperimentModel.getExperimentId().equals(this.experimentModel.getExperimentId())){
-                initExperimentInfo(updatedExperimentModel);
+                try {
+                    initExperimentInfo(updatedExperimentModel);
+                } catch (URISyntaxException e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Exception caught", null, "Unable to open experiment");
+                }
             }
         }else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_DELETED)) {
             if(event.getPayload() instanceof ExperimentListModel){

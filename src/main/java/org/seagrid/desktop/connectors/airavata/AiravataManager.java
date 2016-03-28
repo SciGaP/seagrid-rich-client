@@ -3,6 +3,8 @@ package org.seagrid.desktop.connectors.airavata;
 import org.apache.airavata.api.Airavata;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.data.replica.DataProductModel;
+import org.apache.airavata.model.data.replica.DataReplicaLocationModel;
 import org.apache.airavata.model.error.*;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
@@ -214,5 +216,13 @@ public class AiravataManager {
 
     public synchronized String cloneExperiment(String experimentId, String newExpName) throws TException {
         return getClient().cloneExperiment(getAuthzToken(), experimentId, newExpName);
+    }
+
+    public String registerDataProduct(DataProductModel dpModel) throws TException {
+        return getClient().registerDataProduct(getAuthzToken(), dpModel);
+    }
+
+    public List<DataReplicaLocationModel> getDataReplicas(String uri) throws TException {
+        return getClient().getDataProduct(getAuthzToken(), uri).getReplicaLocations();
     }
 }

@@ -45,6 +45,7 @@ import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescr
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
+import org.apache.airavata.model.data.replica.*;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
@@ -214,11 +215,19 @@ public class ExperimentCreateController {
             });
 
             expSaveButton.setOnAction(event -> {
-                createExperiment(false);
+                try {
+                    createExperiment(false);
+                } catch (TException e) {
+                    SEAGridDialogHelper.showExceptionDialog(e,"Caught Exception",null, "Unable to create experiment");
+                }
             });
 
             expSaveLaunchButton.setOnAction(event -> {
-                createExperiment(true);
+                try {
+                    createExperiment(true);
+                } catch (TException e) {
+                    SEAGridDialogHelper.showExceptionDialog(e, "Caught Exception", null, "Unable to create experiment");
+                }
             });
 
         }catch (Exception e){
@@ -522,7 +531,7 @@ public class ExperimentCreateController {
         return controller.getSelectedFilePath();
     }
 
-    private void createExperiment(boolean launch){
+    private void createExperiment(boolean launch) throws TException {
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String projectId = ((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID();
@@ -587,7 +596,7 @@ public class ExperimentCreateController {
         }
     }
 
-    private ExperimentModel assembleExperiment(String remoteDataDir, String experimentDataDir){
+    private ExperimentModel assembleExperiment(String remoteDataDir, String experimentDataDir) throws TException {
         ExperimentModel experimentModel = new ExperimentModel();
         experimentModel.setExperimentName(expCreateNameField.getText());
         experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
@@ -623,8 +632,23 @@ public class ExperimentCreateController {
                 //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
                 if(((File) this.experimentInputs
                         .get(inputDataObjectType)).exists()) {
-                    inputDataObjectType.setValue(remoteDataDir + ((File) this.experimentInputs
-                            .get(inputDataObjectType)).getName());
+                    String fileName = ((File) this.experimentInputs.get(inputDataObjectType)).getName();
+                    String remoteFilePath = remoteDataDir + fileName;
+                    DataProductModel dpModel = new DataProductModel();
+                    dpModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
+                    dpModel.setOwnerName(SEAGridContext.getInstance().getUserName());
+                    dpModel.setProductName(fileName);
+                    dpModel.setDataProductType(DataProductType.FILE);
+
+                    DataReplicaLocationModel rpModel = new DataReplicaLocationModel();
+                    rpModel.setStorageResourceId(SEAGridContext.getInstance().getGatewayaStorageId());
+                    rpModel.setReplicaName(fileName + " gateway data store copy");
+                    rpModel.setReplicaLocationCategory(ReplicaLocationCategory.GATEWAY_DATA_STORE);
+                    rpModel.setReplicaPersistentType(ReplicaPersistentType.TRANSIENT);
+                    rpModel.setFilePath(remoteFilePath);
+                    dpModel.addToReplicaLocations(rpModel);
+                    String uri = AiravataManager.getInstance().registerDataProduct(dpModel);
+                    inputDataObjectType.setValue(uri);
                 }
             }else{
                 inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));

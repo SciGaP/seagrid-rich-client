@@ -7,7 +7,7 @@ The SEAGrid Rich Client Interface is a desktop application developed in JavaFX.
 ## Maven targets
 
 # Generate the application
-
+	(First you need to build the latest copy of the master branch of Apache Airavata)
 	mvn -P update-deployment clean package
 
 # Deploy the application artifacts to your webserver
