@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.seagrid.desktop.connectors.wso2is.AuthResponse;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationException;
@@ -59,6 +60,9 @@ public class LoginController {
     @FXML
     private Hyperlink dontHaveAccountLink;
 
+    @FXML
+    private WebView loginWebView;
+
     public void initialize() {
         loginButton.disableProperty().bind(new BooleanBinding() {
             {super.bind(passwordField.textProperty(),usernameField.textProperty());}
@@ -82,6 +86,26 @@ public class LoginController {
                 e1.printStackTrace();
             }
         });
+
+        String imgtext = "<img src=\"File:///" + LoginController.class.getResource("/images/logo.png").getPath()
+                + "\" height=50 width=50>";
+        String textinfo1 = "<div style=\"background-color:#E7EEF6; color:#000000\">" +
+                "<div style=\"background-color:#A7B3C7; color:#FFFFFF;\">" +
+                imgtext + "<font size=5> Welcome to SEAGrid !! - Science and Engineering Applications Grid" +
+                "</font>" +
+                "<br></div>" +
+                "<p>You are running the " +
+                "<Font color='green'>SEAGrid Desktop Client </font>" +
+                "Application. </p>";
+        String textinfo2 = "<p>To use Web Portal and for more information, " +
+                " visit <a href='https://seagrid.org/'>https://seagrid.org/</a></div></p>";
+        String textinfo3 = "<p>If you do not have SEAGrid account, you may request one on the web portal." +
+                "</div></p>";
+
+        String textinfo4 = "<br><p><Font color='red'>Note: This version is in active development and will" +
+                " be auto-updated automatically.</font></p>";
+
+        loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
     }
 
     public boolean handleLogin(){

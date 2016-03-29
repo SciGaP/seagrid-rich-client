@@ -240,7 +240,7 @@ public class HomeController {
                     + "\" height=50 width=50>";
             String textinfo1 = "<div style=\"background-color:#E7EEF6; color:#000000\">" +
                     "<div style=\"background-color:#A7B3C7; color:#FFFFFF;\">" +
-                    imgtext + "<font size=5> Welcome to Science and Engineering Applications Grid (SEAGrid) !!" +
+                    imgtext + "<font size=5> Welcome to SEAGrid !! - Science and Engineering Applications Grid" +
                     "</font>" +
                     "<br></div>" +
                     "<p>You are running the " +
@@ -252,7 +252,7 @@ public class HomeController {
                     "</div></p>";
 
             String textinfo4 = "<br><p><Font color='red'>Note: This version is in active development and will" +
-                    " be auto-updated periodically.</font></p>";
+                    " be auto-updated automatically.</font></p>";
 
             WebView webView = new WebView();
             webView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
