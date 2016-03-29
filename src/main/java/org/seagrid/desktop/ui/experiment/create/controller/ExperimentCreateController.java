@@ -411,8 +411,15 @@ public class ExperimentCreateController {
         expCreateInputsGridPane.getRowConstraints().clear();
         int index = 0;
         for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
+            String lable = inputDataObjectType.getName();
+            String toolTip = "";
+            if(inputDataObjectType.getUserFriendlyDescription() != null){
+                toolTip = inputDataObjectType.getUserFriendlyDescription();
+            }
+            Label labelObj = new Label(lable);
+            labelObj.setTooltip(new Tooltip(toolTip));
             if(inputDataObjectType.getType().equals(DataType.STRING)){
-                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                expCreateInputsGridPane.add(labelObj, 0, index);
                 TextField stringField = new TextField();
                 expCreateInputsGridPane.add( stringField, 1, index);
                 this.experimentInputs.put(inputDataObjectType,null);
@@ -422,7 +429,7 @@ public class ExperimentCreateController {
                 if(inputDataObjectType.getValue() != null)
                     stringField.setText(inputDataObjectType.getValue());
             }else if(inputDataObjectType.getType().equals(DataType.INTEGER)){
-                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                expCreateInputsGridPane.add(labelObj, 0, index);
                 TextField numericField = new TextField();
                 numericField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("\\d*")) {
@@ -436,7 +443,7 @@ public class ExperimentCreateController {
                 if(inputDataObjectType.getValue() != null)
                     numericField.setText(inputDataObjectType.getValue());
             }else if(inputDataObjectType.getType().equals(DataType.FLOAT)){
-                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                expCreateInputsGridPane.add(labelObj, 0, index);
                 TextField floatField = new TextField();
                 floatField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("\\f*")) {
@@ -450,7 +457,7 @@ public class ExperimentCreateController {
                 if(inputDataObjectType.getValue() != null)
                     floatField.setText(inputDataObjectType.getValue());
             }else if(inputDataObjectType.getType().equals(DataType.URI)){
-                expCreateInputsGridPane.add(new Label(inputDataObjectType.getName()), 0, index);
+                expCreateInputsGridPane.add(labelObj, 0, index);
                 HBox hBox = new HBox(2);
                 Button localFilePickBtn = new ImageButton("/images/local-storage.png");
                 localFilePickBtn.setTooltip(new Tooltip("Select local file"));
