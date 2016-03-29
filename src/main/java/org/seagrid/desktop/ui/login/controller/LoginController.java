@@ -87,8 +87,7 @@ public class LoginController {
             }
         });
 
-        String imgtext = "<img src=\"File:///" + LoginController.class.getResource("/images/logo.png").getPath()
-                + "\" height=50 width=50>";
+        String imgtext = "<img src=\"data:image/png;base64," + SEAGridContext.logoBase64 + "\" height=50 width=50>";
         String textinfo1 = "<div style=\"background-color:#E7EEF6; color:#000000\">" +
                 "<div style=\"background-color:#A7B3C7; color:#FFFFFF;\">" +
                 imgtext + "<font size=5> Welcome to SEAGrid !! - Science and Engineering Applications Grid" +
@@ -136,4 +135,5 @@ public class LoginController {
         }
         return false;
     }
+
 }
