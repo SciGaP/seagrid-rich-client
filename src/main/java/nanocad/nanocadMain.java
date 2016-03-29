@@ -15,7 +15,7 @@ public class nanocadMain
         if(nano == null || !nano.isShowing()) {
             nano = new nanocadFrame2();
             nano.setSize(700, 600);
-            nano.setResizable(false);
+            nano.setResizable(true);
             nano.setLocationRelativeTo(null);
             nano.setVisible(true);
         }
