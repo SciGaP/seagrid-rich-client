@@ -26,6 +26,7 @@ import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.home.HomeWindow;
 import org.seagrid.desktop.ui.login.LoginWindow;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -34,16 +35,12 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class SEAGridDesktop extends Application{
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridDesktop.class);
+    private static Logger logger;
 
     public SEAGridDesktop(){
         SEAGridEventBus.getInstance().register(this);
@@ -51,22 +48,30 @@ public class SEAGridDesktop extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        LoginWindow loginWindow =  new LoginWindow();
-        loginWindow.displayLoginAndWait();
-        boolean isAuthenticated = SEAGridContext.getInstance().getAuthenticated();
-        if(isAuthenticated){
-            HomeWindow homeWindow =  new HomeWindow();
-            Screen screen = Screen.getPrimary();
-            Rectangle2D bounds = screen.getVisualBounds();
-            primaryStage.setX(bounds.getMinX());
-            primaryStage.setY(bounds.getMinY());
-            primaryStage.setWidth(bounds.getWidth());
-            primaryStage.setHeight(bounds.getHeight());
-            homeWindow.start(primaryStage);
-            primaryStage.setOnCloseRequest(t -> {
-                Platform.exit();
-                System.exit(0);
-            });
+        initApplicationDirs();
+        File dataDir = new File(applicationDataDir());
+        if(dataDir.exists()) {
+            LoginWindow loginWindow =  new LoginWindow();
+            loginWindow.displayLoginAndWait();
+            boolean isAuthenticated = SEAGridContext.getInstance().getAuthenticated();
+            if (isAuthenticated) {
+                HomeWindow homeWindow = new HomeWindow();
+                Screen screen = Screen.getPrimary();
+                Rectangle2D bounds = screen.getVisualBounds();
+                primaryStage.setX(bounds.getMinX());
+                primaryStage.setY(bounds.getMinY());
+                primaryStage.setWidth(bounds.getWidth());
+                primaryStage.setHeight(bounds.getHeight());
+                homeWindow.start(primaryStage);
+                primaryStage.setOnCloseRequest(t -> {
+                    Platform.exit();
+                    System.exit(0);
+                });
+            }
+        }else{
+            SEAGridDialogHelper.showExceptionDialogAndWait(new Exception("Application Data Dir Does Not Exists"),
+                    "Application Data Dir Does Not Exists", null, "Application Data Dir Does Not Exists");
+            System.exit(0);
         }
     }
 
@@ -83,9 +88,28 @@ public class SEAGridDesktop extends Application{
     }
 
     public static void main(String[] args) throws IOException {
+        initApplicationDirs();
+        launch(args);
+    }
+
+    public static void initApplicationDirs() throws FileNotFoundException {
+        File appDataRoot = new File(applicationDataDir());
+        if(!appDataRoot.exists()){
+            appDataRoot.mkdirs();
+        }
+        if(!appDataRoot.canWrite()){
+            SEAGridDialogHelper.showExceptionDialogAndWait(new Exception("Cannot Write to Application Data Dir"),
+                    "Cannot Write to Application Data Dir", null, "Cannot Write to Application Data Dir " + applicationDataDir());
+        }
+
         //Legacy editors use stdout and stderr instead of loggers. This is a workaround to append them to a file
-        PrintStream outPs = new PrintStream("./logs/seagrid.std.out");
-        PrintStream errPs = new PrintStream("./logs/seagrid.std.err");
+        System.setProperty("app.data.dir", applicationDataDir() + "logs");
+        logger = LoggerFactory.getLogger(SEAGridDesktop.class);
+        File logParent = new File(applicationDataDir() + "logs");
+        if(!logParent.exists())
+            logParent.mkdirs();
+        PrintStream outPs = new PrintStream(applicationDataDir() + "logs/seagrid.std.out");
+        PrintStream errPs = new PrintStream(applicationDataDir() + "logs/seagrid.std.err");
         System.setOut(outPs);
         System.setErr(errPs);
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -96,58 +120,62 @@ public class SEAGridDesktop extends Application{
         });
 
         extractLegacyEditorResources();
-        launch(args);
     }
 
     public static void extractLegacyEditorResources() {
         try {
-            String destParent = defaultDataDirectory();
+            String destParent = applicationDataDir() + ".ApplicationData" + File.separator;
+            File appHome = new File(destParent);
+            if(!appHome.exists()){
+                if(!appHome.mkdirs()){
+                    SEAGridDialogHelper.showExceptionDialogAndWait(new Exception("Cannot Create Application Data Dir"),
+                            "Cannot Create Application Data Dir", null, "Cannot Create Application Data Dir");
+                }
+            }
             byte[] buf = new byte[1024];
             ZipInputStream zipinputstream;
             ZipEntry zipentry;
             zipinputstream = new ZipInputStream(SEAGridDesktop.class.getClassLoader().getResourceAsStream("legacy.editors.zip"));
 
             zipentry = zipinputstream.getNextEntry();
-            while (zipentry != null) {
-                //for each entry to be extracted
-                String entryName = destParent + zipentry.getName();
-                entryName = entryName.replace('/', File.separatorChar);
-                entryName = entryName.replace('\\', File.separatorChar);
-                logger.info("entryname " + entryName);
-                int n;
-                FileOutputStream fileoutputstream;
-                File newFile = new File(entryName);
-                if (zipentry.isDirectory()) {
-                    if (!newFile.mkdirs()) {
-                        break;
+            if(zipentry == null){
+                SEAGridDialogHelper.showExceptionDialogAndWait(new Exception("Cannot Read Application Resources"),
+                        "Cannot Read Application Resources", null, "Cannot Read Application Resources");
+            }else {
+                while (zipentry != null) {
+                    //for each entry to be extracted
+                    String entryName = destParent + zipentry.getName();
+                    entryName = entryName.replace('/', File.separatorChar);
+                    entryName = entryName.replace('\\', File.separatorChar);
+                    logger.info("entryname " + entryName);
+                    int n;
+                    FileOutputStream fileoutputstream;
+                    File newFile = new File(entryName);
+                    if (zipentry.isDirectory()) {
+                        if (!newFile.mkdirs()) {
+                            break;
+                        }
+                        zipentry = zipinputstream.getNextEntry();
+                        continue;
                     }
+                    fileoutputstream = new FileOutputStream(entryName);
+                    while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
+                        fileoutputstream.write(buf, 0, n);
+                    }
+                    fileoutputstream.close();
+                    zipinputstream.closeEntry();
                     zipentry = zipinputstream.getNextEntry();
-                    continue;
                 }
-                fileoutputstream = new FileOutputStream(entryName);
-                while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
-                    fileoutputstream.write(buf, 0, n);
-                }
-                fileoutputstream.close();
-                zipinputstream.closeEntry();
-                zipentry = zipinputstream.getNextEntry();
+                zipinputstream.close();
             }
-            zipinputstream.close();
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
         }
     }
 
-    private static String defaultDataDirectory()
+    private static String applicationDataDir()
     {
-        String OS = System.getProperty("os.name").toUpperCase();
-        if (OS.contains("WIN"))
-            return System.getenv("APPDATA") + "/SEAGrid/";
-        else if (OS.contains("MAC"))
-            return System.getProperty("user.home") + "/Library/Application "
-                    + "Support" + "/SEAGrid/";
-        else if (OS.contains("NUX"))
-            return System.getProperty("user.home") + "/.seagrid/";
-        return System.getProperty("user.dir") + "/SEAGrid/";
+        return System.getProperty("user.home") + File.separator + "SEAGrid" + File.separator;
     }
 }

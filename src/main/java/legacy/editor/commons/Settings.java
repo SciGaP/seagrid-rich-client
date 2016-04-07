@@ -30,14 +30,6 @@ public class Settings {
 
     private static String defaultDataDirectory()
     {
-        String OS = System.getProperty("os.name").toUpperCase();
-        if (OS.contains("WIN"))
-            return System.getenv("APPDATA") + "/SEAGrid/";
-        else if (OS.contains("MAC"))
-            return System.getProperty("user.home") + "/Library/Application "
-                    + "Support" + "/SEAGrid/";
-        else if (OS.contains("NUX"))
-            return System.getProperty("user.home") + "/.seagrid/";
-        return System.getProperty("user.dir") + "/SEAGrid/";
+        return System.getProperty("user.home") + File.separator + "SEAGrid" + File.separator + ".ApplicationData" + File.separator;
     }
 }
