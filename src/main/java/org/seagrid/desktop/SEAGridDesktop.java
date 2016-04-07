@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -81,6 +83,18 @@ public class SEAGridDesktop extends Application{
     }
 
     public static void main(String[] args) throws IOException {
+        //Legacy editors use stdout and stderr instead of loggers. This is a workaround to append them to a file
+        PrintStream outPs = new PrintStream("./logs/seagrid.std.out");
+        PrintStream errPs = new PrintStream("./logs/seagrid.std.err");
+        System.setOut(outPs);
+        System.setErr(errPs);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                outPs.close();
+                errPs.close();
+            }
+        });
+
         extractLegacyEditorResources();
         launch(args);
     }
