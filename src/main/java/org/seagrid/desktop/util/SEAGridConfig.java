@@ -26,16 +26,23 @@ import org.slf4j.LoggerFactory;
 public class SEAGridConfig {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
 
+    public static final boolean DEV = true;
+
     public static final String USER_NAME = "user.name";
     public static final String AUTHENTICATED = "authenticated";
     public static final String OAUTH_TOKEN = "oauth.token";
     public static final String OAUTH_REFRESH_TOKEN = "oauth.refresh.token";
     public static final String OAUTH_TOKEN_EXPIRATION_TIME = "oauth.expiration.time";
     public static final String AIRAVATA_HOST = "airavata.host";
+    public static final String DEV_AIRAVATA_HOST = "dev.airavata.host";
     public static final String AIRAVATA_PORT = "airavata.port";
+    public static final String DEV_AIRAVATA_PORT = "dev.airavata.port";
     public static final String AIRAVATA_GATEWAY_ID = "airavata.gateway-id";
+    public static final String DEV_AIRAVATA_GATEWAY_ID = "dev.airavata.gateway-id";
     public static final String SFTP_HOST = "sftp.host";
+    public static final String DEV_SFTP_HOST = "dev.sftp.host";
     public static final String SFTP_PORT = "sftp.port";
+    public static final String DEV_SFTP_PORT = "dev.sftp.port";
     public static final String IDP_URL = "idp.url";
     public static final String IDP_TENANT_ID = "idp.tenant.id";
     public static final String IDP_AUTHORISED_ROLES = "idp.authorised.roles";
@@ -43,6 +50,9 @@ public class SEAGridConfig {
     public static final String IDP_OAUTH_CLIENT_SECRET = "idp.oauth.client.secret";
     public static final String DEFAULT_FILE_DOWNLOAD_PATH = "default.file.download.path";
     public static final java.lang.String GATEWAY_STORAGE_ID = "gateway.storage.resource.id";
+    public static final java.lang.String DEV_GATEWAY_STORAGE_ID = "dev.gateway.storage.resource.id";
     public static final java.lang.String REMOTE_DATA_DIR_ROOT = "remote.data.dir.root";
+    public static final java.lang.String DEV_REMOTE_DATA_DIR_ROOT = "dev.remote.data.dir.root";
     public static final java.lang.String REMOTE_DATA_DIR_PREFIX = "remote.data.dir.prefix";
+    public static final java.lang.String DEV_REMOTE_DATA_DIR_PREFIX = "dev.remote.data.dir.prefix";
 }

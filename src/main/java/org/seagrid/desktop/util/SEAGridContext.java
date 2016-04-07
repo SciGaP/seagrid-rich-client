@@ -64,10 +64,21 @@ public class SEAGridContext {
         return dt.atZone(TimeZone.getDefault().toZoneId()).getOffset();
     }
 
-    public String getFileDownloadLocation(){ return System.getProperty("user.home") + File.separator
-            + properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);}
+    public String getFileDownloadLocation(){
+        if(properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH) != null && !properties.getProperty(
+                SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH).isEmpty()) {
+            return properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);
+        }else{
+            return System.getProperty("user.home") + File.separator + "ExperimentData";
+        }
+    }
 
-    public String getAiravataGatewayId(){ return properties.getProperty(SEAGridConfig.AIRAVATA_GATEWAY_ID);}
+    public String getAiravataGatewayId(){
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_AIRAVATA_GATEWAY_ID);
+        }
+        return properties.getProperty(SEAGridConfig.AIRAVATA_GATEWAY_ID);
+    }
 
     public void setUserName(String userName){ dynamicConfigurations.put(SEAGridConfig.USER_NAME, userName);}
 
@@ -109,18 +120,30 @@ public class SEAGridContext {
     }
 
     public String getAiravataHost() {
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_AIRAVATA_HOST);
+        }
         return properties.getProperty(SEAGridConfig.AIRAVATA_HOST);
     }
 
     public int getAiravataPort() {
+        if(SEAGridConfig.DEV){
+            return Integer.parseInt(properties.getProperty(SEAGridConfig.DEV_AIRAVATA_PORT));
+        }
         return Integer.parseInt(properties.getProperty(SEAGridConfig.AIRAVATA_PORT));
     }
 
     public String getSFTPHost() {
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_SFTP_HOST);
+        }
         return properties.getProperty(SEAGridConfig.SFTP_HOST);
     }
 
     public int getSFTPPort() {
+        if(SEAGridConfig.DEV){
+            return Integer.parseInt(properties.getProperty(SEAGridConfig.DEV_SFTP_PORT));
+        }
         return Integer.parseInt(properties.getProperty(SEAGridConfig.SFTP_PORT));
     }
 
@@ -153,14 +176,23 @@ public class SEAGridContext {
     }
 
     public String getGatewayaStorageId(){
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_GATEWAY_STORAGE_ID);
+        }
         return properties.getProperty(SEAGridConfig.GATEWAY_STORAGE_ID);
     }
 
     public String getGatewayUserDataRoot(){
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_REMOTE_DATA_DIR_ROOT);
+        }
         return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_ROOT) + getUserName() + "/";
     }
 
     public String getRemoteDataDirPrefix(){
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_REMOTE_DATA_DIR_PREFIX);
+        }
         return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_PREFIX);
     }
 

@@ -455,8 +455,8 @@ public class ExperimentSummaryController {
 
     private void downloadFile(Path remotePath, ExperimentModel experimentModel){
         String localPath = SEAGridContext.getInstance()
-                .getFileDownloadLocation()+ File.separator + experimentModel.getExperimentId()
-                +File.separator+remotePath.getFileName();
+                .getFileDownloadLocation()+ File.separator + experimentModel.getProjectId().substring(0,experimentModel
+                .getProjectId().length() - 37) + File.separator + experimentModel.getExperimentId() +File.separator+remotePath.getFileName();
         Service<Boolean> service = new Service<Boolean>() {
             @Override
             protected Task<Boolean> createTask() {
