@@ -6,7 +6,7 @@
 
     <groupId>org.seagrid</groupId>
     <artifactId>seagrid-app</artifactId>
-    <name>SEAGrid Desktop Client</name>
+    <name>SEAGrid Desktop Client - Dev</name>
     <version>1.0</version>
 
     <properties>
@@ -28,6 +28,9 @@
 
         <!-- The Application version used by javapackager -->
         <app.version>1.0</app.version>
+
+        <!--Installer Icon-->
+        <app.icon>app.icns</app.icon>
 
         <!-- Base URL where you will host the application artifacts -->
         <!--<app.url>https://seagrid.org/seagrid-rich-client/</app.url>-->
@@ -169,6 +172,7 @@
                                         <argument>-vendor</argument>
                                         <argument>${app.vendor}</argument>
                                         <argument>-BappVersion=${app.version}</argument>
+                                        <argument>-Bicon=${app.icon}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
