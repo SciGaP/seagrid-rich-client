@@ -6,7 +6,7 @@
 
     <groupId>org.seagrid</groupId>
     <artifactId>seagrid-app</artifactId>
-    <name>SEAGrid Desktop Client - Dev</name>
+    <name>SEAGrid Desktop Client</name>
     <version>1.0</version>
 
     <properties>
