@@ -69,7 +69,7 @@ public class SEAGridContext {
                 SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH).isEmpty()) {
             return properties.getProperty(SEAGridConfig.DEFAULT_FILE_DOWNLOAD_PATH);
         }else{
-            return System.getProperty("user.home") + File.separator + "ExperimentData";
+            return System.getProperty("user.home") + File.separator + "SEAGrid" +  File.separator + "ExperimentData";
         }
     }
 
