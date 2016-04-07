@@ -14,7 +14,8 @@
         <airavata.version>0.16-SNAPSHOT</airavata.version>
 
         <!-- Installer Filename without suffix -->
-        <app.filename>SEAGridDesktop</app.filename>
+        <!--<app.filename>SEAGridDesktop</app.filename>-->
+        <app.filename>SEAGridDesktop-Dev</app.filename>
 
         <!-- The JavaFX Application class name -->
         <app.mainClass>org.seagrid.desktop.SEAGridDesktop</app.mainClass>
@@ -29,9 +30,11 @@
         <app.version>1.0</app.version>
 
         <!-- Base URL where you will host the application artifacts -->
+        <!--<app.url>https://seagrid.org/seagrid-rich-client/</app.url>-->
         <app.url>https://dev.seagrid.org/seagrid-rich-client/</app.url>
 
         <!-- Optional scp target for application artifacts hosted at the above url -->
+        <!--<app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client-->
         <app.deploy.target>pga@gw54.iu.xsede.org:/var/www/portals/dev-seagrid/public/seagrid-rich-client
         </app.deploy.target>
 
