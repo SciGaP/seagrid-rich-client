@@ -464,7 +464,7 @@ public class ExperimentCreateController {
                 hBox.getChildren().add(0, localFilePickBtn);
                 Button remoteFilePickBtn = new ImageButton("/images/remote-storage.png");
                 remoteFilePickBtn.setTooltip(new Tooltip("Select remote file"));
-                hBox.getChildren().add(1, remoteFilePickBtn);
+//                hBox.getChildren().add(1, remoteFilePickBtn);
                 expCreateInputsGridPane.add(hBox, 1, index);
                 localFilePickBtn.setOnAction(event -> {
                     File selectedFile = fileChooser.showOpenDialog(expCreateInputsGridPane.getScene().getWindow());
