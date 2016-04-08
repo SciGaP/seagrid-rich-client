@@ -543,7 +543,7 @@ public class ExperimentCreateController {
             //FIXME Hardcoded value
             String projectId = ((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID();
             String randomString = projectId.substring(0,projectId.length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
-                    + expCreateNameField.getText().replaceAll("[^A-Za-z0-9 ]","_")+"."+System.currentTimeMillis();
+                    + expCreateNameField.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
             String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir, randomString + "/");
             Map<String,File> uploadFiles = new HashMap<>();
