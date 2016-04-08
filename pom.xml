@@ -173,6 +173,7 @@
                                         <argument>${app.vendor}</argument>
                                         <argument>-BappVersion=${app.version}</argument>
                                         <argument>-Bicon=${app.icon}</argument>
+                                        <argument>-Bmac.signing-key-user-name=${app.vendor}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
