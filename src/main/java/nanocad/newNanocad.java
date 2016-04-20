@@ -1524,8 +1524,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //        getSetStructure.addItem("NWChem Input");
 //        getSetStructure.addItem("Molpro Input");
 
-        getSetStructure.addItem("View PDB");
-        getSetStructure.addItem("View with VMD");
+//        getSetStructure.addItem("View PDB");
+//        getSetStructure.addItem("View with VMD");
 
         grp = new group(drawingArea);
         grp1 = new group(drawingArea);
