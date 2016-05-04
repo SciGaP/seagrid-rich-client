@@ -110,8 +110,8 @@ public class SEAGridDesktop extends Application{
             logParent.mkdirs();
         PrintStream outPs = new PrintStream(applicationDataDir() + "logs/seagrid.std.out");
         PrintStream errPs = new PrintStream(applicationDataDir() + "logs/seagrid.std.err");
-//        System.setOut(outPs);
-//        System.setErr(errPs);
+        System.setOut(outPs);
+        System.setErr(errPs);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 outPs.close();
