@@ -68,7 +68,10 @@ public class AiravataManager {
     }
 
     private AuthzToken getAuthzToken() {
-        return new AuthzToken(SEAGridContext.getInstance().getOAuthToken());
+        AuthzToken authzToken = new AuthzToken(SEAGridContext.getInstance().getOAuthToken());
+        authzToken.getClaimsMap().put("gatewayID", SEAGridContext.getInstance().getAiravataGatewayId());
+        authzToken.getClaimsMap().put("userName", SEAGridContext.getInstance().getUserName());
+        return authzToken;
     }
 
     private String getGatewayId() {
