@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class SEAGridConfig {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
 
-    public static final boolean DEV = false;
+    public static final boolean DEV = true;
 
     public static final String USER_NAME = "user.name";
     public static final String AUTHENTICATED = "authenticated";
