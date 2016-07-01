@@ -5,7 +5,8 @@ import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDes
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.data.replica.DataProductModel;
 import org.apache.airavata.model.data.replica.DataReplicaLocationModel;
-import org.apache.airavata.model.error.*;
+import org.apache.airavata.model.error.AiravataClientException;
+import org.apache.airavata.model.error.AiravataErrorType;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
@@ -15,7 +16,7 @@ import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -52,8 +53,9 @@ public class AiravataManager {
     private Airavata.Client createAiravataClient() throws TTransportException {
         String host = SEAGridContext.getInstance().getAiravataHost();
         int port = SEAGridContext.getInstance().getAiravataPort();
-        TTransport transport = new TSocket(host, port);
-        transport.open();
+        TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
+        params.setTrustStore(AiravataManager.class.getResource("/client_truststore.jks").getPath(), "airavata");
+        TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
         TProtocol protocol = new TBinaryProtocol(transport);
         return new Airavata.Client(protocol);
     }
