@@ -520,7 +520,7 @@ public class ExperimentCreateController {
             });
             hBox.getChildren().add(0, hyperlink);
             hBox.getChildren().add(1, localFilePickBtn);
-            hBox.getChildren().add(2, remoteFilePickBtn);
+//            hBox.getChildren().add(2, remoteFilePickBtn);
             experimentInputs.put(inputDataObjectType, selectedFile);
         }
     }
