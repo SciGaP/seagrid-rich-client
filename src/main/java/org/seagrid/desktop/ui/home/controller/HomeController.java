@@ -121,6 +121,9 @@ public class HomeController {
     private TableColumn<ExperimentListModel, String> expNameColumn;
 
     @FXML
+    private TableColumn<ExperimentListModel, String> ownerNameColumn;
+
+    @FXML
     private TableColumn<ExperimentListModel, LocalDateTime> expCreateTimeColumn;
 
     @FXML
@@ -407,6 +410,7 @@ public class HomeController {
         expCheckedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(expCheckedColumn));
         expCheckedColumn.setEditable(true);
         expNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        ownerNameColumn.setCellValueFactory(cellData -> cellData.getValue().ownerNameProperty());
         expApplicationColumn.setCellValueFactory(cellData -> cellData.getValue().applicationProperty());
         expHostColumn.setCellValueFactory(cellData -> cellData.getValue().hostProperty());
         expStatusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());

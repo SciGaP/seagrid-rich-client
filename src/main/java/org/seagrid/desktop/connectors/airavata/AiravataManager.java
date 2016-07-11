@@ -21,6 +21,7 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.seagrid.desktop.util.SEAGridContext;
 
+import java.io.File;
 import java.util.*;
 
 public class AiravataManager {
@@ -39,6 +40,7 @@ public class AiravataManager {
             //FIXME - To create the default user & project if not exists
             this.getProjects();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
         }
     }
@@ -53,8 +55,9 @@ public class AiravataManager {
     private Airavata.Client createAiravataClient() throws TTransportException {
         String host = SEAGridContext.getInstance().getAiravataHost();
         int port = SEAGridContext.getInstance().getAiravataPort();
+        String applicationDataDir = System.getProperty("user.home") + File.separator + "SEAGrid" + File.separator;
         TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
-        params.setTrustStore(AiravataManager.class.getResource("/client_truststore.jks").getPath(), "airavata");
+        params.setTrustStore(applicationDataDir + "client_truststore.jks", "airavata");
         TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
         TProtocol protocol = new TBinaryProtocol(transport);
         return new Airavata.Client(protocol);

@@ -92,7 +92,8 @@ public class SEAGridDesktop extends Application{
         launch(args);
     }
 
-    public static void initApplicationDirs() throws FileNotFoundException {
+    public static void initApplicationDirs() throws IOException {
+        createTrustStoreFileIfNotExists();
         File appDataRoot = new File(applicationDataDir());
         if(!appDataRoot.exists()){
             appDataRoot.mkdirs();
@@ -120,6 +121,17 @@ public class SEAGridDesktop extends Application{
         });
 
         extractLegacyEditorResources();
+    }
+
+    public static void createTrustStoreFileIfNotExists() throws IOException {
+        File targetFile = new File(applicationDataDir() + "client_truststore.jks");
+        if(!targetFile.exists()) {
+            InputStream initialStream = SEAGridContext.class.getResourceAsStream("/client_truststore.jks");
+            byte[] buffer = new byte[initialStream.available()];
+            initialStream.read(buffer);
+            OutputStream outStream = new FileOutputStream(targetFile);
+            outStream.write(buffer);
+        }
     }
 
     public static void extractLegacyEditorResources() {

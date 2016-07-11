@@ -50,6 +50,7 @@ public class ExperimentListModel {
     private StringProperty projectId;
     private BooleanProperty checked;
     private StringProperty name;
+    private StringProperty ownerName;
     private StringProperty application;
     private StringProperty host;
     private StringProperty status;
@@ -57,12 +58,14 @@ public class ExperimentListModel {
 
     private Timeline expStatusUpdateTimer = null;
 
-    public ExperimentListModel(StringProperty id, StringProperty projectId, BooleanProperty checked, StringProperty name, StringProperty application, StringProperty host,
+    public ExperimentListModel(StringProperty id, StringProperty projectId, BooleanProperty checked, StringProperty name, StringProperty ownerName,
+                               StringProperty application, StringProperty host,
                                StringProperty status, ObjectProperty<LocalDateTime> createdTime) {
         this.id = id;
         this.projectId = projectId;
         this.checked = checked;
         this.name = name;
+        this.ownerName = ownerName;
         this.application = application;
         this.host = host;
         this.status = status;
@@ -74,6 +77,7 @@ public class ExperimentListModel {
         this.id = new SimpleStringProperty("test-id");
         this.projectId = new SimpleStringProperty("test-proj-id");
         this.name = new SimpleStringProperty("test-name");
+        this.ownerName = new SimpleStringProperty("owner-name");
         this.application = new SimpleStringProperty("test-application");
         this.host = new SimpleStringProperty("test-host");
         this.status = new SimpleStringProperty("test-status");
@@ -85,6 +89,7 @@ public class ExperimentListModel {
         this.projectId = new SimpleStringProperty(experimentSummaryModel.getProjectId());
         this.checked = new SimpleBooleanProperty();
         this.name = new SimpleStringProperty(experimentSummaryModel.getName());
+        this.ownerName = new SimpleStringProperty(experimentSummaryModel.getUserName());
         if(experimentSummaryModel.getResourceHostId()!=null){
             ComputeResourceDescription resourceDescription = null;
             try {
@@ -169,6 +174,18 @@ public class ExperimentListModel {
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public String getOwnerName() {
+        return ownerName.get();
+    }
+
+    public StringProperty ownerNameProperty() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName.set(ownerName);
     }
 
     public String getApplication() {
