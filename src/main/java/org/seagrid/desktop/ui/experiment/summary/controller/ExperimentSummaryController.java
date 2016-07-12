@@ -376,7 +376,6 @@ public class ExperimentSummaryController {
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    //FIXME
                     String dataRoot = remoteDataDirRoot;
                     List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(input.getValue());
                     String fileUri = "";
@@ -425,7 +424,6 @@ public class ExperimentSummaryController {
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    //FIXME
                     String dataRoot = remoteDataDirRoot;
                     List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(output.getValue());
                     String fileUri = "";

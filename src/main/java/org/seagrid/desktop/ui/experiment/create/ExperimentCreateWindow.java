@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ExperimentCreateWindow extends Application{
     private final static Logger logger = LoggerFactory.getLogger(ExperimentCreateWindow.class);
@@ -59,7 +60,7 @@ public class ExperimentCreateWindow extends Application{
         createPrimaryStage.requestFocus();
     }
 
-    public static void displayEditExperiment(ExperimentModel experimentModel) throws IOException {
+    public static void displayEditExperiment(ExperimentModel experimentModel) throws IOException, TException, URISyntaxException {
         if(createPrimaryStage != null) {
             createPrimaryStage.close();
         }
@@ -75,7 +76,7 @@ public class ExperimentCreateWindow extends Application{
         createPrimaryStage.show();
     }
 
-    public static void displayCreateGaussianExp(String gaussianInput) throws IOException, TException {
+    public static void displayCreateGaussianExp(String gaussianInput) throws IOException, TException, URISyntaxException {
         if(createPrimaryStage != null) {
             createPrimaryStage.close();
         }
@@ -91,7 +92,7 @@ public class ExperimentCreateWindow extends Application{
         primaryStage.show();
     }
 
-    public static void displayCreateGamessExp(String gamessInput) throws IOException, TException {
+    public static void displayCreateGamessExp(String gamessInput) throws IOException, TException, URISyntaxException {
         if(createPrimaryStage != null) {
             createPrimaryStage.close();
         }

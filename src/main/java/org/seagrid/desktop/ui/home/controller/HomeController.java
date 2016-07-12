@@ -821,7 +821,7 @@ public class HomeController {
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 try {
                     ExperimentCreateWindow.displayEditExperiment(experimentModel);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                             "Failed to launch edit experiment dialog");
                 }
@@ -847,7 +847,7 @@ public class HomeController {
                 }
                 try {
                     ExperimentCreateWindow.displayEditExperiment(experimentModel);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
                             "Failed to launch edit experiment dialog");
                 }

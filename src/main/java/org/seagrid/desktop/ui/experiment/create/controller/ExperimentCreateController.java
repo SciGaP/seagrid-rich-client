@@ -67,6 +67,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -237,7 +239,7 @@ public class ExperimentCreateController {
         }
     }
 
-    public void initExperimentEdit(ExperimentModel experimentModel){
+    public void initExperimentEdit(ExperimentModel experimentModel) throws TException, URISyntaxException {
         isEditExperiment = true;
         editExperimentModel = experimentModel;
         expCreateTitle.setText("Edit Experiment");
@@ -270,7 +272,7 @@ public class ExperimentCreateController {
 
     //FIXME This is an application specific initialization method. It is nice if we can come up with a generalizable way to handle
     //FIXME application specific initializer
-    public void initGaussianExperiment(String gaussianInput) throws FileNotFoundException, TException {
+    public void initGaussianExperiment(String gaussianInput) throws FileNotFoundException, TException, URISyntaxException {
         String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gaussian.in";
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gaussianInput);
@@ -309,7 +311,7 @@ public class ExperimentCreateController {
         }
     }
 
-    public void initGamessExperiment(String gamessInput) throws FileNotFoundException, TException {
+    public void initGamessExperiment(String gamessInput) throws FileNotFoundException, TException, URISyntaxException {
         String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gamess.in";
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gamessInput);
@@ -405,7 +407,7 @@ public class ExperimentCreateController {
         }
     }
 
-    private void updateExperimentInputs(List<InputDataObjectType> inputDataObjectTypes) {
+    private void updateExperimentInputs(List<InputDataObjectType> inputDataObjectTypes) throws TException, URISyntaxException {
         this.experimentInputs = new HashMap<>();
         expCreateInputsGridPane.getChildren().clear();
         expCreateInputsGridPane.getRowConstraints().clear();
@@ -485,7 +487,16 @@ public class ExperimentCreateController {
                     }
                 });
                 if(inputDataObjectType.getValue() != null && !inputDataObjectType.getValue().isEmpty()){
-                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
+                    List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(inputDataObjectType.getValue());
+                    String fileUri = "";
+                    for(DataReplicaLocationModel rpModel : replicas){
+                        if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                            fileUri = rpModel.getFilePath();
+                            break;
+                        }
+                    }
+                    String filePath = (new URI(fileUri)).getPath();
+                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
                 }
             }
             //maintaining the grid pane row height
@@ -512,9 +523,14 @@ public class ExperimentCreateController {
                     boolean result = SEAGridDialogHelper.showConfirmDialog("Confirm Action", "Remote File Download", "You have selected a remote file." +
                             " Do you want to download it ?");
                     if(result){
-                        String remotePath = selectedFile.getPath();
-                        remotePath = remotePath.replaceAll(remoteDataDirRoot, "");
-                        downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
+                        try {
+                            String filePath = selectedFile.getPath();
+                            String remotePath = filePath.replaceAll(remoteDataDirRoot, "");
+                            downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
+                        } catch (Exception e) {
+                            SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
+                                    expCreateInputsGridPane.getScene().getWindow(), "Failed Downloading File");
+                        }
                     }
                 }
             });
