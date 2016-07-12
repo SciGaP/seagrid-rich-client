@@ -694,7 +694,7 @@ public class ExperimentCreateController {
                 }
 
                 int wallTime = Integer.parseInt(expCreateWallTimeField.getText().trim());
-                if (wallTime <= 0 || wallTime > selectedQueue.getMaxProcessors()){
+                if (wallTime <= 0 || wallTime > selectedQueue.getMaxRunTime()){
                     SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "Wall time should" +
                             " be positive value less than " + selectedQueue.getMaxRunTime());
                     return false;
