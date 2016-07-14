@@ -124,6 +124,9 @@ public class SEAGridDesktop extends Application{
     }
 
     public static void createTrustStoreFileIfNotExists() throws IOException {
+        File parentDir = new File(applicationDataDir());
+        if(!parentDir.exists())
+            parentDir.mkdirs();
         File targetFile = new File(applicationDataDir() + "client_truststore.jks");
         if(!targetFile.exists()) {
             InputStream initialStream = SEAGridContext.class.getResourceAsStream("/client_truststore.jks");
