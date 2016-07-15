@@ -486,7 +486,7 @@ public class ExperimentCreateController {
                                 "Failed to load remote file picker");
                     }
                 });
-                if(inputDataObjectType.getValue() != null && !inputDataObjectType.getValue().isEmpty()){
+                if(inputDataObjectType.getValue() != null && inputDataObjectType.getValue().startsWith("airavata-dp")){
                     List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(inputDataObjectType.getValue());
                     String fileUri = "";
                     for(DataReplicaLocationModel rpModel : replicas){
@@ -497,6 +497,8 @@ public class ExperimentCreateController {
                     }
                     String filePath = (new URI(fileUri)).getPath();
                     handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
+                }else{
+                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
                 }
             }
             //maintaining the grid pane row height
