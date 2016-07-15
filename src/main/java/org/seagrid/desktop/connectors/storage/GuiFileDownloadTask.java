@@ -46,6 +46,7 @@ public class GuiFileDownloadTask extends GuiFileTask {
     }
 
     public Boolean downloadFile(String remoteFilePath, String localFilePath) throws SftpException, IOException {
+        remoteFilePath = remoteFilePath.replace("\\","/");
         InputStream remoteInputStream = new BufferedInputStream(channelSftp.get(remoteFilePath));
         File localFile = new File(localFilePath);
         if(!localFile.getParentFile().exists()){

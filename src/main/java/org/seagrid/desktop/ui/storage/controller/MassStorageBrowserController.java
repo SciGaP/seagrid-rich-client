@@ -92,7 +92,9 @@ public class MassStorageBrowserController {
     @FXML
     private TextField fbRemotePath;
 
-    private Path currentLocalPath, currentRemotePath;
+    private Path currentLocalPath;
+
+    private String currentRemotePath;
 
     ObservableList<FileListModel> currentLocalFileList, currentRemoteFileList;
 
@@ -256,8 +258,7 @@ public class MassStorageBrowserController {
     }
 
     private void initializeRemoteFileTable() throws SftpException, JSchException {
-        String remoteHome = "/";
-        this.currentRemotePath = Paths.get(remoteHome);
+        this.currentRemotePath = "/";
 
         fbRemoteFileTblFileName.setCellValueFactory(cellData-> new SimpleObjectProperty(cellData.getValue()));
         fbRemoteFileTblFileName.setCellFactory(param -> new TableCell<FileListModel, FileListModel>(){
@@ -308,10 +309,10 @@ public class MassStorageBrowserController {
             FileListModel fileListModel = fbRemoteFileTable.getSelectionModel().getSelectedItem();
             if(fileListModel != null && event.getClickCount()==2) {
                 if (fileListModel.getFileListModelType().equals(FileListModel.FileListModelType.DIR)) {
-                    currentRemotePath = Paths.get(currentRemotePath.toString() + "/" + fileListModel.getFileName());
+                    currentRemotePath = currentRemotePath + "/" + fileListModel.getFileName();
                 } else if (fileListModel.getFileListModelType().equals(FileListModel.FileListModelType
                         .PARENT_DIR)) {
-                    currentRemotePath = currentRemotePath.getParent();
+                    currentRemotePath = (new File(currentRemotePath)).getParent();
                 }
                 try {
                     populateRemoteFileTable();
@@ -359,7 +360,7 @@ public class MassStorageBrowserController {
             if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                 FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
                 if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.FILE)) {
-                    if (currentRemotePath.getParent() != null) {
+                    if ((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()) {
                         uploadFile(draggedFileListModel.getFilePath(), currentRemotePath.toString() + "/" + draggedFileListModel
                                 .getFileName(), draggedFileListModel);
                     } else {
@@ -382,9 +383,9 @@ public class MassStorageBrowserController {
         currentRemoteFileList.clear();
         fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
         FileListModel fileListModel;
-        if(currentRemotePath.getParent() != null){
+        if((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()){
             fileListModel = new FileListModel("..", FileListModel.FileListModelType.PARENT_DIR,0,0, FileListModel.FileLocation.REMOTE,
-                    currentRemotePath.getParent().toString());
+                    (new File(currentRemotePath).getParent()));
             currentRemoteFileList.add(fileListModel);
         }
         Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
@@ -548,12 +549,12 @@ public class MassStorageBrowserController {
 
     public void gotoRemoteDir(String path) throws JSchException, SftpException {
         currentRemoteFileList.clear();
-        currentRemotePath = Paths.get(path);
+        currentRemotePath = path;
         fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
         FileListModel fileListModel;
-        if(currentRemotePath.getParent() != null){
+        if((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()){
             fileListModel = new FileListModel("..", FileListModel.FileListModelType.PARENT_DIR,0,0, FileListModel.FileLocation.REMOTE,
-                    currentRemotePath.getParent().toString());
+                    (new File(currentRemotePath).getParent()));
             currentRemoteFileList.add(fileListModel);
         }
         Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());

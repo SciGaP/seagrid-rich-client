@@ -47,6 +47,7 @@ public class GuiFileUploadTask extends GuiFileTask {
 
     public Boolean uploadFile(String remoteFilePath, String localFilePath) throws IOException, SftpException {
         createRemoteDirsIfNotExists(Paths.get(remoteFilePath).getParent().toString());
+        remoteFilePath = remoteFilePath.replace("\\","/");
         OutputStream remoteOutputStream = new BufferedOutputStream(channelSftp.put(remoteFilePath));
         File localFile = new File(localFilePath);
         InputStream localInputStream = new FileInputStream(localFile);
@@ -70,6 +71,7 @@ public class GuiFileUploadTask extends GuiFileTask {
     }
 
     private void createRemoteDirsIfNotExists(String parentDirPath) throws SftpException {
+        parentDirPath = parentDirPath.replace("\\","/");
         String[] folders = parentDirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {
