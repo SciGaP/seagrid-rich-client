@@ -1201,6 +1201,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                 drawFile(directory + tryfile, data, "mol2");
             }
         }
+        clearFlag = false;
         return;
     }
 
