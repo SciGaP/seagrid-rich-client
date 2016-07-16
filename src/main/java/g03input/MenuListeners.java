@@ -342,7 +342,7 @@ public class MenuListeners extends JFrame implements ActionListener{
 			    dftFrame.getContentPane().add(donePanel,BorderLayout.SOUTH);
 			    dftFrame.setSize(450,200);
 			    dftFrame.setLocation(200,260);
-			    dftFrame.setResizable(false);
+			    dftFrame.setResizable(true);
 			    dftFrame.setVisible(true);
 			  }
 			

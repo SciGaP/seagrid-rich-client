@@ -155,7 +155,7 @@ public class InputFile extends JFrame implements ActionListener {
     	inputFrame.getContentPane().add(inputPanel);
     	//molFrame.getContentPane().add(textPanel);
     	inputFrame.pack();
-    	inputFrame.setResizable(false);
+    	inputFrame.setResizable(true);
     	inputFrame.setVisible(false);
     }
     

@@ -16,7 +16,7 @@ public class LoginWindow extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/views/login/login.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root));
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);
@@ -29,7 +29,7 @@ public class LoginWindow extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/views/login/login.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root));
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);

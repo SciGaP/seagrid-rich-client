@@ -26,7 +26,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 
@@ -39,7 +38,7 @@ public class ProjectWindow extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/views/project/project.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Project");
         primaryStage.setScene(new Scene(root, 400, 150));
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
 
@@ -49,7 +48,7 @@ public class ProjectWindow extends Application {
             Parent root = FXMLLoader.load(ProjectWindow.class.getResource("/views/project/project.fxml"));
             primaryStage.setTitle("SEAGrid Desktop Client - Create Project");
             primaryStage.setScene(new Scene(root, 400, 150));
-            primaryStage.setResizable(false);
+            primaryStage.setResizable(true);
             primaryStage.initModality(Modality.WINDOW_MODAL);
             primaryStage.show();
         }

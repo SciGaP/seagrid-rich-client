@@ -532,7 +532,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 						chargeFrame.setLocation(200,200);
 						chargeFrame.setSize(250,225);
 						chargeFrame.setVisible(true);
-						chargeFrame.setResizable(false);
+						chargeFrame.setResizable(true);
 						chargeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);}
 				}
 				if(RadioButtonEditor.button.getActionCommand()=="ChkBasis" && (okChk.isSelected()==true))
@@ -634,7 +634,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					constantsFrame.setLocation(200,200);
 					constantsFrame.setSize(250,225);
 					constantsFrame.setVisible(true);
-					constantsFrame.setResizable(false);
+					constantsFrame.setResizable(true);
 					constantsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 				
@@ -694,7 +694,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					counterFrame.setLocation(200,200);
 					counterFrame.setSize(250,190);
 					counterFrame.setVisible(true);
-					counterFrame.setResizable(false);
+					counterFrame.setResizable(true);
 					counterFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 				
@@ -796,7 +796,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					cphfFrame.setLocation(200,200);
 					cphfFrame.setSize(620,150);
 					cphfFrame.setVisible(true);
-					cphfFrame.setResizable(false);
+					cphfFrame.setResizable(true);
 					cphfFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 				
@@ -879,7 +879,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					densityFrame.setLocation(200,200);
 					densityFrame.setSize(365,210);
 					densityFrame.setVisible(true);
-					densityFrame.setResizable(false);
+					densityFrame.setResizable(true);
 					densityFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					//G03MenuTree.keyoptArea.setText(G03MenuTree.keyoptArea.getText()+otherKeyToolTip.densityFit);
 					try {
@@ -1002,7 +1002,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					fmmFrame.setLocation(200,200);
 					fmmFrame.setSize(375,285);
 					fmmFrame.setVisible(true);
-					fmmFrame.setResizable(false);
+					fmmFrame.setResizable(true);
 					fmmFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					try {
 						G03MenuTree.insertHTML(G03MenuTree.keyoptArea,otherKeyToolTip.fmm);
@@ -1066,7 +1066,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					nmrFrame.setLocation(200,200);
 					nmrFrame.setSize(520,150);
 					nmrFrame.setVisible(true);
-					nmrFrame.setResizable(false);
+					nmrFrame.setResizable(true);
 					nmrFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
 				
@@ -1360,7 +1360,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					symmetryFrame.getContentPane().add(symmetryMainPanel);
 					symmetryFrame.setSize(600,100);
 					symmetryFrame.setVisible(true);
-					symmetryFrame.setResizable(false);
+					symmetryFrame.setResizable(true);
 					symmetryFrame.setLocation(100,100);
 					
 				}
@@ -1432,7 +1432,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 						sparseFrame.getContentPane().add(sparseMainPanel);
 						sparseFrame.setSize(300,150);
 						sparseFrame.setVisible(true);
-						sparseFrame.setResizable(false);
+						sparseFrame.setResizable(true);
 						sparseFrame.setLocation(100,100);
 					}
 				}
@@ -1542,7 +1542,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					punchFrame.getContentPane().add(punchMainPanel);
 					punchFrame.setSize(600,100);
 					punchFrame.setVisible(true);
-					punchFrame.setResizable(false);
+					punchFrame.setResizable(true);
 					punchFrame.setLocation(100,100);
 					
 				}
@@ -1595,7 +1595,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					pseudoFrame.getContentPane().add(pseudoMainPanel);
 					pseudoFrame.setSize(300,100);
 					pseudoFrame.setVisible(true);
-					pseudoFrame.setResizable(false);
+					pseudoFrame.setResizable(true);
 					pseudoFrame.setLocation(100,100);
 					
 				}
@@ -1666,7 +1666,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					propFrame.getContentPane().add(propMainPanel);
 					propFrame.setSize(200,250);
 					propFrame.setVisible(true);
-					propFrame.setResizable(false);
+					propFrame.setResizable(true);
 					propFrame.setLocation(100,100);
 					
 				}
@@ -1784,7 +1784,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					outputFrame.getContentPane().add(outputMainPanel);
 					outputFrame.setSize(450,100);
 					outputFrame.setVisible(true);
-					outputFrame.setResizable(false);
+					outputFrame.setResizable(true);
 					outputFrame.setLocation(100,100);
 					
 				}

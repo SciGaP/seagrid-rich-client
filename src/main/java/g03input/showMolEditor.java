@@ -196,7 +196,7 @@ public class showMolEditor extends JFrame implements ActionListener,WindowListen
     	molFrame.getContentPane().add(molPanel);
     	//molFrame.getContentPane().add(textPanel);
     	molFrame.pack();
-    	molFrame.setResizable(false);
+    	molFrame.setResizable(true);
     	//molFrame.setVisible(true);  
     	molFrame.setVisible(false);
     }

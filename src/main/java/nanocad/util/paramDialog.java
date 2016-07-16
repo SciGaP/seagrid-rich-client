@@ -67,7 +67,7 @@ public class paramDialog extends Dialog
 		button1.setBackground(new Color(12632256));
 		add(button1);
 		setTitle("Enter Parameter");
-		setResizable(false);
+		setResizable(true);
 		//}}
 
 		//{{REGISTER_LISTENERS

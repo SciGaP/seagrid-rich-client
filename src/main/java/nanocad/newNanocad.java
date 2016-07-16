@@ -2864,7 +2864,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             add(templatecontrols);
 
             pack();
-            setResizable(false);
+            setResizable(true);
             setSize(475, 105);
 
             addWindowListener(new WindowAdapter() {
