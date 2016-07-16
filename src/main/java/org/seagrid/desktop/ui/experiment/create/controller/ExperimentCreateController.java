@@ -518,8 +518,14 @@ public class ExperimentCreateController {
                     try {
                         Desktop.getDesktop().open(selectedFile);
                     } catch (IOException e) {
-                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
-                                expCreateInputsGridPane.getScene().getWindow(), "Failed Opening File");
+                        logger.error("Cannot open file. Opening parent directory");
+                        try {
+                            Desktop.getDesktop().open(selectedFile.getParentFile());
+                        } catch (IOException e1) {
+                            logger.error("Cannot open file. Opening parent directory");
+                            SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
+                                    expCreateInputsGridPane.getScene().getWindow(), "Failed Opening File");
+                        }
                     }
                 }else{
                     boolean result = SEAGridDialogHelper.showConfirmDialog("Confirm Action", "Remote File Download", "You have selected a remote file." +
