@@ -342,39 +342,39 @@ public class MassStorageBrowserController {
             });
             return row;
         });
-        fbRemoteFileTable.setOnDragOver(event -> {
-            fbRemoteFileTable.getScene().setCursor(Cursor.DEFAULT);
-            Dragboard db = event.getDragboard();
-            if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                if (((FileListModel) db.getContent(SERIALIZED_MIME_TYPE)).getFileLocation().equals(FileListModel.FileLocation.LOCAL)) {
-                    Image image = new Image(MassStorageBrowserController.class.getResourceAsStream("/images/add.png"));
-                    fbRemoteFileTable.getScene().setCursor(new ImageCursor(image));
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                    event.consume();
-                }
-            }
-        });
-        fbRemoteFileTable.setOnDragDropped(event -> {
-            fbRemoteFileTable.getScene().setCursor(Cursor.DEFAULT);
-            Dragboard db = event.getDragboard();
-            if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
-                if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.FILE)) {
-                    if ((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()) {
-                        uploadFile(draggedFileListModel.getFilePath(), currentRemotePath.toString() + "/" + draggedFileListModel
-                                .getFileName(), draggedFileListModel);
-                    } else {
-                        uploadFile(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
-                                .getFileName(), draggedFileListModel);
-                    }
-                }else if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.DIR)){
-                    uploadDir(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
-                            .getFileName(), draggedFileListModel);
-                }
-                event.setDropCompleted(true);
-                event.consume();
-            }
-        });
+//        fbRemoteFileTable.setOnDragOver(event -> {
+//            fbRemoteFileTable.getScene().setCursor(Cursor.DEFAULT);
+//            Dragboard db = event.getDragboard();
+//            if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+//                if (((FileListModel) db.getContent(SERIALIZED_MIME_TYPE)).getFileLocation().equals(FileListModel.FileLocation.LOCAL)) {
+//                    Image image = new Image(MassStorageBrowserController.class.getResourceAsStream("/images/add.png"));
+//                    fbRemoteFileTable.getScene().setCursor(new ImageCursor(image));
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                    event.consume();
+//                }
+//            }
+//        });
+//        fbRemoteFileTable.setOnDragDropped(event -> {
+//            fbRemoteFileTable.getScene().setCursor(Cursor.DEFAULT);
+//            Dragboard db = event.getDragboard();
+//            if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+//                FileListModel draggedFileListModel = (FileListModel) db.getContent(SERIALIZED_MIME_TYPE);
+//                if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.FILE)) {
+//                    if ((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()) {
+//                        uploadFile(draggedFileListModel.getFilePath(), currentRemotePath.toString() + "/" + draggedFileListModel
+//                                .getFileName(), draggedFileListModel);
+//                    } else {
+//                        uploadFile(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
+//                                .getFileName(), draggedFileListModel);
+//                    }
+//                }else if(draggedFileListModel.getFileListModelType().equals(FileListModel.FileListModelType.DIR)){
+//                    uploadDir(draggedFileListModel.getFilePath(), "/" + draggedFileListModel
+//                            .getFileName(), draggedFileListModel);
+//                }
+//                event.setDropCompleted(true);
+//                event.consume();
+//            }
+//        });
 
         populateRemoteFileTable();
     }
