@@ -183,9 +183,10 @@ public class ExperimentCreateController {
                     loadAvailableComputeResources();
                     ApplicationInterfaceDescription applicationInterfaceDescription = (ApplicationInterfaceDescription)expCreateAppField
                             .getSelectionModel().getSelectedItem();
+                    boolean hasOptionalFileInputs = applicationInterfaceDescription.isHasOptionalFileInputs();
                     List<InputDataObjectType> inputDataObjectTypes = applicationInterfaceDescription.getApplicationInputs();
                     this.outputDataObjectTypes = applicationInterfaceDescription.getApplicationOutputs();
-                    updateExperimentInputs(inputDataObjectTypes);
+                    updateExperimentInputs(inputDataObjectTypes, hasOptionalFileInputs);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateAppField.getScene().getWindow(),
@@ -267,7 +268,10 @@ public class ExperimentCreateController {
                 .getWallTimeLimit()+"");
         expCreatePhysicalMemField.setText(experimentModel.getUserConfigurationData().getComputationalResourceScheduling()
                 .getTotalPhysicalMemory()+"");
-        updateExperimentInputs(experimentModel.getExperimentInputs());
+
+        ApplicationInterfaceDescription applicationInterfaceDescription = AiravataManager.getInstance().getApplicationInterface(experimentModel.getExecutionId());
+        boolean hasOptionalFileInputs = applicationInterfaceDescription.isHasOptionalFileInputs();
+        updateExperimentInputs(experimentModel.getExperimentInputs(), hasOptionalFileInputs);
     }
 
     //FIXME This is an application specific initialization method. It is nice if we can come up with a generalizable way to handle
@@ -307,7 +311,7 @@ public class ExperimentCreateController {
             expCreateAppField.getSelectionModel().select(0);
             List<InputDataObjectType> gaussianInputs = gaussianApp.getApplicationInputs();
             gaussianInputs.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gaussianInputs);
+            updateExperimentInputs(gaussianInputs, false);
         }
     }
 
@@ -331,7 +335,7 @@ public class ExperimentCreateController {
             expCreateAppField.getSelectionModel().select(0);
             List<InputDataObjectType> gamessAppInput = gamessApp.getApplicationInputs();
             gamessAppInput.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gamessAppInput);
+            updateExperimentInputs(gamessAppInput, false);
         }
     }
 
@@ -407,7 +411,16 @@ public class ExperimentCreateController {
         }
     }
 
-    private void updateExperimentInputs(List<InputDataObjectType> inputDataObjectTypes) throws TException, URISyntaxException {
+    private void updateExperimentInputs(List<InputDataObjectType> inputDataObjectTypes, boolean hasOptionalFileInputs) throws TException, URISyntaxException {
+        if(hasOptionalFileInputs){
+            if(!inputDataObjectTypes.stream().filter(p->p.getType().equals(DataType.URI_COLLECTION)).findFirst().isPresent()){
+                InputDataObjectType inputDataObjectType = new InputDataObjectType();
+                inputDataObjectType.setName("Optional-File-Inputs");
+                inputDataObjectType.setType(DataType.URI_COLLECTION);
+                inputDataObjectType.setIsRequired(false);
+                inputDataObjectTypes.add(inputDataObjectType);
+            }
+        }
         this.experimentInputs = new HashMap<>();
         expCreateInputsGridPane.getChildren().clear();
         expCreateInputsGridPane.getRowConstraints().clear();
@@ -500,6 +513,38 @@ public class ExperimentCreateController {
                 }else{
                     handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
                 }
+            }else if(inputDataObjectType.getType().equals(DataType.URI_COLLECTION)){
+                expCreateInputsGridPane.add(labelObj, 0, index);
+                HBox hBox = new HBox(2);
+                Button localFilePickBtn = new ImageButton("/images/local-storage.png");
+                localFilePickBtn.setTooltip(new Tooltip("Select multiple local files"));
+                hBox.getChildren().add(0, localFilePickBtn);
+                expCreateInputsGridPane.add(hBox, 1, index);
+
+                Button remoteFilePickBtn = new ImageButton("/images/remote-storage.png");
+                remoteFilePickBtn.setTooltip(new Tooltip("Select remote file"));
+//                hBox.getChildren().add(1, remoteFilePickBtn);
+
+                localFilePickBtn.setOnAction(event -> {
+                    List<File> selectedFiles = fileChooser.showOpenMultipleDialog(expCreateInputsGridPane.getScene().getWindow());
+                    handleMultipleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, selectedFiles);
+                });
+
+                if(inputDataObjectType.getValue() != null && inputDataObjectType.getValue().contains("airavata-dp")){
+                    String[] replicaUris = inputDataObjectType.getValue().split(",");
+                    for(String replicaUri : replicaUris) {
+                        List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(replicaUri);
+                        String fileUri = "";
+                        for (DataReplicaLocationModel rpModel : replicas) {
+                            if (rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                                fileUri = rpModel.getFilePath();
+                                break;
+                            }
+                        }
+                        String filePath = (new URI(fileUri)).getPath();
+                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
+                    }
+                }
             }
             //maintaining the grid pane row height
             expCreateInputsGridPane.getRowConstraints().add(index,new RowConstraints(25));
@@ -549,6 +594,54 @@ public class ExperimentCreateController {
         }
     }
 
+    private void handleMultipleExperimentFileSelect(InputDataObjectType inputDataObjectType, HBox hBox, Button localFilePickBtn,
+                                            Button remoteFilePickBtn,List<File> selectedFiles){
+        List<File> nonNullSelectedFiles = new ArrayList<>();
+        int i = 0;
+        hBox.getChildren().clear();
+        for (File selectedFile : selectedFiles){
+            if (selectedFile != null) {
+                Hyperlink hyperlink = new Hyperlink(selectedFile.getName());
+                hyperlink.setOnAction(hyperLinkEvent -> {
+                    //FIXME Else it is a remote file. Cannot open locally without downloading it.
+                    if (selectedFile.exists()) {
+                        try {
+                            Desktop.getDesktop().open(selectedFile);
+                        } catch (IOException e) {
+                            logger.error("Cannot open file. Opening parent directory");
+                            try {
+                                Desktop.getDesktop().open(selectedFile.getParentFile());
+                            } catch (IOException e1) {
+                                logger.error("Cannot open file. Opening parent directory");
+                                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
+                                        expCreateInputsGridPane.getScene().getWindow(), "Failed Opening File");
+                            }
+                        }
+                    } else {
+                        boolean result = SEAGridDialogHelper.showConfirmDialog("Confirm Action", "Remote File Download", "You have selected a remote file." +
+                                " Do you want to download it ?");
+                        if (result) {
+                            try {
+                                String filePath = selectedFile.getPath();
+                                String remotePath = filePath.replaceAll(remoteDataDirRoot, "");
+                                downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
+                            } catch (Exception e) {
+                                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog",
+                                        expCreateInputsGridPane.getScene().getWindow(), "Failed Downloading File");
+                            }
+                        }
+                    }
+                });
+                hBox.getChildren().add(i, hyperlink);
+                i++;
+                nonNullSelectedFiles.add(selectedFile);
+            }
+        }
+        hBox.getChildren().add(i, localFilePickBtn);
+        experimentInputs.put(inputDataObjectType, nonNullSelectedFiles);
+
+    }
+
     private String showSelectRemoteFile() throws IOException {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
@@ -578,6 +671,12 @@ public class ExperimentCreateController {
                     //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
                     if(file.exists())
                         uploadFiles.put("/" + randomString + "/" + file.getName(), file);
+                }else if(entry.getKey().getType().equals(DataType.URI_COLLECTION)){
+                    for(File file : (List<File>)entry.getValue()){
+                        //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
+                        if(file.exists())
+                            uploadFiles.put("/" + randomString + "/" + file.getName(), file);
+                    }
                 }
             }
             if(uploadFiles.size() > 0){
@@ -681,6 +780,33 @@ public class ExperimentCreateController {
                     String uri = AiravataManager.getInstance().registerDataProduct(dpModel);
                     inputDataObjectType.setValue(uri);
                 }
+            }else if(inputDataObjectType.getType().equals(DataType.URI_COLLECTION)){
+                List<File> files = (List<File>) this.experimentInputs.get(inputDataObjectType);
+                String uriCollection = "";
+                for(File file : files){
+                    //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
+                    if(file.exists()) {
+                        String fileName = file.getName();
+                        String remoteFilePath = remoteDataDir + fileName;
+                        DataProductModel dpModel = new DataProductModel();
+                        dpModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
+                        dpModel.setOwnerName(SEAGridContext.getInstance().getUserName());
+                        dpModel.setProductName(fileName);
+                        dpModel.setDataProductType(DataProductType.FILE);
+
+                        DataReplicaLocationModel rpModel = new DataReplicaLocationModel();
+                        rpModel.setStorageResourceId(SEAGridContext.getInstance().getGatewayaStorageId());
+                        rpModel.setReplicaName(fileName + " gateway data store copy");
+                        rpModel.setReplicaLocationCategory(ReplicaLocationCategory.GATEWAY_DATA_STORE);
+                        rpModel.setReplicaPersistentType(ReplicaPersistentType.TRANSIENT);
+                        rpModel.setFilePath(remoteFilePath);
+                        dpModel.addToReplicaLocations(rpModel);
+                        String uri = AiravataManager.getInstance().registerDataProduct(dpModel);
+                        uriCollection = uriCollection + uri + ",";
+                    }
+                }
+                uriCollection = uriCollection.substring(0, uriCollection.length() -1);
+                inputDataObjectType.setValue(uriCollection);
             }else{
                 inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
             }
@@ -736,7 +862,7 @@ public class ExperimentCreateController {
         }else{
             for(InputDataObjectType inputDataObjectType : this.experimentInputs.keySet()){
                 Object object = this.experimentInputs.get(inputDataObjectType);
-                if(object == null){
+                if(inputDataObjectType.isIsRequired() && (object == null || object.toString().equals(""))){
                     SEAGridDialogHelper.showWarningDialog("Warning Dialog", "Experiment Validation Failed", "No value" +
                             " selected for input " + inputDataObjectType.getName());
                     return false;

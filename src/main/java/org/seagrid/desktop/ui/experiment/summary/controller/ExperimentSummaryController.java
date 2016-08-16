@@ -371,27 +371,60 @@ public class ExperimentSummaryController {
         List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
         int rowIndex = EXPERIMENT_INPUT_START_ROW;
         experimentInfoGridPane.add(new Label("Inputs"), 0, rowIndex);
+        String dataRoot = remoteDataDirRoot;
+        List<DataReplicaLocationModel> replicas;
+        String fileUri;
+        Hyperlink hyperlink;
+        TextFlow uriOutputLabel;
         for(InputDataObjectType input : inputDataObjectTypes){
             switch (input.getType()){
                 case URI :
                 case STDERR:
                 case STDOUT:
-                    String dataRoot = remoteDataDirRoot;
-                    List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(input.getValue());
-                    String fileUri = "";
-                    for(DataReplicaLocationModel rpModel : replicas){
-                        if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
-                            fileUri = rpModel.getFilePath();
-                            break;
+                    if(input.getValue() != null && !input.getValue().equals("")) {
+                        replicas = AiravataManager.getInstance().getDataReplicas(input.getValue());
+                        fileUri = "";
+                        for (DataReplicaLocationModel rpModel : replicas) {
+                            if (rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                                fileUri = rpModel.getFilePath();
+                                break;
+                            }
                         }
+                        String filePath1 = (new URI(fileUri)).getPath();
+                        hyperlink = new Hyperlink(Paths.get(filePath1).getFileName().toString());
+                        uriOutputLabel = new TextFlow(new Text(input.getName() + " : "), hyperlink);
+                        hyperlink.setOnAction(event -> {
+                            downloadFile(Paths.get(filePath1.toString().replaceAll(dataRoot, "")), experimentModel);
+                        });
+                        experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                     }
-                    String filePath = (new URI(fileUri)).getPath();
-                    Hyperlink hyperlink = new Hyperlink(Paths.get(filePath).getFileName().toString());
-                    TextFlow uriOutputLabel = new TextFlow(new Text(input.getName()+" : "), hyperlink);
-                    hyperlink.setOnAction(event -> {
-                        downloadFile(Paths.get(filePath.toString().replaceAll(dataRoot, "")), experimentModel);
-                    });
-                    experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
+                    break;
+                case URI_COLLECTION:
+                    if(input.getValue() != null && !input.getValue().equals("")) {
+                        String uriCollection = input.getValue();
+                        String[] uris = uriCollection.split(",");
+                        int i = 1;
+                        for(String uri : uris){
+                            replicas = AiravataManager.getInstance().getDataReplicas(uri);
+                            fileUri = "";
+                            for(DataReplicaLocationModel rpModel : replicas){
+                                if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                                    fileUri = rpModel.getFilePath();
+                                    break;
+                                }
+                            }
+                            String filePath2 = (new URI(fileUri)).getPath();
+                            hyperlink = new Hyperlink(Paths.get(filePath2).getFileName().toString());
+                            uriOutputLabel = new TextFlow(new Text(input.getName()+" ("+ i +")" +" : "), hyperlink);
+                            hyperlink.setOnAction(event -> {
+                                downloadFile(Paths.get(filePath2.toString().replaceAll(dataRoot, "")), experimentModel);
+                            });
+                            experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
+                            rowIndex++;
+                            i++;
+                        }
+                        rowIndex--;
+                    }
                     break;
                 default :
                     Label outputLabel = new Label();
