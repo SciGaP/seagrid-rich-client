@@ -72,6 +72,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -376,6 +377,16 @@ public class ExperimentSummaryController {
         String fileUri;
         Hyperlink hyperlink;
         TextFlow uriOutputLabel;
+
+        Collections.sort(inputDataObjectTypes, (o1, o2) -> {
+            if(o1.getName().startsWith("Optional-File-Inputs"))
+                return Integer.MAX_VALUE;
+            else if(o2.getName().startsWith("Optional-File-Inputs"))
+                return Integer.MIN_VALUE;
+            else
+                return o1.getName().compareTo(o2.getName());
+        });
+
         for(InputDataObjectType input : inputDataObjectTypes){
             switch (input.getType()){
                 case URI :
@@ -420,6 +431,8 @@ public class ExperimentSummaryController {
                                 downloadFile(Paths.get(filePath2.toString().replaceAll(dataRoot, "")), experimentModel);
                             });
                             experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
+
+                            experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
                             rowIndex++;
                             i++;
                         }
