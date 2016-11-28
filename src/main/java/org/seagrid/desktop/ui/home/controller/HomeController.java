@@ -516,6 +516,7 @@ public class HomeController {
                     ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
                     Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(experimentListModel.getId());
                     Tab experimentTab = new Tab(experimentListModel.getName(), parentNode);
+                    experimentTab.setId(experimentListModel.getId());
                     experimentTab.setClosable(true);
                     tabbedPane.getTabs().add(experimentTab);
                     tabbedPane.getSelectionModel().select(experimentTab);
@@ -831,6 +832,12 @@ public class HomeController {
                 ExperimentModel experimentModel = (ExperimentModel) event.getPayload();
                 SEAGridDialogHelper.showInformationNotification("Success", "Updated experiment "
                         + experimentModel.getExperimentName(), expSummaryTable.getScene().getWindow());
+                tabbedPane.getTabs().stream().forEach(t->{
+                    String tabId = t.getId();
+                    if(experimentModel.getExperimentId().equals(tabId)){
+                        t.setText(experimentModel.getExperimentName());
+                    }
+                });
             }
         } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED)) {
             if (event.getPayload() instanceof ExperimentModel) { // This is coming from experiment edit
@@ -846,6 +853,14 @@ public class HomeController {
                     observableExperimentList.add(0, experimentListModel);
                 }
                 try {
+                    ExperimentSummaryWindow experimentSummaryWindow = new ExperimentSummaryWindow();
+                    Parent parentNode = experimentSummaryWindow.getExperimentInfoNode(experimentListModel.getId());
+                    Tab experimentTab = new Tab(experimentModel.getExperimentName(), parentNode);
+                    experimentTab.setId(experimentModel.getExperimentId());
+                    experimentTab.setClosable(true);
+                    tabbedPane.getTabs().add(experimentTab);
+                    tabbedPane.getSelectionModel().select(experimentTab);
+
                     ExperimentCreateWindow.displayEditExperiment(experimentModel);
                 } catch (Exception e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
