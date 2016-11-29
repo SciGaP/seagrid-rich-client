@@ -532,6 +532,7 @@ public class ExperimentCreateController {
 
                 if(inputDataObjectType.getValue() != null && inputDataObjectType.getValue().contains("airavata-dp")){
                     String[] replicaUris = inputDataObjectType.getValue().split(",");
+                    ArrayList<File> fileList = new ArrayList<>();
                     for(String replicaUri : replicaUris) {
                         List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(replicaUri);
                         String fileUri = "";
@@ -542,8 +543,9 @@ public class ExperimentCreateController {
                             }
                         }
                         String filePath = (new URI(fileUri)).getPath();
-                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
+                        fileList.add(new File(filePath));
                     }
+                    handleMultipleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, fileList);
                 }
             }
             //maintaining the grid pane row height
@@ -782,31 +784,33 @@ public class ExperimentCreateController {
                 }
             }else if(inputDataObjectType.getType().equals(DataType.URI_COLLECTION)){
                 List<File> files = (List<File>) this.experimentInputs.get(inputDataObjectType);
-                String uriCollection = "";
-                for(File file : files){
-                    //FIXME - Otherwise the file is remote file. This is not a good way to handle this. Should find a better way to handle it
-                    if(file.exists()) {
-                        String fileName = file.getName();
-                        String remoteFilePath = remoteDataDir + fileName;
-                        DataProductModel dpModel = new DataProductModel();
-                        dpModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
-                        dpModel.setOwnerName(SEAGridContext.getInstance().getUserName());
-                        dpModel.setProductName(fileName);
-                        dpModel.setDataProductType(DataProductType.FILE);
+                //FIXME - Otherwise the files are remote file. This is not a good way to handle this. Should find a better way to handle it
+                if(files.get(0).exists()){
+                    String uriCollection = "";
+                    for(File file : files){
+                        if(file.exists()) {
+                            String fileName = file.getName();
+                            String remoteFilePath = remoteDataDir + fileName;
+                            DataProductModel dpModel = new DataProductModel();
+                            dpModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
+                            dpModel.setOwnerName(SEAGridContext.getInstance().getUserName());
+                            dpModel.setProductName(fileName);
+                            dpModel.setDataProductType(DataProductType.FILE);
 
-                        DataReplicaLocationModel rpModel = new DataReplicaLocationModel();
-                        rpModel.setStorageResourceId(SEAGridContext.getInstance().getGatewayaStorageId());
-                        rpModel.setReplicaName(fileName + " gateway data store copy");
-                        rpModel.setReplicaLocationCategory(ReplicaLocationCategory.GATEWAY_DATA_STORE);
-                        rpModel.setReplicaPersistentType(ReplicaPersistentType.TRANSIENT);
-                        rpModel.setFilePath(remoteFilePath);
-                        dpModel.addToReplicaLocations(rpModel);
-                        String uri = AiravataManager.getInstance().registerDataProduct(dpModel);
-                        uriCollection = uriCollection + uri + ",";
+                            DataReplicaLocationModel rpModel = new DataReplicaLocationModel();
+                            rpModel.setStorageResourceId(SEAGridContext.getInstance().getGatewayaStorageId());
+                            rpModel.setReplicaName(fileName + " gateway data store copy");
+                            rpModel.setReplicaLocationCategory(ReplicaLocationCategory.GATEWAY_DATA_STORE);
+                            rpModel.setReplicaPersistentType(ReplicaPersistentType.TRANSIENT);
+                            rpModel.setFilePath(remoteFilePath);
+                            dpModel.addToReplicaLocations(rpModel);
+                            String uri = AiravataManager.getInstance().registerDataProduct(dpModel);
+                            uriCollection = uriCollection + uri + ",";
+                        }
                     }
+                    uriCollection = uriCollection.substring(0, uriCollection.length() -1);
+                    inputDataObjectType.setValue(uriCollection);
                 }
-                uriCollection = uriCollection.substring(0, uriCollection.length() -1);
-                inputDataObjectType.setValue(uriCollection);
             }else{
                 inputDataObjectType.setValue((String) this.experimentInputs.get(inputDataObjectType));
             }

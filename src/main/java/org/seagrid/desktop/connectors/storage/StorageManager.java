@@ -26,9 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 public class StorageManager {
@@ -87,6 +84,23 @@ public class StorageManager {
     private void createRemoteParentDirsIfNotExists(String parentDirPath) throws SftpException {
         String pwd = channelSftp.pwd();
         String[] folders = parentDirPath.split( "/" );
+        for ( String folder : folders ) {
+            if ( folder.length() > 0 ) {
+                try {
+                    channelSftp.cd(folder);
+                }
+                catch ( SftpException e ) {
+                    channelSftp.mkdir( folder );
+                    channelSftp.cd( folder );
+                }
+            }
+        }
+        channelSftp.cd(pwd);
+    }
+
+    public void createDirIfNotExists(String dirPath) throws SftpException {
+        String pwd = channelSftp.pwd();
+        String[] folders = dirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {
                 try {

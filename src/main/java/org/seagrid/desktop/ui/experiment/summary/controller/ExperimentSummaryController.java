@@ -42,7 +42,6 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
-import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
 import org.apache.airavata.model.commons.ErrorModel;
@@ -189,21 +188,14 @@ public class ExperimentSummaryController {
         expCloneButton.setOnAction(event -> {
             try {
                 List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
-                for(InputDataObjectType inputDataObjectType : inputDataObjectTypes){
-                    if(inputDataObjectType.getType().equals(DataType.URI)){
-                        String randomString = experimentNameLabel.getText().replaceAll(" ","-")+"-"+System.currentTimeMillis();
-                        //FIXME - Hardcoded logic
-                        File remoteSrcFile =  new File(inputDataObjectType.getValue());
-                        String remoteSrcPath = "/" + remoteSrcFile.getParentFile().getName()
-                                + "/" + remoteSrcFile.getName();
-                        String remoteDestFilePath = "/" + randomString + "/" + remoteSrcFile.getName();
-                        StorageManager.getInstance().createSymLink(remoteSrcPath, remoteDestFilePath);
-                    }
-                }
+                String experimentDataDir = "/" + experimentModel.getProjectId().substring(0, experimentModel.getProjectId().length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
+                        + experimentNameLabel.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
+                StorageManager.getInstance().createDirIfNotExists(experimentDataDir);
                 String expId = AiravataManager.getInstance().cloneExperiment(experimentModel.getExperimentId(),
                         "Clone of " + experimentModel.getExperimentName());
                 ExperimentModel clonedExperimentModel = AiravataManager.getInstance().getExperiment(expId);
                 clonedExperimentModel.setExperimentInputs(inputDataObjectTypes);
+                clonedExperimentModel.getUserConfigurationData().setExperimentDataDir(experimentDataDir);
                 AiravataManager.getInstance().updateExperiment(clonedExperimentModel);
                 SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.EXPERIMENT_CLONED,
                         clonedExperimentModel));
