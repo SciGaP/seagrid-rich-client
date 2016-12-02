@@ -100,6 +100,7 @@ public class StorageManager {
 
     public void createDirIfNotExists(String dirPath) throws SftpException {
         String pwd = channelSftp.pwd();
+        channelSftp.cd("/");
         String[] folders = dirPath.split( "/" );
         for ( String folder : folders ) {
             if ( folder.length() > 0 ) {
