@@ -20,6 +20,7 @@
 */
 package org.seagrid.desktop.connectors.wso2is;
 
+import org.apache.airavata.model.error.AuthorizationException;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -44,7 +45,7 @@ public class AuthenticationManager {
     String clientId = SEAGridContext.getInstance().getOAuthClientId();
     String clientSecret = SEAGridContext.getInstance().getOAuthClientSecret();
 
-    public AuthResponse authenticate(String username,String password) throws AuthenticationException {
+    public AuthResponse authenticate(String username,String password) throws AuthenticationException, AuthorizationException {
         try {
             username = username + "@" + SEAGridContext.getInstance().getIdpTenantId();
 
@@ -91,8 +92,9 @@ public class AuthenticationManager {
                         }
                     }
                 }
+                throw new AuthorizationException();
             }
-        }catch (Exception ex){
+        }catch (OAuthProblemException | OAuthSystemException | IOException ex){
             throw new AuthenticationException(ex);
         }
         return null;

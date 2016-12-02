@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.apache.airavata.model.error.AuthorizationException;
 import org.seagrid.desktop.connectors.wso2is.AuthResponse;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationException;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
@@ -132,6 +133,11 @@ public class LoginController {
             e.printStackTrace();
             SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", loginButton.getScene().getWindow(),
                     "Login operation failed !");
+        } catch (AuthorizationException e){
+            loginAuthFailed.setText("Your account is not yet approved by the Admin !");
+            loginAuthFailed.setFont(new Font(10));
+            loginAuthFailed.setTextFill(Color.RED);
+            passwordField.setText("");
         }
         return false;
     }
