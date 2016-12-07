@@ -11,6 +11,7 @@ import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.security.AuthzToken;
 import org.apache.airavata.model.status.JobStatus;
+import org.apache.airavata.model.workspace.Notification;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -24,6 +25,7 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AiravataManager {
 
@@ -37,9 +39,6 @@ public class AiravataManager {
         try {
             this.airavataClient = createAiravataClient();
             this.airavataCache = new AiravataCache<>(200, 500, 50);
-
-            //FIXME - To create the default user & project if not exists
-            this.getProjects();
         } catch (Exception e) {
             e.printStackTrace();
             throw new AiravataClientException(AiravataErrorType.UNKNOWN);
@@ -239,5 +238,17 @@ public class AiravataManager {
 
     public List<DataReplicaLocationModel> getDataReplicas(String uri) throws TException {
         return getClient().getDataProduct(getAuthzToken(), uri).getReplicaLocations();
+    }
+
+    public List<Notification> getNotifications() throws TException {
+        //We don't need security token for calling getNotifications API method
+        java.util.List<Notification> temp = (createAiravataClient()).getAllNotifications(new AuthzToken("dummy-token"),
+                SEAGridContext.getInstance().getAiravataGatewayId());
+        java.util.List<Notification> messages = new ArrayList<>();
+        if(temp != null){
+            messages.addAll(temp.stream().filter(m -> m.getExpirationTime() > System.currentTimeMillis()
+                    || m.getExpirationTime() == 0).collect(Collectors.toList()));
+        }
+        return messages;
     }
 }

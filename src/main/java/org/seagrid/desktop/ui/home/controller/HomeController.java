@@ -22,6 +22,9 @@ package org.seagrid.desktop.ui.home.controller;
 
 
 import com.google.common.eventbus.Subscribe;
+import g03input.G03MenuTree;
+import gamess.GamessGUI;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.Observable;
@@ -34,6 +37,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -46,13 +50,12 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import g03input.G03MenuTree;
-import gamess.GamessGUI;
 import nanocad.nanocadMain;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
+import org.apache.airavata.model.workspace.Notification;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
@@ -89,6 +92,9 @@ public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(ExperimentListModel.class);
 
     private ObservableList<ExperimentListModel> observableExperimentList;
+
+    @FXML
+    public Label notificationLabel;
 
     @FXML
     private Button browseMassStorageBtn;
@@ -178,6 +184,11 @@ public class HomeController {
 
     private ContextMenu contextMenu;
 
+    //Dummy class used for storing notification list index
+    private class Index{
+        int index;
+    }
+
     @SuppressWarnings("unused")
     public void initialize() {
         SEAGridEventBus.getInstance().register(this);
@@ -191,6 +202,49 @@ public class HomeController {
                     "Failed initialising experiment list !");
         }
         initTokenUpdateDaemon();
+
+        //initializing notification messages
+        notificationLabel.setCursor(javafx.scene.Cursor.HAND);
+        notificationLabel.setStyle("-fx-border-color: white;");
+        notificationLabel.setMaxWidth(Double.MAX_VALUE);
+        try{
+            java.util.List<Notification> messages = AiravataManager.getInstance().getNotifications();
+            final Index index = new Index();
+            index.index = 0;
+            if (messages != null && messages.size() > 0) {
+                notificationLabel.setText(messages.get(index.index).getTitle() + " : "
+                        + messages.get(index.index).getNotificationMessage().split("\r|\n")[0]);
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0),
+                        event -> {
+                            index.index++;
+                            index.index = index.index % messages.size();
+                            switch (messages.get(index.index).getPriority()){
+                                case HIGH:
+                                    notificationLabel.setTextFill(Color.web("#ff0000"));
+                                    break;
+                                case NORMAL:
+                                    notificationLabel.setTextFill(Color.web("#ffa500"));
+                                    break;
+                                case LOW:
+                                    notificationLabel.setTextFill(Color.web("#808080"));
+                                    break;
+                            }
+                            notificationLabel.setText(messages.get(index.index).getTitle() + " : "
+                                    + messages.get(index.index).getNotificationMessage().split("\r|\n")[0]);
+
+                            notificationLabel.setOnMouseClicked(event1 -> {
+                                SEAGridDialogHelper.showInformationDialog("Notification", messages.get(index.index).getTitle(),
+                                        messages.get(index.index).getNotificationMessage(), null);
+                            });
+                        }),
+                        new KeyFrame(Duration.seconds(5)));
+                timeline.setCycleCount(Animation.INDEFINITE);
+                timeline.play();
+            }
+        }catch (Exception ex){
+            //cannot connect to Airavata
+            ex.printStackTrace();
+        }
     }
 
     public void initMenuBar() {

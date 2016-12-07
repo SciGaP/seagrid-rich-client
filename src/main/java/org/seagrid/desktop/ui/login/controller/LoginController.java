@@ -20,8 +20,12 @@
 */
 package org.seagrid.desktop.ui.login.controller;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -30,7 +34,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.apache.airavata.model.error.AuthorizationException;
+import org.apache.airavata.model.workspace.Notification;
+import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.connectors.wso2is.AuthResponse;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationException;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
@@ -45,6 +52,9 @@ import java.net.URI;
 
 public class LoginController {
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+    @FXML
+    public Label notificationLabel;
 
     @FXML
     private TextField usernameField;
@@ -63,6 +73,11 @@ public class LoginController {
 
     @FXML
     private WebView loginWebView;
+
+    //Dummy class used for storing notification list index
+    private class Index{
+        int index;
+    }
 
     public void initialize() {
         loginButton.disableProperty().bind(new BooleanBinding() {
@@ -106,6 +121,49 @@ public class LoginController {
                 " be auto-updated automatically.</font></p>";
 
         loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
+
+        //initializing notification messages
+        notificationLabel.setCursor(Cursor.HAND);
+        notificationLabel.setStyle("-fx-border-color: white;");
+        notificationLabel.setMaxWidth(Double.MAX_VALUE);
+        try{
+            java.util.List<Notification> messages = AiravataManager.getInstance().getNotifications();
+            final Index index = new Index();
+            index.index = 0;
+            if (messages != null && messages.size() > 0) {
+                notificationLabel.setText(messages.get(index.index).getTitle() + " : "
+                        + messages.get(index.index).getNotificationMessage().split("\r|\n")[0]);
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0),
+                        event -> {
+                            index.index++;
+                            index.index = index.index % messages.size();
+                            switch (messages.get(index.index).getPriority()){
+                                case HIGH:
+                                    notificationLabel.setTextFill(Color.web("#ff0000"));
+                                    break;
+                                case NORMAL:
+                                    notificationLabel.setTextFill(Color.web("#ffa500"));
+                                    break;
+                                case LOW:
+                                    notificationLabel.setTextFill(Color.web("#808080"));
+                                    break;
+                            }
+                            notificationLabel.setText(messages.get(index.index).getTitle() + " : "
+                                    + messages.get(index.index).getNotificationMessage().split("\r|\n")[0]);
+
+                            notificationLabel.setOnMouseClicked(event1 -> {
+                                SEAGridDialogHelper.showInformationDialog("Notification", messages.get(index.index).getTitle(),
+                                        messages.get(index.index).getNotificationMessage(), null);
+                            });
+                        }),
+                        new KeyFrame(Duration.seconds(5)));
+                timeline.setCycleCount(Animation.INDEFINITE);
+                timeline.play();
+            }
+        }catch (Exception ex){
+            //cannot connect to Airavata
+            ex.printStackTrace();
+        }
     }
 
     public boolean handleLogin(){
