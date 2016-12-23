@@ -781,7 +781,7 @@ public class HomeController {
 //                                "Failed updating OAuth refresh token");
                         //Initiating a logout
                         SEAGridDialogHelper.showInformationDialog("Session Timed Out...", "Session Timed Out...", "Your session has timed out. Please re-login to continue work.", null);
-                                ((Stage) logoutBtn.getScene().getWindow()).close();
+                        ((Stage) logoutBtn.getScene().getWindow()).close();
                         SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
                     }
                 }));
