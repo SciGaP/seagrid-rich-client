@@ -777,8 +777,8 @@ public class HomeController {
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();
-                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
-                                "Failed updating OAuth refresh token");
+//                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+//                                "Failed updating OAuth refresh token");
                         //Initiating a logout
                         ((Stage) logoutBtn.getScene().getWindow()).close();
                         SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
