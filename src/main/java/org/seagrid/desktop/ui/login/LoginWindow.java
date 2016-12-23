@@ -30,6 +30,7 @@ public class LoginWindow extends Application {
         primaryStage.setTitle("SEAGrid Desktop Client - Login");
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(true);
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);
