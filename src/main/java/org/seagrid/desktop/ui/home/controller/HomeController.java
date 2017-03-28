@@ -956,7 +956,7 @@ public class HomeController {
         experimentSummaryModel.setGatewayId(experiment.getGatewayId());
         experimentSummaryModel.setUserName(experiment.getUserName());
         experimentSummaryModel.setDescription(experiment.getDescription());
-        experimentSummaryModel.setExperimentStatus(experiment.getExperimentStatus().getState().toString());
+        experimentSummaryModel.setExperimentStatus(experiment.getExperimentStatus().get(0).getState().toString());
         long time = System.currentTimeMillis();
         experimentSummaryModel.setCreationTime(time);
         experimentSummaryModel.setStatusUpdateTime(time);

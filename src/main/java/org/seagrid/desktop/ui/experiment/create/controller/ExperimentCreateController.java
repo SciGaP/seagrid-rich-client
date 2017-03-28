@@ -42,6 +42,7 @@ import javafx.util.StringConverter;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.appcatalog.userresourceprofile.UserComputeResourcePreference;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
@@ -133,6 +134,9 @@ public class ExperimentCreateController {
 
     @FXML
     private Button expSaveLaunchButton;
+
+    @FXML
+    private RadioButton useMyCRAccount;
 
     private FileChooser fileChooser;
 
@@ -257,6 +261,20 @@ public class ExperimentCreateController {
         expCreateResourceField.getItems().stream().filter(r -> ((ComputeResourceDescription) r).getComputeResourceId()
                 .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()))
                 .forEach(r -> expCreateResourceField.getSelectionModel().select(r));
+
+        UserComputeResourcePreference userComputeResourcePreference = AiravataManager.getInstance()
+                .getUserComputeResourcePrefs(editExperimentModel.getUserConfigurationData()
+                        .getComputationalResourceScheduling().getResourceHostId());
+
+        if(userComputeResourcePreference != null){
+            useMyCRAccount.setVisible(true);
+            if(editExperimentModel.getUserConfigurationData().isUseUserCRPref()){
+                useMyCRAccount.setSelected(true);
+            }
+        }else{
+            useMyCRAccount.setVisible(false);
+        }
+
         expCreateQueueField.getItems().stream().filter(q -> ((BatchQueue) q).getQueueName()
                 .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getQueueName()))
                 .forEach(q -> expCreateQueueField.getSelectionModel().select(q));
@@ -369,6 +387,21 @@ public class ExperimentCreateController {
                 }
             });
             expCreateResourceField.valueProperty().addListener((observable, oldValue, newValue) -> {
+                String computeResourceId = ((ComputeResourceDescription)newValue).getComputeResourceId();
+                try{
+                    UserComputeResourcePreference userComputeResourcePreference = AiravataManager.getInstance()
+                            .getUserComputeResourcePrefs(computeResourceId);
+                    if(userComputeResourcePreference != null){
+                        useMyCRAccount.setSelected(true);
+                        useMyCRAccount.setVisible(true);
+                    }else{
+                        useMyCRAccount.setSelected(false);
+                        useMyCRAccount.setVisible(false);
+                    }
+                }catch (Exception ex){
+                    SEAGridDialogHelper.showExceptionDialog(ex, "Failed while retrieving user compute prefs", null, ex.getMessage());
+                }
+
                 loadAvailableBatchQueues();
             });
             expCreateResourceField.getSelectionModel().selectFirst();
@@ -745,6 +778,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
         userConfigurationDataModel.setExperimentDataDir(remoteDataDirRoot + experimentDataDir);
+        userConfigurationDataModel.setUseUserCRPref(useMyCRAccount.isSelected());
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()

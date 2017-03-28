@@ -192,7 +192,7 @@ public class ExperimentSummaryController {
                         + experimentNameLabel.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
                 StorageManager.getInstance().createDirIfNotExists(experimentDataDir);
                 String expId = AiravataManager.getInstance().cloneExperiment(experimentModel.getExperimentId(),
-                        "Clone of " + experimentModel.getExperimentName());
+                        "Clone of " + experimentModel.getExperimentName(), experimentModel.getProjectId());
                 ExperimentModel clonedExperimentModel = AiravataManager.getInstance().getExperiment(expId);
                 clonedExperimentModel.setExperimentInputs(inputDataObjectTypes);
                 clonedExperimentModel.getUserConfigurationData().setExperimentDataDir(experimentDataDir);
@@ -240,13 +240,17 @@ public class ExperimentSummaryController {
                         experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()
                 );
                 if(computeResourceDescription != null){
-                    experimentCRLabel.setText(computeResourceDescription.getHostName());
+                    String temp = " (using community account)";
+                    if(experimentModel.getUserConfigurationData().isUseUserCRPref()){
+                        temp = " (using user account)";
+                    }
+                    experimentCRLabel.setText(computeResourceDescription.getHostName()+temp);
                 }
             }
             showStatus(experimentModel);
             experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
                     .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
-            experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus()
+            experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus().get(0)
                     .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
             experimentEnableAutoSchedLabel.setText("true");
             experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
@@ -303,7 +307,7 @@ public class ExperimentSummaryController {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     showStatus(experimentModel);
                     updateButtonOptions(experimentModel);
-                    String expState = experimentModel.getExperimentStatus().getState().toString();
+                    String expState = experimentModel.getExperimentStatus().get(0).getState().toString();
                     if(expState.equals("FAILED") || expState.equals("COMPLETED") || expState.equals("CANCELLED")){
                         showExperimentOutputs(experimentModel);
                         expInfoUpdateTimer.stop();
@@ -321,8 +325,8 @@ public class ExperimentSummaryController {
     }
 
     private void showStatus(ExperimentModel experimentModel) throws TException {
-        experimentStatusLabel.setText(experimentModel.getExperimentStatus().getState().toString());
-        switch (experimentModel.getExperimentStatus().getState()){
+        experimentStatusLabel.setText(experimentModel.getExperimentStatus().get(0).getState().toString());
+        switch (experimentModel.getExperimentStatus().get(0).getState()){
             case COMPLETED :
                 experimentStatusLabel.setTextFill(Color.GREEN);
                 break;
@@ -525,7 +529,7 @@ public class ExperimentSummaryController {
     }
 
     private void updateButtonOptions(ExperimentModel experimentModel){
-        switch (experimentModel.getExperimentStatus().getState()){
+        switch (experimentModel.getExperimentStatus().get(0).getState()){
             case CREATED:
                 expCancelButton.setDisable(true);
                 expStorageDir.setDisable(false);

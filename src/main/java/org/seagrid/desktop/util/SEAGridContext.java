@@ -156,15 +156,27 @@ public class SEAGridContext {
     }
 
     public String getOAuthClientId() {
-        return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_ID);
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_ID);
+        }else{
+            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_ID);
+        }
     }
 
     public String getOAuthClientSecret() {
-        return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_SECRET);
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_SECRET);
+        }else{
+            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_SECRET);
+        }
     }
 
     public String getIdpTenantId() {
-        return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
+        if(SEAGridConfig.DEV){
+            return properties.getProperty(SEAGridConfig.DEV_IDP_TENANT_ID);
+        }else {
+            return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
+        }
     }
 
     public CharSequence getGaussianAppName() {
@@ -184,7 +196,7 @@ public class SEAGridContext {
 
     public String getGatewayUserDataRoot(){
         if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_REMOTE_DATA_DIR_ROOT);
+            return properties.getProperty(SEAGridConfig.DEV_REMOTE_DATA_DIR_ROOT) + getUserName() + "/";
         }
         return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_ROOT) + getUserName() + "/";
     }
