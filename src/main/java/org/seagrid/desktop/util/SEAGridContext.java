@@ -23,9 +23,7 @@ package org.seagrid.desktop.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -42,6 +40,8 @@ public class SEAGridContext {
     private static final String PROPERTY_FILE_NAME = "/seagrid.properties";
 
     private static SEAGridContext instance;
+
+    private UserPrefs userPrefs;
 
     private SEAGridContext(){
         InputStream inputStream = SEAGridContext.class.getResourceAsStream(PROPERTY_FILE_NAME);
@@ -208,6 +208,41 @@ public class SEAGridContext {
         return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_PREFIX);
     }
 
+
+    public UserPrefs getUserPrefs(){
+        if(this.userPrefs == null){
+            try
+            {
+                FileInputStream fis = new FileInputStream(getFileDownloadLocation()+"/.prefs/user_pref.ser");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                this.userPrefs = (UserPrefs)ois.readObject();
+            }
+            catch (Exception e){
+                this.userPrefs = new UserPrefs();
+            }
+        }
+        return this.userPrefs;
+    }
+
+    public void saveUserPrefs() {
+        File file = new File((getFileDownloadLocation()+"/.prefs"));
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(getFileDownloadLocation()+"/.prefs/user_pref.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this.userPrefs);
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     //FIXME - There is an issue in loading file from resources. This is a temporary hack
     public static final String logoBase64 = "iVBORw0KGgoAAAANSUhEUgAAAdkAAACTCAMAAAD1LZOOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5" +
