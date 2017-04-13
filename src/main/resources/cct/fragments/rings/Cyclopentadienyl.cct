@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Title Card Required " atoms="12" bonds="10">
+<monomers number="1">
+GAUSS
+</monomers>
+<atoms number="12">
+0,X,0.5846154,-0.84615386,0.0,0
+6,C,1.8346153,-0.84615386,0.0,0
+6,C,0.9708864,0.34266716,0.0,0
+6,C,-0.4266556,-0.11142183,0.0,0
+6,C,-0.4266556,-1.5808859,0.0,0
+6,C,0.9708864,-2.0349748,0.0,0
+1,H,2.9186444,-0.73221785,0.0,0
+1,H,1.1975104,1.4088482,0.0,0
+1,H,-1.3706236,0.43357816,0.0,0
+1,H,-1.2366836,-2.310238,0.0,0
+1,H,1.4142294,-3.0307388,0.0,0
+0,X,0.5846154,-0.84615386,-2.0,0
+</atoms>
+<bonds number="11">
+1,2
+1,5
+1,6
+2,3
+2,7
+3,4
+3,8
+4,5
+4,9
+5,10
+0,11
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="GaussianLinkZeroCommand" type="molecule" class="String" value="%chk=eta-5-cp-cart.chk"/>
+<property id="GaussianLinkZeroCommand" type="molecule" class="String" value="%mem=6MW"/>
+<property id="GaussianLinkZeroCommand" type="molecule" class="String" value="%nproc=1"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" X                  0.58461540   -0.84615383    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" C                  1.83461540   -0.84615383    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" C                  0.97088640    0.34266717    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" C                 -0.42665560   -0.11142183    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" C                 -0.42665560   -1.58088583    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" C                  0.97088640   -2.03497483    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" H                  2.91864440   -0.73221783    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" H                  1.19751040    1.40884817    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" H                 -1.37062360    0.43357817    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" H                 -1.23668360   -2.31023783    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" H                  1.41422940   -3.03073883    0.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" X                  0.58461540   -0.84615383   -2.00000000"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=""/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 1 2 1.0 5 1.0 6 1.0"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 2 3 1.0 7 1.0"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 3 4 1.0 8 1.0"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 4 5 1.0 9 1.0"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 5 10 1.0"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 6"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 7"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 8"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 9"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=" 10"/>
+<property id="GaussianMoleculeSpec" type="molecule" class="String" value=""/>
+<property id="GaussianNumberOfAtoms" type="molecule" class="Integer" value="12"/>
+<property id="Multiplicity" type="molecule" class="Integer" value="2"/>
+<property id="GaussianRouteCommand" type="molecule" class="String" value="# hf/3-21g geom=connectivity"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="RGBColor" type="atom" class="Integer[]" format="all">
+64,64,64
+142,142,142
+142,142,142
+142,142,142
+142,142,142
+142,142,142
+204,204,204
+204,204,204
+204,204,204
+204,204,204
+204,204,204
+64,64,64
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+&amp;!
+C.3
+C.3
+C.3
+C.3
+C.3
+H
+H
+H
+H
+H
+&amp;!
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.2
+0.43
+0.43
+0.43
+0.43
+0.43
+0.275
+0.275
+0.275
+0.275
+0.275
+0.2
+</property>
+<property id="BondRadius" type="bond" class="Float" format="all">
+0.2
+0.2
+0.2
+0.2
+0.2
+0.2
+0.2
+0.2
+0.2
+0.2
+</property>
+<property id="RenderingStyle" type="bond" class="Integer" format="all">
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+</property>
+</molecule>
+</cct>

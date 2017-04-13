@@ -1,0 +1,40 @@
+
+double asin(double value) {
+  return Math.asin(value);
+}
+
+double asin(Double value) {
+  return Math.asin(value);
+}
+
+double asin(float value) {
+  return Math.asin(value);
+}
+
+double asin(Float value) {
+  return Math.asin(value);
+}
+
+double asin(Number value) {
+  return Math.asin(((Number)value).doubleValue());
+}
+
+double asin(int value) {
+  return Math.asin((double)value);
+}
+
+double asin(long value) {
+  return Math.asin((double)value);
+}
+
+double asin(Integer value) {
+  return Math.asin(value.doubleValue());
+}
+
+double asin(Long value) {
+  return Math.asin(value.doubleValue());
+}
+
+double asin(String value) {
+  return Math.asin(Double.parseDouble(value.trim() ) );
+}

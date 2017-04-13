@@ -1,0 +1,47 @@
+/**
+	Opens dialog to select directory. Returns null is dialog was cancelled
+*/
+
+String selectDirectory(String dialogTitle, String saveLabel ) {
+    java.util.prefs.Preferences prefs = null;
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle(dialogTitle);
+    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    fc.setAcceptAllFileFilterUsed(false);
+
+    if ( saveLabel != null && saveLabel.trim().length() > 0 ) {
+        prefs = java.util.prefs.Preferences.userNodeForPackage(this.getClass());
+        String lastPWD = prefs.get(saveLabel, "");
+        if (lastPWD.length() > 0) {
+            File pwd = new File(lastPWD);
+            if (pwd.isDirectory() && pwd.exists()) {
+                fc.setCurrentDirectory(pwd);
+            }
+        }
+    }
+
+    int returnVal = fc.showOpenDialog(new Frame());
+    if (returnVal != JFileChooser.APPROVE_OPTION ) {
+        return null;
+    }
+
+    if (prefs != null ) {
+        pwd = fc.getSelectedFile();
+        try {
+            prefs.put(saveLabel, pwd.getAbsolutePath());
+            } catch (Exception ex) {
+                System.err.println("Cannot save cwd: " + ex.getMessage()
+                        + " Ignored...");
+            }
+    }
+
+    return fc.getSelectedFile().toString();
+}
+
+String selectDirectory(String dialogTitle ) {
+    return selectDirectory(dialogTitle, null );
+}
+
+String selectDirectory() {
+    return selectDirectory("Select Directory", null);
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Cyclopentene" atoms="13" bonds="13">
+<monomers number="1">
+Cyclopentene
+</monomers>
+<atoms number="13">
+6,C,5.480963E-4,-1.1294785,-4.9739203E-4,0
+6,C,-1.247273,-0.19977055,3.4960793E-4,0
+6,C,-0.6635669,1.1941096,-1.9839205E-4,0
+6,C,0.6623991,1.1947365,-1.7739205E-4,0
+6,C,1.247467,-0.19858254,3.3860793E-4,0
+1,H,8.660963E-4,-1.7726005,-0.8718154,0
+1,H,-1.874028,-0.36628354,0.87145364,0
+1,H,-1.8753549,-0.36652255,-0.8697384,0
+1,H,-1.2792869,2.0734534,-4.3139208E-4,0
+1,H,1.2772721,2.0746684,-4.0039208E-4,0
+1,H,1.874379,-0.36451554,0.87144065,0
+1,H,1.875704,-0.36474156,-0.86975336,0
+1,H,8.740963E-4,-1.7744725,0.86942965,0
+</atoms>
+<bonds number="13">
+0,1
+0,4
+0,5
+0,12
+1,2
+1,6
+1,7
+2,3
+2,8
+3,4
+3,9
+4,10
+4,11
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-193.90443"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.377393 -0.571927 -0.058154 -0.058170 -0.571915 0.200688 0.202067 0.202056 0.213987 0.213980 0.202067 0.202056 0.200658 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="0.2956"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.4
+C.4
+C.3
+C.3
+C.4
+H
+H
+H
+H
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.43
+0.43
+0.43
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

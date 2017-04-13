@@ -1,0 +1,32 @@
+
+double variance(float [] data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(Float [] data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(double [] data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(Double [] data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(java.util.List data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(java.util.ArrayList data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(Number [] data ) {
+  return cct.math.Statistics.variance( data );
+}
+
+double variance(Object [] data ) {
+  return cct.math.Statistics.variance( data );
+}

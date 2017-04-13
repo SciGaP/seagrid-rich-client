@@ -1,0 +1,40 @@
+
+double atan(double value) {
+  return Math.atan(value);
+}
+
+double atan(Double value) {
+  return Math.atan(value);
+}
+
+double atan(float value) {
+  return Math.atan(value);
+}
+
+double atan(Float value) {
+  return Math.atan(value);
+}
+
+double atan(Number value) {
+  return Math.atan(((Number)value).doubleValue());
+}
+
+double atan(int value) {
+  return Math.atan((double)value);
+}
+
+double atan(long value) {
+  return Math.atan((double)value);
+}
+
+double atan(Integer value) {
+  return Math.atan(value.doubleValue());
+}
+
+double atan(Long value) {
+  return Math.atan(value.doubleValue());
+}
+
+double atan(String value) {
+  return Math.atan(Double.parseDouble(value.trim() ) );
+}

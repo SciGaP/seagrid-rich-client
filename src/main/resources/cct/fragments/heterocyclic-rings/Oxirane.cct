@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Oxirane" atoms="7" bonds="7">
+<monomers number="1">
+Oxirane
+</monomers>
+<atoms number="7">
+6,C,-0.40259472,-0.61504227,0.0,0
+6,C,0.2842683,0.6778817,0.0,0
+8,O,1.0591533,-0.5625723,0.0,0
+1,H,-0.82764673,-0.9912143,0.907601,0
+1,H,-0.82764673,-0.9912143,-0.907601,0
+1,H,0.3572333,1.2410808,0.907472,0
+1,H,0.3572333,1.2410808,-0.907472,0
+</atoms>
+<bonds number="7">
+0,1
+0,2
+0,3
+0,4
+1,2
+1,5
+1,6
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-152.78978"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.185354 -0.185463 -0.428930 0.199979 0.199979 0.199895 0.199895 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="3.0505"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.4
+C.4
+O.4
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.33
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

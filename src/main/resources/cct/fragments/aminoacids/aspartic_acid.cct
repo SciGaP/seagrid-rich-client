@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Unnamed Molecule" atoms="14" bonds="13">
+<monomers number="1">
+ASP
+</monomers>
+<atoms number="14">
+7,N,1.5002465,1.1505123,0.3086615,0
+1,H,2.35944,0.85527146,-0.10396999,0
+6,CA,0.4913625,0.10246217,0.4009956,0
+1,HA,0.26271254,-0.07415584,1.4463047,0
+6,CB,-0.81112546,0.54977214,-0.2743024,0
+6,C,0.9599286,-1.2230479,-0.15148337,0
+1,HB1,-1.0476615,1.5461493,0.08013263,0
+1,HB2,-0.68144345,0.6263562,-1.3513314,0
+6,CG,-2.0338125,-0.34696683,-0.002492371,0
+8,O,2.0949197,-1.4218488,-0.5672334,0
+8,OD1,-3.0895593,-0.0076408386,-0.5948334,0
+8,OD2,-1.8588555,-1.322125,0.78424764,0
+1,HC,0.22863352,-2.017202,-0.14334437,0
+1,HN,1.2034911,2.032644,0.6705543,0
+</atoms>
+<bonds number="13">
+0,1
+0,2
+0,13
+2,3
+2,4
+2,5
+4,6
+4,7
+4,8
+5,9
+5,12
+8,10
+8,11
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="-1"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-433.85434"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.846369 0.368642 -0.260337 0.272591 -0.327943 0.218788 0.232835 0.205243 0.483991 -0.535856 -0.704229 -0.717264 0.244432 0.365475 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="7.6368"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="RGBColor" type="atom" class="Integer[]" format="indexed">
+12,102,255,102
+13,102,255,102
+</property>
+<property id="Pickability" type="atom" class="Boolean" format="indexed">
+12,true
+13,true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+N.3
+H
+C.4
+H
+C.4
+C.3
+H
+H
+C.3
+O.2
+O.2
+O.2
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.4
+0.275
+0.43
+0.275
+0.43
+0.43
+0.275
+0.275
+0.43
+0.33
+0.33
+0.33
+0.275
+0.275
+</property>
+</molecule>
+</cct>

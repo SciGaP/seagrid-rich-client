@@ -1,0 +1,18 @@
+<BondParameters>
+  C.4  C.4  310.0    1.526     Amber: CT-CT  310.0    1.526       JCC,7,(1986),230; AA, SUGARS
+  C.4  H    340.0    1.090     Amber: CT-HC  340.0    1.090       changed from 331 bsd on NMA nmodes; AA, SUGARS
+  O.4  H    553.0    0.9572    Amber: OW-HW  553.0    0.9572    ! TIP3P water
+  C.4  O.4  320.0    1.410     Amber: CT-OS  320.0    1.410       JCC,7,(1986),230; NUCLEIC ACIDS
+  C.3  C.3  469.0    1.400     Amber: CA-CA  469.0    1.400       JCC,7,(1986),230; BENZENE,PHE,TRP,TYR
+  C.3  C.4  317.0    1.510     Amber: CA-CT  317.0    1.510       JCC,7,(1986),230; PHE,TYR
+  C.3  H    367.0    1.080     Amber: CA-HA  367.0    1.080       changed from 340. bsd on C6H6 nmodes; PHE,TRP,TYR
+  C.3  O.4  450.0    1.364     Amber: CA-OH  450.0    1.364       substituted for C-OH in tyr
+  S.4  S.4  166.0    2.038     Amber: S -S   166.0    2.038       JCC,7,(1986),230; CYX   (SCHERAGA)
+
+<AngleParameters>
+  H   O.4   H   100.  104.52    Amber: HW-OW-HW    100.      104.52    TIP3P water
+  C.3 C.3   C.3  70.  120.0 
+  C.3 C.3   H    50.  120.0 
+
+<Surface>
+S1 3.851 0.105 

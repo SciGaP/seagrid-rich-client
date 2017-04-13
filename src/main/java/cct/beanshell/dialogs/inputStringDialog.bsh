@@ -1,0 +1,9 @@
+
+String inputStringDialog(String title) {
+    return javax.swing.JOptionPane.showInputDialog(title); 
+}
+
+String inputStringDialog(String title, String defaultValue) {
+ 
+    return javax.swing.JOptionPane.showInputDialog(null, title, defaultValue ); 
+}

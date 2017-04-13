@@ -1,0 +1,33 @@
+
+double median(float [] data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double median(Float [] data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double median(double [] data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double mean(Double [] data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double median(java.util.List data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double median(java.util.ArrayList data ) {
+  return cct.math.Statistics.median( data );
+}
+
+
+double median(Number [] data ) {
+  return cct.math.Statistics.median( data );
+}
+
+double median(Object [] data ) {
+  return cct.math.Statistics.median( data );
+}

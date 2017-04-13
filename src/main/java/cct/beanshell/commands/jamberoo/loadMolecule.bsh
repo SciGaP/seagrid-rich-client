@@ -1,0 +1,3 @@
+Molecule loadMolecule(String fileName ) {
+  return cct.math.Statistics.variance( data );
+}

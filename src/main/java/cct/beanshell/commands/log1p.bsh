@@ -1,0 +1,40 @@
+
+double log1p(double value) {
+  return Math.log1p(value);
+}
+
+double log1p(Double value) {
+  return Math.log1p(value);
+}
+
+double log1p(float value) {
+  return Math.log1p(value);
+}
+
+double log1p(Float value) {
+  return Math.log1p(value);
+}
+
+double log1p(Number value) {
+  return Math.log1p( ((Number)value).doubleValue() );
+}
+
+double log1p(int value) {
+  return Math.log1p((double)value);
+}
+
+double log1p(long value) {
+  return Math.log1p((double)value);
+}
+
+double log1p(Integer value) {
+  return Math.log1p(value.doubleValue());
+}
+
+double log1p(Long value) {
+  return Math.log1p(value.doubleValue());
+}
+
+double log1p(String value) {
+  return Math.log1p(Double.parseDouble(value.trim() ) );
+}

@@ -1,0 +1,11 @@
+[PropertyInfo]
+gridBagLayout1,java.awt.GridBagLayout,false,false, , ,false,<default>
+JQuickSelectionPanel1,SwingDialogs.JQuickSelectionPanel,false,false, , ,false,<default>
+JSelectionRulePanel1,SwingDialogs.JSelectionRulePanel,false,false, , ,false,<default>
+JSelectionTypePanel1,SwingDialogs.JSelectionTypePanel,false,false, , ,false,<default>
+JSpecialSelectionPanel1,SwingDialogs.JSpecialSelectionPanel,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

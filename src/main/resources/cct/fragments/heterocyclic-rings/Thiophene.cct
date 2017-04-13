@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Thiophene" atoms="9" bonds="9">
+<monomers number="1">
+Thiophene
+</monomers>
+<atoms number="9">
+6,C,0.54509825,-1.2593888,3.5222223E-5,0
+6,C,-0.6882048,-0.72249675,-5.1777777E-5,0
+6,C,-0.6882048,0.7224962,4.4222223E-5,0
+6,C,0.54509723,1.2593893,-1.5777778E-5,0
+16,S,1.8163333,2.3841858E-7,-5.777778E-6,0
+1,H,0.81824523,-2.2906647,5.122222E-5,0
+1,H,-1.5833027,-1.3104697,-7.377778E-5,0
+1,H,-1.5833039,1.3104682,4.822222E-5,0
+1,H,0.81824225,2.2906663,-3.1777778E-5,0
+</atoms>
+<bonds number="9">
+0,1
+0,4
+0,5
+1,2
+1,6
+2,3
+2,7
+3,4
+3,8
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-551.19653"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.408406 -0.151214 -0.151215 -0.408405 0.123588 0.252947 0.244880 0.244880 0.252947 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="1.3273"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.3
+C.3
+C.3
+C.3
+S.4
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.43
+0.43
+0.52
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

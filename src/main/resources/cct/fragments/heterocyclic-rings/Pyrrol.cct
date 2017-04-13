@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Pyrrol" atoms="10" bonds="10">
+<monomers number="1">
+Pyrrol
+</monomers>
+<atoms number="10">
+6,C,0.35148862,1.1218652,2.34E-5,0
+6,C,-0.95228344,0.7153012,-9.260001E-5,0
+6,C,-0.9523874,-0.71516377,1.174E-4,0
+6,C,0.3513266,-1.1219158,-1.10600005E-4,0
+7,N,1.1431506,-8.278814E-5,4.8399997E-5,0
+1,H,2.1331096,-1.5378813E-4,6.74E-5,0
+1,H,0.77243155,2.102003,5.0399998E-5,0
+1,H,-1.8093854,1.3524942,-1.376E-4,0
+1,H,-1.8095804,-1.3522338,2.024E-4,0
+1,H,0.7721296,-2.1021137,-1.686E-4,0
+</atoms>
+<bonds number="10">
+0,1
+0,4
+0,6
+1,2
+1,7
+2,3
+2,8
+3,4
+3,9
+4,5
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-208.73828"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.187217 -0.186329 -0.186328 -0.187217 -0.677655 0.450875 0.247523 0.239412 0.239412 0.247523 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="1.8948"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.3
+C.3
+C.3
+C.3
+N.3
+H
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.43
+0.43
+0.4
+0.275
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

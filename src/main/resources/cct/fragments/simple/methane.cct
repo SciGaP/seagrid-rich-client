@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Methane" atoms="5" bonds="4">
+<monomers number="1">
+Methane
+</monomers>
+<atoms number="5">
+6,C,0.0,0.0,0.0,0
+1,H,1.07,0.0,0.0,0
+1,H,-0.35666633,1.0088059,0.0,0
+1,H,-0.35666633,-0.50440323,-0.87365127,0
+1,H,-0.35666704,-0.50440276,0.87365127,0
+</atoms>
+<bonds number="4">
+0,1
+0,2
+0,3
+0,4
+</bonds>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+</property>
+<property id="Pickability" type="atom" class="Boolean" format="all">
+false
+true
+false
+false
+false
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.4
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

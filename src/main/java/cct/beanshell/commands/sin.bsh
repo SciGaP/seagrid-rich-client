@@ -1,0 +1,40 @@
+
+double sin(double value) {
+  return Math.sin(value);
+}
+
+double sin(Double value) {
+  return Math.sin(value);
+}
+
+double sin(float value) {
+  return Math.sin(value);
+}
+
+double sin(Float value) {
+  return Math.sin(value);
+}
+
+double sin(Number value) {
+  return Math.sin(((Number)value).doubleValue());
+}
+
+double sin(int value) {
+  return Math.sin((double)value);
+}
+
+double sin(long value) {
+  return Math.sin((double)value);
+}
+
+double sin(Integer value) {
+  return Math.sin(value.doubleValue());
+}
+
+double sin(Long value) {
+  return Math.sin(value.doubleValue());
+}
+
+double sin(String value) {
+  return Math.sin(Double.parseDouble(value.trim() ) );
+}

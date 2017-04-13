@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Propane" atoms="11" bonds="10">
+<monomers number="1">
+Propane
+</monomers>
+<atoms number="11">
+6,C,1.2745571,-0.23046127,1.8423253E-7,0
+6,C,1.300465E-7,0.6177467,1.8423253E-7,0
+1,H,1.300465E-7,1.2691838,0.8698122,0
+1,H,2.1636462,0.39150974,-7.815767E-6,0
+1,H,1.3164631,-0.8695473,0.8766762,0
+1,H,1.3164551,-0.8695583,-0.8766688,0
+6,C,-1.2745569,-0.23046127,1.8423253E-7,0
+1,H,1.300465E-7,1.2691838,-0.86981183,0
+1,H,-2.1636457,0.39150974,5.1842326E-6,0
+1,H,-1.3164619,-0.8695483,-0.87667584,0
+1,H,-1.3164569,-0.8695573,0.8766702,0
+</atoms>
+<bonds number="10">
+0,1
+0,3
+0,4
+0,5
+1,2
+1,6
+1,7
+6,8
+6,9
+6,10
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-118.217384"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.565392 -0.323862 0.185375 0.180776 0.180587 0.180586 -0.565393 0.185375 0.180776 0.180587 0.180586 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="0.0792"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.4
+C.4
+H
+H
+H
+H
+C.4
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.275
+0.275
+0.275
+0.275
+0.43
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

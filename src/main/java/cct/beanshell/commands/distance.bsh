@@ -1,0 +1,24 @@
+
+double distance(cct.vecmath.Point3f p1, cct.vecmath.Point3f p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}
+
+double distance(float [] p1, float [] p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}
+
+double distance(Float [] p1, Float [] p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}
+
+double distance(double [] p1, double [] p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}
+
+double distance(Double [] p1, Double [] p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}
+
+double distance(Number [] p1, Number [] p2) {
+  return cct.vecmath.Point3f.distance( p1, p2 );
+}

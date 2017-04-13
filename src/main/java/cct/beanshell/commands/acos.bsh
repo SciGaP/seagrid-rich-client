@@ -1,0 +1,40 @@
+
+double acos(double value) {
+  return Math.acos(value);
+}
+
+double acos(Double value) {
+  return Math.acos(value);
+}
+
+double acos(float value) {
+  return Math.acos(value);
+}
+
+double acos(Float value) {
+  return Math.acos(value);
+}
+
+double acos(Number value) {
+  return Math.acos(((Number)value).doubleValue());
+}
+
+double acos(int value) {
+  return Math.acos((double)value);
+}
+
+double acos(long value) {
+  return Math.acos((double)value);
+}
+
+double acos(Integer value) {
+  return Math.acos(value.doubleValue());
+}
+
+double acos(Long value) {
+  return Math.acos(value.doubleValue());
+}
+
+double acos(String value) {
+  return Math.acos(Double.parseDouble(value.trim() ) );
+}

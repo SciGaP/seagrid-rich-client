@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Pyridine" atoms="11" bonds="11">
+<monomers number="1">
+Pyridine
+</monomers>
+<atoms number="11">
+6,6,-1.1483394,-0.9067658,-5.8181804E-6,0
+6,6,-1.1958175,0.48060918,1.0718182E-4,0
+6,6,-2.2439443E-5,1.1865492,-9.9818186E-5,0
+6,6,1.1958286,0.4805832,5.1818197E-6,0
+6,6,1.1483746,-0.9067238,9.5181815E-5,0
+7,7,-1.0439442E-5,-1.5848758,-1.1181818E-4,0
+1,1,-2.0436814,-1.4937818,-1.1818181E-5,0
+1,1,-2.1397233,0.98918724,7.2181814E-5,0
+1,1,1.5560558E-5,2.2597811,-1.2781817E-4,0
+1,1,2.1396987,0.9892322,-8.8181805E-6,0
+1,1,2.0436776,-1.4937948,8.618182E-5,0
+</atoms>
+<bonds number="11">
+0,1
+0,5
+0,6
+1,2
+1,7
+2,3
+2,8
+3,4
+3,9
+4,5
+4,10
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-246.60086"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.296229 0.044330 -0.436431 0.044369 -0.296324 -0.260432 0.229385 0.248410 0.245120 0.248411 0.229392 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="2.7059"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.3
+C.3
+C.3
+C.3
+C.3
+N.2
+H
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.43
+0.43
+0.43
+0.4
+0.275
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

@@ -1,0 +1,4 @@
+
+println(Object obj) {
+  System.out.println(obj.toString());
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Vynyl" atoms="6" bonds="5">
+<monomers number="1">
+Vynyl
+</monomers>
+<atoms number="6">
+6,C,0.0,0.662804,0.0,0
+6,C,0.0,-0.662804,0.0,0
+1,H,-0.911613,1.230637,0.0,0
+1,H,0.911613,1.230636,0.0,0
+1,H,0.911613,-1.230637,0.0,0
+1,H,-0.911613,-1.230636,0.0,0
+</atoms>
+<bonds number="5">
+0,1
+0,2
+0,3
+1,4
+1,5
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-78.0085"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.366995 -0.366995 0.183498 0.183498 0.183498 0.183498 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="0.0"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.3
+C.3
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.43
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

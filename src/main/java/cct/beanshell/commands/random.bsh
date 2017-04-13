@@ -1,0 +1,4 @@
+
+double random() {
+  return Math.random();
+}

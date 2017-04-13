@@ -1,0 +1,40 @@
+
+double ceil(double value) {
+  return Math.ceil(value);
+}
+
+double ceil(Double value) {
+  return Math.ceil(value);
+}
+
+double ceil(float value) {
+  return Math.ceil(value);
+}
+
+double ceil(Float value) {
+  return Math.ceil(value);
+}
+
+double ceil(Number value) {
+  return Math.ceil(((Number)value).doubleValue());
+}
+
+double ceil(int value) {
+  return Math.ceil((double)value);
+}
+
+double ceil(long value) {
+  return Math.ceil((double)value);
+}
+
+double ceil(Integer value) {
+  return Math.ceil(value.doubleValue());
+}
+
+double ceil(Long value) {
+  return Math.ceil(value.doubleValue());
+}
+
+double ceil(String value) {
+  return Math.ceil(Double.parseDouble(value.trim() ) );
+}

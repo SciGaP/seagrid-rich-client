@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Unnamed Molecule" atoms="16" bonds="16">
+<monomers number="1">
+null
+</monomers>
+<atoms number="16">
+6,6,-2.733142,0.18061945,6.750547E-5,0
+8,8,-1.671039,-0.7757206,-1.14494535E-4,0
+6,6,-0.35202104,-0.3924346,-1.0349453E-4,0
+6,6,0.06872397,0.9294634,-9.0494534E-5,0
+6,6,1.433599,1.2121574,-1.6494532E-5,0
+6,6,2.368535,0.19051844,-4.4945323E-6,0
+6,6,1.931311,-1.1333976,1.7505468E-5,0
+6,6,0.579866,-1.4266266,-1.749453E-5,0
+1,1,-3.639614,-0.39987457,1.6850547E-4,0
+1,1,-2.695878,0.80051243,-0.8866345,0
+1,1,-2.695635,0.8004474,0.88680446,0
+1,1,-0.63745207,1.7348784,-1.1149453E-4,0
+1,1,1.755532,2.2362075,1.505468E-6,0
+1,1,3.417578,0.4144544,1.050547E-5,0
+1,1,2.646064,-1.9340686,2.9505469E-5,0
+1,1,0.22357197,-2.4371364,-6.494533E-6,0
+</atoms>
+<bonds number="16">
+0,1
+0,8
+0,9
+0,10
+1,2
+2,3
+2,7
+3,4
+3,11
+4,5
+4,12
+5,6
+5,13
+6,7
+6,14
+7,15
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-344.45987"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.219926 -0.541216 -0.370290 0.334343 -0.428406 -0.210307 -0.256375 -0.063487 0.203036 0.182536 0.182538 0.235830 0.232133 0.232722 0.234344 0.252526 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="1.705"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+C.4
+O.4
+C.3
+C.3
+C.3
+C.3
+C.3
+C.3
+H
+H
+H
+H
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.43
+0.33
+0.43
+0.43
+0.43
+0.43
+0.43
+0.43
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

@@ -1,0 +1,40 @@
+
+double sqrt(double value) {
+  return Math.sqrt(value);
+}
+
+double sqrt(Double value) {
+  return Math.sqrt(value);
+}
+
+double sqrt(float value) {
+  return Math.sqrt(value);
+}
+
+double sqrt(Float value) {
+  return Math.sqrt(value);
+}
+
+double sqrt(Number value) {
+  return Math.sqrt(((Number)value).doubleValue());
+}
+
+double sqrt(int value) {
+  return Math.sqrt((double)value);
+}
+
+double sqrt(long value) {
+  return Math.sqrt((double)value);
+}
+
+double sqrt(Integer value) {
+  return Math.sqrt(value.doubleValue());
+}
+
+double sqrt(Long value) {
+  return Math.sqrt(value.doubleValue());
+}
+
+double sqrt(String value) {
+  return Math.sqrt(Double.parseDouble(value.trim() ) );
+}

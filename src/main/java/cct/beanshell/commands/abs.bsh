@@ -1,0 +1,45 @@
+
+double abs(double value) {
+  return Math.abs(value);
+}
+
+double abs(Double value) {
+  return Math.abs(value);
+}
+
+double abs(float value) {
+  return Math.abs(value);
+}
+
+double abs(Float value) {
+  return Math.abs(value);
+}
+
+double abs(Number value) {
+  if ( value instanceof Integer ) 
+    return Math.abs( (Integer)value) );
+  if ( value instanceof Long )  
+    return Math.abs( (Long)value );
+
+  return Math.abs(((Number)value).doubleValue());
+}
+
+double abs(int value) {
+  return Math.abs(value);
+}
+
+double abs(long value) {
+  return Math.abs(value);
+}
+
+double abs(Integer value) {
+  return Math.abs(value);
+}
+
+double abs(Long value) {
+  return Math.abs(value);
+}
+
+double abs(String value) {
+  return Math.abs(Double.parseDouble(value.trim() ) );
+}

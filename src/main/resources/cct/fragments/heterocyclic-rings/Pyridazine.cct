@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Pyridazine" atoms="10" bonds="10">
+<monomers number="1">
+Pyridazine
+</monomers>
+<atoms number="10">
+7,N,1.5771432,-0.6620445,0.0,0
+6,C,0.4300831,-1.3273004,0.0,0
+6,C,-0.8080959,-0.68829054,0.0,0
+6,C,-0.8080959,0.68829244,0.0,0
+6,C,0.4300831,1.3273005,0.0,0
+7,N,1.577142,0.6620405,0.0,0
+1,H,-1.716804,-1.2561255,0.0,0
+1,H,0.51767313,-2.3923175,0.0,0
+1,H,-1.7168028,1.2561285,0.0,0
+1,H,0.5176741,2.3923166,0.0,0
+</atoms>
+<bonds number="10">
+0,1
+0,5
+1,2
+1,7
+2,3
+2,6
+3,4
+3,8
+4,5
+4,9
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-262.53186"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.119629 -0.394764 -0.005096 -0.005097 -0.394764 -0.119631 0.265527 0.253963 0.265527 0.253963 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="5.062"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+N.2
+C.3
+C.3
+C.3
+C.3
+N.2
+H
+H
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.4
+0.43
+0.43
+0.43
+0.43
+0.4
+0.275
+0.275
+0.275
+0.275
+</property>
+</molecule>
+</cct>

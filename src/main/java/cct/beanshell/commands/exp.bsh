@@ -1,0 +1,40 @@
+
+double exp(double value) {
+  return Math.exp(value);
+}
+
+double exp(Double value) {
+  return Math.exp(value);
+}
+
+double exp(float value) {
+  return Math.exp(value);
+}
+
+double exp(Float value) {
+  return Math.exp(value);
+}
+
+double exp(Number value) {
+  return Math.exp( ((Number)value).doubleValue() );
+}
+
+double exp(int value) {
+  return Math.exp((double)value);
+}
+
+double exp(long value) {
+  return Math.exp((double)value);
+}
+
+double exp(Integer value) {
+  return Math.exp(value.doubleValue());
+}
+
+double exp(Long value) {
+  return Math.exp(value.doubleValue());
+}
+
+double exp(String value) {
+  return Math.exp(Double.parseDouble(value.trim() ) );
+}

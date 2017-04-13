@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cct version="0.1">
+<molecule name="Unnamed Molecule" atoms="9" bonds="8">
+<monomers number="1">
+GLY
+</monomers>
+<atoms number="9">
+7,N,1.2522054,0.090014905,0.0,0
+1,H,1.4517283,-0.8805211,0.0,0
+6,CA,-0.10629255,0.5334629,0.0,0
+6,C,-1.0626845,-0.6204721,0.0,0
+1,HA1,-0.34798056,1.1440579,0.871083,0
+1,HA2,-0.34798056,1.1440579,-0.871083,0
+8,O,-0.72424453,-1.7860571,0.0,0
+1,HC,-2.1155875,-0.3601011,0.0,0
+1,HN,2.0008366,0.7355579,0.0,0
+</atoms>
+<bonds number="8">
+0,1
+0,2
+0,8
+2,3
+2,4
+2,5
+3,6
+3,7
+</bonds>
+<property id="Charge" type="molecule" class="Integer" value="0"/>
+<property id="SCF Energy" type="molecule" class="Float" value="-207.84595"/>
+<property id="S**2" type="molecule" class="Float" value="0.0"/>
+<property id="Mulliken charges" type="molecule" class="String" value="-0.977354 0.431366 -0.291144 0.359635 0.203812 0.203812 -0.518370 0.182396 0.405847 "/>
+<property id="Multiplicity" type="molecule" class="Integer" value="1"/>
+<property id="Dipole" type="molecule" class="Float" value="3.4109"/>
+<property id="Visible" type="atom" class="Boolean" format="all">
+true
+true
+true
+true
+true
+true
+true
+true
+true
+</property>
+<property id="RGBColor" type="atom" class="Integer[]" format="indexed">
+7,102,255,102
+8,102,255,102
+</property>
+<property id="Pickability" type="atom" class="Boolean" format="indexed">
+7,true
+8,true
+</property>
+<property id="CCTAtomType" type="atom" class="String" format="all">
+N.3
+H
+C.4
+C.3
+H
+H
+O.2
+H
+H
+</property>
+<property id="RenderingStyle" type="atom" class="Integer" format="all">
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</property>
+<property id="GRadius" type="atom" class="Float" format="all">
+0.4
+0.275
+0.43
+0.43
+0.275
+0.275
+0.33
+0.275
+0.275
+</property>
+</molecule>
+</cct>

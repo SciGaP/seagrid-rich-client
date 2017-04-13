@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+		<meta name="generator" content="Adobe GoLive">
+		<title>Chemistryl Grid Portal</title>
+	</head>
+
+	<body bgcolor="#6666ff" text="black" link="#ff66cc">
+		<div align="center">
+			<h1>Chemistry Grid Project</h1>
+			<hr>
+			<h1><img src="Portal.gif" alt="" height="364" width="500" border="0"></h1>
+			<hr>
+		</div>
+		<div align="left">
+			<p><font size="+1">This site reflects a progress in developing a Java Molecular Viewer which will provide an interface between a user and Chemistry Grid.</font></p>
+			<p><img src="newball.gif" alt="" height="33" width="35" border="0"> <font size="+1"><a href="amber/index.html">Amber Tools </a></font></p>
+			<p><img src="newball.gif" alt="" height="33" width="35" border="0"><font size="+1"> <a href="database_dialog/index.html">Interaction with Chemistry Database</a></font></p>
+			<p><img src="newball.gif" alt="" height="33" width="35" border="0"> <font size="+1">Builder can now parse Gaussian output files.</font></p>
+			<p><img src="newball.gif" alt="" height="33" width="35" border="0"><font color="#ff3300"> </font><font size="+1" color="#99ffff">Selection, Add Atoms</font><font size="+1" color="#ff3300"> </font><font size="+1">and </font><font size="+1" color="#66ffff">Delete Atoms</font><font size="+1"> Dialogs are added</font></p>
+			<p></p>
+			<p><font size="+1">Slide show of internal ANUSF presentation is <a href="Presentation-1/index.html">here</a>.</font></p>
+			<p><font size="+1">Before starting a viewer </font></p>
+		</div>
+		<ul>
+			<div align="left">
+				<li><font size="+1">Be sure that you have the latest Java runtime environment installed (<a href="http://java.sun.com/j2se/1.5.0/download.jsp">j2se 5.0</a>). Mac users should download and install j2se 5.0 from the Apple web-site  (<a href="http://www.apple.com/support/downloads/java2se50release1.html">http://www.apple.com/support/downloads/java2se50release1.html</a>)</font>
+				<li><font size="+1">Download and install  Java3d from <a href="http://java.sun.com/products/java-media/3D/">http://java.sun.com/products/java-media/3D/</a> for your platform. Mac users already have it.</font>
+			</div>
+		</ul>
+		<div align="left">
+			<p><font size="+1">It's possible to use a Molecular builder either like a standalone program or like an applet in web browser.</font></p>
+			<ul>
+				<li>
+					<h3><font size="+1"><strong>Standalone program</strong> </font></h3>
+				
+			</ul>
+		</div>
+		<ol>
+			<div align="left">
+				<li><font size="+1">Download a program as a JAR file <a href="downloads/mb.jar">here</a>.</font>
+				<li><font size="+1">To run it issue a command &quot;java -jar mb.jar&quot; in command prompt or double click in Windows Exlorer (MS Windows)</font>
+			</div>
+		</ol>
+		<ul>
+			<div align="left">
+				<li>
+					<h3><font size="+1"><strong>Applet</strong></font></h3>
+				
+			</div>
+		</ul>
+		<p><font size="+1">Molecular Viewer is a Java Applet and by default  it is not permitted to read/write from the local hard drive. To allow an applet to access your hard drive you need under the MS Windows</font></p>
+		<ul>
+			<li><font size="+1">To find a file </font><font size="+1" color="yellow">java.policy</font><font size="+1"> in your Java installation directory (usually, c:\program\files\java\j2re1.4.2_06\lib\security). This file controls the privileges given to a trusted applet;</font>
+			<li><font size="+1">Edit this file and add the following lines at the end:</font>
+		</ul>
+		<p><font size="+1" color="#33ff33">grant codeBase &quot;http://anusf.anu.edu.au/~vvv900/-&quot; {</font></p>
+		<p><font size="+1" color="#33ff33">        permission java.io.FilePermission &quot;X:\\Data\\-&quot;, &quot;read,write&quot;;</font></p>
+		<p><font size="+1" color="#33ff33">};</font></p>
+		<p><font size="+1">The above means that an applet originated from the URL http://anusf.anu.edu.au/~vvv900 is entitled to the permission to read/write to a file residing in <i>X:\Data\ </i>or any subdirectory of <i>X:\Data\</i> (which is the meaning of the hyphen). In this example, the local file system is a MS Windows one. The path name must be written with double backslashes (&quot;\\&quot;) to mean a single backslash (the first backslash is an escape character).</font></p>
+		<p><font size="+1">Now you can start a <a href="JavaViewer/index.html">viewer</a>.</font></p>
+		<p><font size="+1">If everything is fine you shall see a new window:</font></p>
+		<div align="center">
+			<p><font size="+1"><img src="View-main-window.gif" alt="" height="434" width="533" border="0"></font></p>
+		</div>
+		<p><font size="+1">The Molecular Builder commands are grouped in several main functional categories listed in the menubar across the top of the screen </font></p>
+		<p><font size="+1">Please, keep in mind that viewer is at the development stage, so not all menu items will work. To load a new molecule use &quot;File&quot; -&gt; &quot;Open As&quot; menu item:</font></p>
+		<div align="center">
+			<p><font size="+1"><img src="Save_As.gif" alt="" height="450" width="558" border="0"></font></p>
+		</div>
+		<p><font size="+1">Now viewer can read files only in the Tripos </font><font size="+1" color="yellow">mol2</font><font size="+1"> and Gaussian </font><font size="+1" color="yellow">gjf</font><font size="+1">  formats.</font></p>
+		<p><font size="+1">Invoking an &quot;Open File&quot; dialog </font></p>
+		<div align="center">
+			<p><font size="+1"><img src="Open-file-dialog.gif" alt="" height="419" width="563" border="0"></font></p>
+		</div>
+		<p><font size="+1">you can select a file and click &quot;Open&quot; button. A viewer will parse a file and show a molecule</font></p>
+		<div align="center">
+			<p><font size="+1"><img src="Molecule-in-window.gif" alt="" height="512" width="626" border="0"></font></p>
+		</div>
+		<p><font size="+1">All manipulations with molecular structures are accomplished by pressing mouse button and then moving the mouse. It is strongly advisable to use a three button mouse.</font></p>
+		<h3><font size="+1">Rotation</font></h3>
+		<p><font size="+1">Hold down the <b>left</b> mouse button and then move the mouse</font></p>
+		<h3><font size="+1">Translation</font></h3>
+		<p><font size="+1">Hold down the <b>right</b> mouse button and then move the mouse</font></p>
+		<h3><font size="+1">Scaling (Zooming)</font></h3>
+		<p><font size="+1">Hold down the <b>middle</b> mouse button and then move the mouse</font></p>
+		<hr>
+		<h1>Edit Menu</h1>
+		<ul>
+			<h2>
+				<li><a href="delete_atoms_dialog/index.html">Delete Atoms</a>
+				<li><a href="add_atoms_dialog/index.html">Add Atoms</a>
+				<li><a href="database_dialog/index.html">Database
+			</a></h2>
+			<h2>
+				
+			</h2>
+		</ul>
+		<h1>View Menu</h1>
+		<ul>
+			<h2>
+				<li><a href="display_atoms_dialog/index.html">Display Atoms
+			</a></h2>
+			<h2>
+				<li><a href="undisplay_atoms_dialog/index.html">Undisplay Atoms
+			</a></h2>
+		</ul>
+		<h1>General Naming Conventions and Operations</h1>
+		<ul>
+			<h2>
+				<li><a href="selection_dialog/index.html">Selection</a>
+			</h2>
+		</ul>
+		<hr>
+		<p><font size="+1">Send all questions and comments to Vlad (vvv900@sf.anu.edu.au)</font></p>
+		<p><font size="+1">Best wishes,</font></p>
+		<p><font size="+1">Dr. Vladislav Vasilyev</font></p>
+		<p><font size="+1">Supercomputer Facility, ANU,</font></p>
+		<p><font size="+1">Canberra</font></p>
+	</body>
+
+</html>
