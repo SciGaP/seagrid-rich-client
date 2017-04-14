@@ -238,66 +238,66 @@ public class AtomGeometry {
   // --- icons
 
   public static ImageIcon ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/emptyTransparent.png"));
+      "/cct/images/icons48x48/emptyTransparent.png"));
   static ImageIcon TERMINAL_SINGLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/terminal_single_atom.png"));
+      "/cct/images/icons48x48/terminal_single_atom.png"));
 
   static ImageIcon TERMINAL_DOUBLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/terminal_double_atom.png"));
+      "/cct/images/icons48x48/terminal_double_atom.png"));
 
   static ImageIcon TERMINAL_TRIPLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/terminal_triple_atom.png"));
+      "/cct/images/icons48x48/terminal_triple_atom.png"));
 
   static ImageIcon LINEAR_SINGLE_SINGLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/linear_single_single_atom.png"));
+      "/cct/images/icons48x48/linear_single_single_atom.png"));
 
   static ImageIcon LINEAR_SINGLE_TRIPLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/linear_single_triple_atom.png"));
+      "/cct/images/icons48x48/linear_single_triple_atom.png"));
 
   static ImageIcon LINEAR_DOUBLE_DOUBLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/linear_double_double_atom.png"));
+      "/cct/images/icons48x48/linear_double_double_atom.png"));
 
   static ImageIcon BENDED_SINGLE_DOUBLE_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/bended_single_double_atom.png"));
+      "/cct/images/icons48x48/bended_single_double_atom.png"));
 
   static ImageIcon TRIGONAL_PLANAR_SSS_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/trigonal-3.png"));
+      "/cct/images/icons48x48/trigonal-3.png"));
 
   static ImageIcon TRIGONAL_PLANAR_DSS_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/trigonal_planar_dss_atom.png"));
+      "/cct/images/icons48x48/trigonal_planar_dss_atom.png"));
 
   static ImageIcon TRIGONAL_PLANAR_SAA_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/trigonal_planar_saa_atom.png"));
+      "/cct/images/icons48x48/trigonal_planar_saa_atom.png"));
 
   static ImageIcon TRIGONAL_BIPYRAMID_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/trigonal_bipyramid_atom.png"));
+      "/cct/images/icons48x48/trigonal_bipyramid_atom.png"));
 
   static ImageIcon T_SHAPED_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/t_shaped_atom.png"));
+      "/cct/images/icons48x48/t_shaped_atom.png"));
 
   static ImageIcon SQUARE_PLANAR_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/square_planar_atom.png"));
+      "/cct/images/icons48x48/square_planar_atom.png"));
 
   static ImageIcon SEESAW_SHAPED_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/seesaw_shaped_atom.png"));
+      "/cct/images/icons48x48/seesaw_shaped_atom.png"));
 
   static ImageIcon OCTAHEDRAL_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/octahedral_atom.png"));
+      "/cct/images/icons48x48/octahedral_atom.png"));
 
   static ImageIcon TETRAHEDRAL_SSSS_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-4.png"));
+      "/cct/images/icons48x48/tetrahedral-4.png"));
 
   static ImageIcon TETRAHEDRAL_SSS_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-3.png"));
+      "/cct/images/icons48x48/tetrahedral-3.png"));
 
   static ImageIcon TETRAHEDRAL_SS_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-2.png"));
+      "/cct/images/icons48x48/tetrahedral-2.png"));
 
   static ImageIcon TETRAHEDRAL_SSSD_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral_sssd_atom.png"));
+      "/cct/images/icons48x48/tetrahedral_sssd_atom.png"));
 
   static ImageIcon TETRAHEDRAL_SSDD_ATOM_ICON = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral_ssdd_atom.png"));
+      "/cct/images/icons48x48/tetrahedral_ssdd_atom.png"));
 
   static Map<String, AtomGeometry> atomTypes = new LinkedHashMap<String, AtomGeometry> ();
 

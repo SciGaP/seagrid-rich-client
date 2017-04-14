@@ -37,43 +37,21 @@
 
 package cct.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import cct.interfaces.MoleculeInterface;
+import cct.j3d.Java3dUniverse;
+import cct.tools.FragmentDictionaryParser;
+
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
-import javax.swing.WindowConstants;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
-import cct.interfaces.MoleculeInterface;
-import cct.j3d.Java3dUniverse;
-import cct.tools.FragmentDictionaryParser;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -90,9 +68,9 @@ import cct.tools.FragmentDictionaryParser;
 public class JAddFragmentDialog
     extends JFrame {
 
-  private static ImageIcon saveFile = new ImageIcon(cct.resources.Resources.class.getResource("cct/images/icons16x16/saveFile.png"));
+  private static ImageIcon saveFile = new ImageIcon(cct.resources.Resources.class.getResource("/cct/images/icons16x16/saveFile.png"));
   private static ImageIcon addNewFragment = new ImageIcon(cct.resources.Resources.class.getResource(
-          "cct/images/icons16x16/add-fragment.png"));
+          "/cct/images/icons16x16/add-fragment.png"));
   public static final String CUSTOM_DICTIONARY_NAME = "Custom";
 
   Java3dUniverse java3d = null;

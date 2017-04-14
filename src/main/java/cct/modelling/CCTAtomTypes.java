@@ -98,18 +98,18 @@ public class CCTAtomTypes
   private static Map elementMapping = new LinkedHashMap();
 
   static ImageIcon emptyIcon = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/emptyTransparent.png"));
+      "/cct/images/icons48x48/emptyTransparent.png"));
   static ImageIcon tetrahedral_4_Icon = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-4.png"));
+      "/cct/images/icons48x48/tetrahedral-4.png"));
 
   static ImageIcon tetrahedral_3_Icon = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-3.png"));
+      "/cct/images/icons48x48/tetrahedral-3.png"));
 
   static ImageIcon tetrahedral_2_Icon = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/tetrahedral-2.png"));
+      "/cct/images/icons48x48/tetrahedral-2.png"));
 
   static ImageIcon trigonal_3_Icon = new ImageIcon(ImageResources.class.getResource(
-      "icons48x48/trigonal-3.png"));
+      "/cct/images/icons48x48/trigonal-3.png"));
 
   static {
     atomProperties.add(BASE_ELEMENT_KEY);

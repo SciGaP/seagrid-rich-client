@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<fragmentDictionary name="Solvents">
-	<fragmentDictionary name="Equilibrated Solvents">
-		<fragment name="Water" url="equilibrated/water.cct" />
-		<fragment name="Methanol" url="equilibrated/methanol.cct" />
-		<fragment name="N-methyl amide" url="equilibrated/N-methyl_amide.cct" />
-	</fragmentDictionary>
-</fragmentDictionary>

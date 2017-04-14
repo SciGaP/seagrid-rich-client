@@ -79,7 +79,7 @@ public class JamberooMolecularEditor implements ActionListener {
   private static String Build = "0703";
   private boolean packFrame = false;
   private ImageIcon icon = null;
-  private List<JamberooFrame> windows = new ArrayList<JamberooFrame>();
+  private static List<JamberooFrame> windows = null;
   static final Logger logger = Logger.getLogger(JamberooMolecularEditor.class.getCanonicalName());
   private int Number_of_open_windows = 0;
 
@@ -87,7 +87,6 @@ public class JamberooMolecularEditor implements ActionListener {
    * Construct and show the application.
    */
   public JamberooMolecularEditor(String[] args) {
-
     Logger.getLogger("").setLevel(Level.WARNING);
 
     try {
@@ -214,10 +213,11 @@ public class JamberooMolecularEditor implements ActionListener {
       @Override
       public void windowClosing(WindowEvent we) {
         Window window = we.getWindow();
-        windows.remove(window);
-        window.dispose();
-        if (windows.size() < 1) {
-          System.exit(0);
+        if (windows.size() == 1) {
+            window.setVisible(false);
+        }else {
+            windows.remove(window);
+            window.dispose();
         }
       }
     });
@@ -231,7 +231,7 @@ public class JamberooMolecularEditor implements ActionListener {
    * @param args String[]
    */
   public static void main(String[] args) {
-
+      windows = new ArrayList<>();
     processArguments(args);
     Locale.setDefault(Locale.ENGLISH);
     final String[] Args = args;
@@ -276,4 +276,15 @@ public class JamberooMolecularEditor implements ActionListener {
       frame.setVisible(true);
     }
   }
+
+    public static void showJamberoo() {
+        if(windows == null){
+            main(new String[]{});
+        }else{
+            for(JamberooFrame w : windows){
+                w.setVisible(true);
+            }
+        }
+
+    }
 }

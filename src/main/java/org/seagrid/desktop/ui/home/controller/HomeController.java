@@ -21,6 +21,7 @@
 package org.seagrid.desktop.ui.home.controller;
 
 
+import cct.JamberooMolecularEditor;
 import com.google.common.eventbus.Subscribe;
 import g03input.G03MenuTree;
 import gamess.GamessGUI;
@@ -143,6 +144,9 @@ public class HomeController {
 
     @FXML
     private Button nanocadBtn;
+
+    @FXML
+    private Button jamberooBtn;
 
     @FXML
     private MenuItem aboutMenuItem;
@@ -286,6 +290,14 @@ public class HomeController {
             }
         });
         nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
+        jamberooBtn.setOnAction(event -> {
+            try{
+                JamberooMolecularEditor.showJamberoo();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        });
         g03Btn.setOnAction(event1 -> G03MenuTree.showG03MenuTree());
         gamessBtn.setOnAction(event1 -> GamessGUI.showGamesGUI());
         logoutBtn.setOnAction(event -> {
