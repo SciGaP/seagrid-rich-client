@@ -117,7 +117,7 @@ public class JamberooMolecularEditor implements ActionListener {
       String variable = System.getenv("CLASSPATH");
       logger.info("CLASSPATH=" + variable);
       JOptionPane.showMessageDialog(null, "Cannot load " + ex.getMessage() + "\nEither java3d is not installed or it is not in the CLASSPATH", "Error", JOptionPane.ERROR_MESSAGE);
-      System.exit(1);
+//      System.exit(1);
     }
 
     JFrame.setDefaultLookAndFeelDecorated(false);
@@ -126,7 +126,7 @@ public class JamberooMolecularEditor implements ActionListener {
       frame_class = this.getClass().getClassLoader().loadClass("cct.dialogs.JEditorFrame");
     } catch (Exception ex) {
       logger.severe(ex.getMessage());
-      System.exit(1);
+//      System.exit(1);
     }
 
     //String look = SwingLookAndFeel.retrieveLookAndFeelPrefs(cct.dialogs.JamberooFrame.class);
@@ -250,10 +250,10 @@ public class JamberooMolecularEditor implements ActionListener {
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals("-v")) {
         logger.info(Version + "." + Build);
-        System.exit(0);
+//        System.exit(0);
       } else if (args[i].equals("-V")) {
         logger.info("Version " + Version + " build " + Build);
-        System.exit(0);
+//        System.exit(0);
       }
     }
   }
