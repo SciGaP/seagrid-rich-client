@@ -113,9 +113,12 @@ public class JamberooMolecularEditor implements ActionListener {
       Class.forName("javax.media.j3d.VirtualUniverse");
       //logger.info("JMolEditor: java3d ok...");
     } catch (Exception ex) {
-      logger.severe("Cannot load " + ex.getMessage() + " Either java3d is not installed or it is not in the CLASSPATH");
-      String variable = System.getenv("CLASSPATH");
-      logger.info("CLASSPATH=" + variable);
+      ex.printStackTrace();
+        String variable = System.getenv("CLASSPATH");
+        logger.info("CLASSPATH=" + variable);
+        System.out.println("CLASSPATH=" + variable);
+        logger.severe("Cannot load " + ex.getMessage() + " Either java3d is not installed or it is not in the CLASSPATH");
+
       JOptionPane.showMessageDialog(null, "Cannot load " + ex.getMessage() + "\nEither java3d is not installed or it is not in the CLASSPATH", "Error", JOptionPane.ERROR_MESSAGE);
 //      System.exit(1);
     }
