@@ -294,130 +294,94 @@
 
         <!-- Jamberoo dependencies -->
         <dependency>
-            <groupId>bsh-2.0b4</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>bsh-2.0b4</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/bsh-2.0b4.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>cct-globus</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>cct-globus</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/cct-globus.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>Fragments</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>Fragments</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Fragments.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>gluegen-rt</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>gluegen-rt</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/gluegen-rt.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>gluegen-rt-natives-macosx-universal</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>gluegen-rt-natives-macosx-universal</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/gluegen-rt-natives-macosx-universal.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>j2ssh-common</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>j2ssh-common</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/j2ssh-common.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>j2ssh-core</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>j2ssh-core</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/j2ssh-core.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>Jamberoo-help</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>Jamberoo-help</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Jamberoo-help.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jbzip2-0.9.1</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jbzip2-0.9.1</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jbzip2-0.9.1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jcommon-1.0.12</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jcommon-1.0.12</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jcommon-1.0.12.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jfreechart-1.0.9</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jfreechart-1.0.9</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jfreechart-1.0.9.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jhall</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jhall</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jhall.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jocl-natives-macosx-universal</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jocl-natives-macosx-universal</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jocl-natives-macosx-universal.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jogamp-fat</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jogamp-fat</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jogamp-fat.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jogl-all</groupId>
-            <artifactId>jogamp-all</artifactId>
+            <groupId>jamberoo</groupId>
+            <artifactId>jogl-all</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jogl-all.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>jogl-all-natives-macosx-universal</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>jogl-all-natives-macosx-universal</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jogl-all-natives-macosx-universal.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>mysql-connector-java-5.1.33-bin</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>mysql-connector-java-5.1.33-bin</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/mysql-connector-java-5.1.33-bin.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>Solvents</groupId>
+            <groupId>jamberoo</groupId>
             <artifactId>Solvents</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/Solvents.jar</systemPath>
         </dependency>
     </dependencies>
 
