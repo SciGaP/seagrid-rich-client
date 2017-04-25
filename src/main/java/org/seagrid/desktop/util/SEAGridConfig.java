@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class SEAGridConfig {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
 
-    public static final boolean DEV = false;
+    public static final boolean DEV = true;
 
     public static final String USER_NAME = "user.name";
     public static final String AUTHENTICATED = "authenticated";
@@ -45,9 +45,12 @@ public class SEAGridConfig {
     public static final String DEV_SFTP_PORT = "dev.sftp.port";
     public static final String IDP_URL = "idp.url";
     public static final String IDP_TENANT_ID = "idp.tenant.id";
+    public static final String DEV_IDP_TENANT_ID = "dev.idp.tenant.id";
     public static final String IDP_AUTHORISED_ROLES = "idp.authorised.roles";
     public static final String IDP_OAUTH_CLIENT_ID = "idp.oauth.client.id";
     public static final String IDP_OAUTH_CLIENT_SECRET = "idp.oauth.client.secret";
+    public static final String DEV_IDP_OAUTH_CLIENT_ID = "dev.idp.oauth.client.id";
+    public static final String DEV_IDP_OAUTH_CLIENT_SECRET = "dev.idp.oauth.client.secret";
     public static final String DEFAULT_FILE_DOWNLOAD_PATH = "default.file.download.path";
     public static final java.lang.String GATEWAY_STORAGE_ID = "gateway.storage.resource.id";
     public static final java.lang.String DEV_GATEWAY_STORAGE_ID = "dev.gateway.storage.resource.id";

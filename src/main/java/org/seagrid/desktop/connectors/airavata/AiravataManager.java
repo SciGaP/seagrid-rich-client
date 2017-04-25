@@ -3,6 +3,7 @@ package org.seagrid.desktop.connectors.airavata;
 import org.apache.airavata.api.Airavata;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.appcatalog.userresourceprofile.UserComputeResourcePreference;
 import org.apache.airavata.model.data.replica.DataProductModel;
 import org.apache.airavata.model.data.replica.DataReplicaLocationModel;
 import org.apache.airavata.model.error.*;
@@ -125,7 +126,8 @@ public class AiravataManager {
                     getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
         }catch (Exception ex){
             //FIXME If the user is new getProjects will fail
-            getClient().createProject(getAuthzToken(),getGatewayId(),new Project("", getUserName(), "Default Project"));
+            getClient().createProject(getAuthzToken(),getGatewayId(),new Project("", getUserName(),
+                    SEAGridContext.getInstance().getAiravataGatewayId(), "Default Project"));
             projects = getClient().getUserProjects(
                     getAuthzToken(), getGatewayId(), getUserName(), -1, 0);
         }
@@ -134,7 +136,7 @@ public class AiravataManager {
 
     public synchronized Project createProject(String projectName, String projectDescription) throws TException {
         Project project;
-        project = new Project("no-id", getUserName(), projectName);
+        project = new Project("no-id", getUserName(), SEAGridContext.getInstance().getAiravataGatewayId(), projectName);
         if (projectDescription != null)
             project.setDescription(projectDescription);
         String projectId = getClient().createProject(
@@ -228,8 +230,8 @@ public class AiravataManager {
         getClient().terminateExperiment(getAuthzToken(),experimentId, getGatewayId());
     }
 
-    public synchronized String cloneExperiment(String experimentId, String newExpName) throws TException {
-        return getClient().cloneExperiment(getAuthzToken(), experimentId, newExpName);
+    public synchronized String cloneExperiment(String experimentId, String newExpName, String projectId) throws TException {
+        return getClient().cloneExperiment(getAuthzToken(), experimentId, newExpName, projectId);
     }
 
     public String registerDataProduct(DataProductModel dpModel) throws TException {
@@ -250,5 +252,18 @@ public class AiravataManager {
                     || m.getExpirationTime() == 0).collect(Collectors.toList()));
         }
         return messages;
+    }
+
+    public UserComputeResourcePreference getUserComputeResourcePrefs(String computeResourceId) throws TException {
+        UserComputeResourcePreference userComputeResourcePreference = null;
+        try{
+            userComputeResourcePreference = getClient().getUserComputeResourcePreference(getAuthzToken(),
+                    SEAGridContext.getInstance().getUserName(), SEAGridContext.getInstance().getAiravataGatewayId(),
+                    computeResourceId);
+            return userComputeResourcePreference;
+        }catch (Exception ex) {
+            //User compute resource pref does not exists
+            return null;
+        }
     }
 }

@@ -43,6 +43,7 @@ import org.seagrid.desktop.connectors.wso2is.AuthenticationException;
 import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.UserPrefs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +56,9 @@ public class LoginController {
 
     @FXML
     public Label notificationLabel;
+
+    @FXML
+    public RadioButton rememberMe;
 
     @FXML
     private TextField usernameField;
@@ -94,6 +98,15 @@ public class LoginController {
             handleLogin();});
         usernameField.setOnAction(event->{if(!usernameField.getText().isEmpty() && !passwordField.getText().isEmpty())
             handleLogin();});
+
+        UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
+        if(userPrefs != null){
+            usernameField.setText(userPrefs.getUserName());
+            if(userPrefs.isRememberPassword()){
+                rememberMe.setSelected(true);
+                passwordField.setText(userPrefs.getPassword());
+            }
+        }
 
         dontHaveAccountLink.setOnAction(event -> {
             try {
@@ -180,6 +193,12 @@ public class LoginController {
                 SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
                         + System.currentTimeMillis());
                 Stage stage = (Stage) loginButton.getScene().getWindow();
+
+                UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
+                userPrefs.setUserName(username);
+                userPrefs.setPassword(password);
+                userPrefs.setRememberPassword(rememberMe.isSelected());
+
                 stage.close();
             }else{
                 loginAuthFailed.setText("Authentication Failed !");

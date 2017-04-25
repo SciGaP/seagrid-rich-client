@@ -23,6 +23,7 @@ package org.seagrid.desktop.connectors.storage;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
+import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,7 @@ public class GuiFileDownloadTask extends GuiFileTask {
 
     public Boolean downloadFile(String remoteFilePath, String localFilePath) throws SftpException, IOException {
         remoteFilePath = remoteFilePath.replace("\\","/");
+        remoteFilePath = remoteFilePath.replaceAll(SEAGridContext.getInstance().getUserName(), "");
         InputStream remoteInputStream = new BufferedInputStream(channelSftp.get(remoteFilePath));
         File localFile = new File(localFilePath);
         if(!localFile.getParentFile().exists()){

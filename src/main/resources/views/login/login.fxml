@@ -25,6 +25,11 @@
                 <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <TextField fx:id="usernameField" promptText="Username" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <PasswordField fx:id="passwordField" promptText="Password" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <RadioButton fx:id="rememberMe" alignment="CENTER_LEFT" contentDisplay="LEFT" mnemonicParsing="false" text="Remember Me" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                  <font>
+                    <Font size="10.0" fx:id="x2" />
+                  </font>
+                </RadioButton>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
@@ -33,16 +38,14 @@
               <rowConstraints>
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
             <StackPane prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="NEVER">
               <children>
                 <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="211.0" StackPane.alignment="CENTER_LEFT">
                   <children>
-                    <Hyperlink fx:id="dontHaveAccountLink" text="Don't have account?">
-                      <font>
-                        <Font size="10.0" />
-                      </font>
+                    <Hyperlink fx:id="dontHaveAccountLink" font="$x2" text="Don't have account?">
                       <HBox.margin>
                         <Insets right="5.0" fx:id="x1" />
                       </HBox.margin>

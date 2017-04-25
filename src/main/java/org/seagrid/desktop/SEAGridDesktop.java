@@ -117,6 +117,7 @@ public class SEAGridDesktop extends Application{
             public void run() {
                 outPs.close();
                 errPs.close();
+                SEAGridContext.getInstance().saveUserPrefs();
             }
         });
 

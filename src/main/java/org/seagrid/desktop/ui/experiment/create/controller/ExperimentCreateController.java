@@ -42,6 +42,7 @@ import javafx.util.StringConverter;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.BatchQueue;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
+import org.apache.airavata.model.appcatalog.userresourceprofile.UserComputeResourcePreference;
 import org.apache.airavata.model.application.io.DataType;
 import org.apache.airavata.model.application.io.InputDataObjectType;
 import org.apache.airavata.model.application.io.OutputDataObjectType;
@@ -57,6 +58,7 @@ import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
 import org.seagrid.desktop.ui.commons.ImageButton;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
+import org.seagrid.desktop.util.UserPrefs;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
@@ -134,6 +136,9 @@ public class ExperimentCreateController {
     @FXML
     private Button expSaveLaunchButton;
 
+    @FXML
+    private RadioButton useMyCRAccount;
+
     private FileChooser fileChooser;
 
     private Map<InputDataObjectType, Object> experimentInputs;
@@ -167,6 +172,17 @@ public class ExperimentCreateController {
 
             List<ApplicationInterfaceDescription> applications = AiravataManager.getInstance().getAllApplicationInterfaces();
             expCreateAppField.getItems().setAll(applications);
+
+            UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
+            ApplicationInterfaceDescription lastSelectedApplication = null;
+            if(userPrefs != null && userPrefs.getLastApplicationId() != null){
+                Optional<ApplicationInterfaceDescription> lastApplication = applications.stream()
+                        .filter(application -> application.getApplicationInterfaceId().equals(userPrefs.getLastApplicationId())).findFirst();
+                if(lastApplication.isPresent()){
+                    lastSelectedApplication = lastApplication.get();
+                }
+            }
+
             expCreateAppField.setConverter(new StringConverter<ApplicationInterfaceDescription>() {
                 @Override
                 public String toString(ApplicationInterfaceDescription application) {
@@ -193,7 +209,12 @@ public class ExperimentCreateController {
                             "Failed to load experiment create dialog !");
                 }
             });
-            expCreateAppField.getSelectionModel().selectFirst();
+
+            if(lastSelectedApplication != null){
+                expCreateAppField.getSelectionModel().select(lastSelectedApplication);
+            }else{
+                expCreateAppField.getSelectionModel().selectFirst();
+            }
 
             //Won't allow characters to be entered
             expCreateNodeCountField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -257,6 +278,20 @@ public class ExperimentCreateController {
         expCreateResourceField.getItems().stream().filter(r -> ((ComputeResourceDescription) r).getComputeResourceId()
                 .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getResourceHostId()))
                 .forEach(r -> expCreateResourceField.getSelectionModel().select(r));
+
+        UserComputeResourcePreference userComputeResourcePreference = AiravataManager.getInstance()
+                .getUserComputeResourcePrefs(editExperimentModel.getUserConfigurationData()
+                        .getComputationalResourceScheduling().getResourceHostId());
+
+        if(userComputeResourcePreference != null){
+            useMyCRAccount.setVisible(true);
+            if(editExperimentModel.getUserConfigurationData().isUseUserCRPref()){
+                useMyCRAccount.setSelected(true);
+            }
+        }else{
+            useMyCRAccount.setVisible(false);
+        }
+
         expCreateQueueField.getItems().stream().filter(q -> ((BatchQueue) q).getQueueName()
                 .equals(experimentModel.getUserConfigurationData().getComputationalResourceScheduling().getQueueName()))
                 .forEach(q -> expCreateQueueField.getSelectionModel().select(q));
@@ -369,6 +404,21 @@ public class ExperimentCreateController {
                 }
             });
             expCreateResourceField.valueProperty().addListener((observable, oldValue, newValue) -> {
+                String computeResourceId = ((ComputeResourceDescription)newValue).getComputeResourceId();
+                try{
+                    UserComputeResourcePreference userComputeResourcePreference = AiravataManager.getInstance()
+                            .getUserComputeResourcePrefs(computeResourceId);
+                    if(userComputeResourcePreference != null){
+                        useMyCRAccount.setSelected(true);
+                        useMyCRAccount.setVisible(true);
+                    }else{
+                        useMyCRAccount.setSelected(false);
+                        useMyCRAccount.setVisible(false);
+                    }
+                }catch (Exception ex){
+                    SEAGridDialogHelper.showExceptionDialog(ex, "Failed while retrieving user compute prefs", null, ex.getMessage());
+                }
+
                 loadAvailableBatchQueues();
             });
             expCreateResourceField.getSelectionModel().selectFirst();
@@ -735,6 +785,11 @@ public class ExperimentCreateController {
         experimentModel.setProjectId(((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID());
         experimentModel.setExecutionId(((ApplicationInterfaceDescription)expCreateAppField.getSelectionModel()
                 .getSelectedItem()).getApplicationInterfaceId());
+
+        UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
+        userPrefs.setLastApplicationId(((ApplicationInterfaceDescription) expCreateAppField.getSelectionModel()
+                .getSelectedItem()).getApplicationInterfaceId());
+
         experimentModel.setGatewayId(SEAGridContext.getInstance().getAiravataGatewayId());
         experimentModel.setUserName(SEAGridContext.getInstance().getUserName());
 
@@ -745,6 +800,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
         userConfigurationDataModel.setExperimentDataDir(remoteDataDirRoot + experimentDataDir);
+        userConfigurationDataModel.setUseUserCRPref(useMyCRAccount.isSelected());
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()

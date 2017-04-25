@@ -77,6 +77,7 @@
                 <Font name="System Bold" size="16.0" />
               </font>
             </Label>
+            <RadioButton fx:id="useMyCRAccount" mnemonicParsing="false" text="Use My Account" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="335.0" minWidth="10.0" prefWidth="277.0" />
