@@ -376,11 +376,6 @@
         </dependency>
         <dependency>
             <groupId>jamberoo</groupId>
-            <artifactId>jogamp-fat</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>jamberoo</groupId>
             <artifactId>jogl-all</artifactId>
             <version>1.0</version>
         </dependency>
