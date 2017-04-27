@@ -48,8 +48,8 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.media.j3d.Material;
-import javax.vecmath.Color3f;
+import org.scijava.java3d.Material;
+import org.scijava.vecmath.Color3f;
 
 import cct.modelling.ChemicalElements;
 

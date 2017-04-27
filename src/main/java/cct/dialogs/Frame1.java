@@ -46,7 +46,7 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import javax.media.j3d.Canvas3D;
+import org.scijava.java3d.Canvas3D;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;

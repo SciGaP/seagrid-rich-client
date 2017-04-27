@@ -360,9 +360,9 @@ public class Utils {
 
       sWriter.write(QueryProperties.getJava3dPropsAsString());
 
-      sWriter.write(packageInfoAsString(classLoader, "javax.vecmath", "Point3d"));
-      sWriter.write(packageInfoAsString(classLoader, "javax.media.j3d", "SceneGraphObject"));
-      sWriter.write(packageInfoAsString(classLoader, "com.sun.j3d.utils.universe", "SimpleUniverse"));
+      sWriter.write(packageInfoAsString(classLoader, "org.scijava.vecmath", "Point3d"));
+      sWriter.write(packageInfoAsString(classLoader, "org.scijava.java3d", "SceneGraphObject"));
+      sWriter.write(packageInfoAsString(classLoader, "org.scijava.java3d.utils.universe", "SimpleUniverse"));
 
       return sWriter.toString();
     } catch (SecurityException see) {

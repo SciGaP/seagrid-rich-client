@@ -39,16 +39,16 @@ package cct.oogl.java3d;
 
 import java.util.logging.Logger;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.GeometryArray;
-import javax.media.j3d.Material;
-import javax.media.j3d.Node;
-import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.TriangleArray;
-import javax.vecmath.Color4f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
+import org.scijava.java3d.Appearance;
+import org.scijava.java3d.GeometryArray;
+import org.scijava.java3d.Material;
+import org.scijava.java3d.Node;
+import org.scijava.java3d.PolygonAttributes;
+import org.scijava.java3d.Shape3D;
+import org.scijava.java3d.TriangleArray;
+import org.scijava.vecmath.Color4f;
+import org.scijava.vecmath.Point3f;
+import org.scijava.vecmath.Vector3f;
 
 import cct.interfaces.GraphicsObjectInterface;
 import cct.j3d.VerticesObject;

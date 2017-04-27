@@ -1,7 +1,7 @@
 package cct.j3d;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix3d;
+import org.scijava.vecmath.AxisAngle4d;
+import org.scijava.vecmath.Matrix3d;
 
 /**
  * <p>Title: Jamberoo - Computational Chemistry Toolkit</p>

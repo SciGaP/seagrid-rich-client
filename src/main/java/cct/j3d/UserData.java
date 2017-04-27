@@ -2,7 +2,7 @@ package cct.j3d;
 
 import java.util.HashMap;
 
-import javax.media.j3d.SceneGraphObject;
+import org.scijava.java3d.SceneGraphObject;
 
 /**
  * <p>Title: Jamberoo - Computational Chemistry Toolkit</p>

@@ -40,11 +40,11 @@ package cct.j3d;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.Material;
-import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.TransparencyAttributes;
-import javax.vecmath.Color3f;
+import org.scijava.java3d.Appearance;
+import org.scijava.java3d.Material;
+import org.scijava.java3d.PolygonAttributes;
+import org.scijava.java3d.TransparencyAttributes;
+import org.scijava.vecmath.Color3f;
 
 /**
  * <p>Title: </p>

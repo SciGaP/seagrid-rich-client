@@ -41,15 +41,15 @@ import java.awt.AWTEvent;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.View;
-import javax.media.j3d.WakeupCriterion;
-import javax.media.j3d.WakeupOnAWTEvent;
-import javax.vecmath.Matrix3d;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.java3d.View;
+import org.scijava.java3d.WakeupCriterion;
+import org.scijava.java3d.WakeupOnAWTEvent;
+import org.scijava.vecmath.Matrix3d;
 
-import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
-import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
+import org.scijava.java3d.utils.behaviors.mouse.MouseBehaviorCallback;
+import org.scijava.java3d.utils.behaviors.mouse.MouseZoom;
 
 /**
  * <p>Title: Picking</p>

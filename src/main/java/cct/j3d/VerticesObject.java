@@ -43,9 +43,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.media.j3d.Shape3D;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.Group;
+import org.scijava.java3d.Shape3D;
 
 import cct.interfaces.GraphicsObjectInterface;
 import cct.j3d.ui.VerticesPropertyPanel;

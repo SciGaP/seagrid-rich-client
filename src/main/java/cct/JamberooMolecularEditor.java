@@ -110,7 +110,7 @@ public class JamberooMolecularEditor implements ActionListener {
 
     try {
       //logger.info("JMolEditor: checking for java3d...");
-      Class.forName("javax.media.j3d.VirtualUniverse");
+      Class.forName("org.scijava.java3d.VirtualUniverse");
       //logger.info("JMolEditor: java3d ok...");
     } catch (Exception ex) {
       ex.printStackTrace();

@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
-import javax.vecmath.Color3f;
+import org.scijava.vecmath.Color3f;
 
 /**
  * <p>Title: Computational Chemistry Tookit</p>

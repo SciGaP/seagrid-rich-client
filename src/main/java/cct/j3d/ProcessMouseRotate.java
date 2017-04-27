@@ -40,12 +40,12 @@ package cct.j3d;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.vecmath.Matrix3d;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.vecmath.Matrix3d;
 
-import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import org.scijava.java3d.utils.behaviors.mouse.MouseBehaviorCallback;
+import org.scijava.java3d.utils.behaviors.mouse.MouseRotate;
 
 /**
  * <p>Title: Picking</p>

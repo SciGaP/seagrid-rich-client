@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Color3f;
+import org.scijava.vecmath.Color3f;
 
 import cct.interfaces.AtomInterface;
 import cct.interfaces.ColorChangerInterface;

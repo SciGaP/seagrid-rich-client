@@ -40,8 +40,8 @@ package cct.j3d;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Color3f;
-import javax.vecmath.Color4f;
+import org.scijava.vecmath.Color3f;
+import org.scijava.vecmath.Color4f;
 
 /**
  * <p>Title: Computational Chemistry Tookit</p>

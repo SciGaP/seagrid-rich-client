@@ -39,7 +39,7 @@ package cct.interfaces;
 
 import java.awt.Component;
 
-import javax.media.j3d.Shape3D;
+import org.scijava.java3d.Shape3D;
 
 /**
  * <p>Title: </p>

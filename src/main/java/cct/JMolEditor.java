@@ -122,7 +122,7 @@ public class JMolEditor implements ActionListener {
 
     try {
       //logger.info("JMolEditor: checking for java3d...");
-      Class.forName("javax.media.j3d.VirtualUniverse");
+      Class.forName("org.scijava.java3d.VirtualUniverse");
       //logger.info("JMolEditor: java3d ok...");
     } catch (Exception ex) {
       logger.severe("Cannot load " + ex.getMessage() + " Either java3d is not installed or it is not in the CLASSPATH");

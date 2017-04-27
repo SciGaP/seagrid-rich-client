@@ -40,16 +40,16 @@ package cct.j3d;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.Canvas3D;
-import javax.media.j3d.Group;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransparencyAttributes;
-import javax.media.j3d.TriangleArray;
-import javax.media.j3d.View;
-import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
+import org.scijava.java3d.Appearance;
+import org.scijava.java3d.Canvas3D;
+import org.scijava.java3d.Group;
+import org.scijava.java3d.Shape3D;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransparencyAttributes;
+import org.scijava.java3d.TriangleArray;
+import org.scijava.java3d.View;
+import org.scijava.vecmath.Color3f;
+import org.scijava.vecmath.Point3d;
 
 import cct.gaussian.Gaussian;
 import cct.interfaces.GraphicsObjectInterface;

@@ -13,9 +13,9 @@ package cct.j3d;
  * @version 1.0
  */
 
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.vecmath.Color3f;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.Group;
+import org.scijava.vecmath.Color3f;
 
 public class XYZAxes
     extends BranchGroup {

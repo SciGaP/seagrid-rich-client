@@ -37,26 +37,18 @@
 
 package cct.j3d.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Frame;
+import cct.interfaces.GraphicsObjectInterface;
+import org.scijava.java3d.BranchGroup;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.media.j3d.BranchGroup;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-
-import cct.interfaces.GraphicsObjectInterface;
 
 /**
  * <p>Title: Computational Chemistry Tookit</p>

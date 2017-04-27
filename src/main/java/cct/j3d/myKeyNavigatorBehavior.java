@@ -39,11 +39,11 @@ package cct.j3d;
 
 import java.util.logging.Logger;
 
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.WakeupOnAWTEvent;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.java3d.WakeupOnAWTEvent;
 
-import com.sun.j3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
+import org.scijava.java3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 
 // Uncomplete WRONG class (to delete)
 

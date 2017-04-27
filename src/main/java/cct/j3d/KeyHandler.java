@@ -41,10 +41,10 @@ import java.awt.AWTEvent;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import javax.media.j3d.Behavior;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.WakeupOnAWTEvent;
+import org.scijava.java3d.Behavior;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.java3d.WakeupOnAWTEvent;
 
 public class KeyHandler
     extends Behavior {

@@ -44,13 +44,13 @@
 
 package cct.j3d;
 
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
-import com.sun.j3d.utils.geometry.Primitive;
-import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.universe.SimpleUniverse;
+import org.scijava.java3d.utils.behaviors.mouse.MouseRotate;
+import org.scijava.java3d.utils.geometry.Primitive;
+import org.scijava.java3d.utils.geometry.Sphere;
+import org.scijava.java3d.utils.universe.SimpleUniverse;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
+import org.scijava.java3d.*;
+import org.scijava.vecmath.*;
 import java.awt.*;
 import java.util.logging.Logger;
 

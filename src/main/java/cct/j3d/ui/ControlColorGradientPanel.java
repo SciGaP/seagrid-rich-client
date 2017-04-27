@@ -50,7 +50,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.vecmath.Color3f;
+import org.scijava.vecmath.Color3f;
 
 import cct.j3d.ColorRangeScheme;
 

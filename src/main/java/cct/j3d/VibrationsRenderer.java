@@ -37,14 +37,14 @@
 package cct.j3d;
 
 import cct.GlobalSettings;
-import javax.media.j3d.Alpha;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.media.j3d.Node;
-import javax.media.j3d.Switch;
-import javax.media.j3d.SwitchValueInterpolator;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
+import org.scijava.java3d.Alpha;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.Group;
+import org.scijava.java3d.Node;
+import org.scijava.java3d.Switch;
+import org.scijava.java3d.SwitchValueInterpolator;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
 
 import cct.interfaces.AtomInterface;
 import cct.interfaces.BondInterface;

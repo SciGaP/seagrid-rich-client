@@ -39,31 +39,31 @@ package cct.j3d;
 
 import java.util.logging.Logger;
 
-import javax.media.j3d.Bounds;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Canvas3D;
-import javax.media.j3d.Node;
-import javax.media.j3d.PickBounds;
-import javax.media.j3d.PickConeRay;
-import javax.media.j3d.PickCylinder;
-import javax.media.j3d.PickPoint;
-import javax.media.j3d.PickRay;
-import javax.media.j3d.PickSegment;
-import javax.media.j3d.PickShape;
-import javax.media.j3d.SceneGraphPath;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
+import org.scijava.java3d.Bounds;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.Canvas3D;
+import org.scijava.java3d.Node;
+import org.scijava.java3d.PickBounds;
+import org.scijava.java3d.PickConeRay;
+import org.scijava.java3d.PickCylinder;
+import org.scijava.java3d.PickPoint;
+import org.scijava.java3d.PickRay;
+import org.scijava.java3d.PickSegment;
+import org.scijava.java3d.PickShape;
+import org.scijava.java3d.SceneGraphPath;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.vecmath.Point3d;
+import org.scijava.vecmath.Vector3d;
 
 import cct.modelling.OperationsOnAtoms;
 
-import com.sun.j3d.utils.behaviors.mouse.MouseBehaviorCallback;
-import com.sun.j3d.utils.geometry.Cylinder;
-import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.picking.PickResult;
-import com.sun.j3d.utils.picking.behaviors.PickMouseBehavior;
-import com.sun.j3d.utils.picking.behaviors.PickingCallback;
+import org.scijava.java3d.utils.behaviors.mouse.MouseBehaviorCallback;
+import org.scijava.java3d.utils.geometry.Cylinder;
+import org.scijava.java3d.utils.geometry.Sphere;
+import org.scijava.java3d.utils.picking.PickResult;
+import org.scijava.java3d.utils.picking.behaviors.PickMouseBehavior;
+import org.scijava.java3d.utils.picking.behaviors.PickingCallback;
 
 /**
  *	PickRotateBehavior behavior = new PickRotateBehavior(canvas, root, bounds);

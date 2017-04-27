@@ -40,32 +40,32 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.GeometryArray;
-import javax.media.j3d.Group;
-import javax.media.j3d.Material;
-import javax.media.j3d.Node;
-import javax.media.j3d.PointArray;
-import javax.media.j3d.PointAttributes;
-import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.vecmath.Color3f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
+import org.scijava.java3d.Appearance;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.ColoringAttributes;
+import org.scijava.java3d.GeometryArray;
+import org.scijava.java3d.Group;
+import org.scijava.java3d.Material;
+import org.scijava.java3d.Node;
+import org.scijava.java3d.PointArray;
+import org.scijava.java3d.PointAttributes;
+import org.scijava.java3d.PolygonAttributes;
+import org.scijava.java3d.Shape3D;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.vecmath.Color3f;
+import org.scijava.vecmath.Point3f;
+import org.scijava.vecmath.Vector3f;
 
 import cct.interfaces.AtomInterface;
 import cct.modelling.ChemicalElements;
 
-import com.sun.j3d.utils.geometry.Primitive;
-import com.sun.j3d.utils.geometry.Sphere;
+import org.scijava.java3d.utils.geometry.Primitive;
+import org.scijava.java3d.utils.geometry.Sphere;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.media.j3d.*;
+import org.scijava.java3d.*;
 
 /**
  * <p>

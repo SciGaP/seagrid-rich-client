@@ -41,7 +41,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import javax.media.j3d.Canvas3D;
+import org.scijava.java3d.Canvas3D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 

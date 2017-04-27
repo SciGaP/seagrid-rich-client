@@ -41,14 +41,14 @@ import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-import javax.media.j3d.Bounds;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Canvas3D;
-import javax.media.j3d.WakeupCriterion;
-import javax.media.j3d.WakeupOnAWTEvent;
-import javax.media.j3d.WakeupOr;
+import org.scijava.java3d.Bounds;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.Canvas3D;
+import org.scijava.java3d.WakeupCriterion;
+import org.scijava.java3d.WakeupOnAWTEvent;
+import org.scijava.java3d.WakeupOr;
 
-import com.sun.j3d.utils.picking.behaviors.PickMouseBehavior;
+import org.scijava.java3d.utils.picking.behaviors.PickMouseBehavior;
 
 public class MousePickingHandler
     extends PickMouseBehavior {

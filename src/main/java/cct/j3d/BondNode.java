@@ -37,33 +37,33 @@
 
 package cct.j3d;
 
-import javax.media.j3d.Appearance;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.ColoringAttributes;
-import javax.media.j3d.GeometryArray;
-import javax.media.j3d.Group;
-import javax.media.j3d.LineArray;
-import javax.media.j3d.Material;
-import javax.media.j3d.Node;
-import javax.media.j3d.PolygonAttributes;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Color3f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
+import org.scijava.java3d.Appearance;
+import org.scijava.java3d.BranchGroup;
+import org.scijava.java3d.ColoringAttributes;
+import org.scijava.java3d.GeometryArray;
+import org.scijava.java3d.Group;
+import org.scijava.java3d.LineArray;
+import org.scijava.java3d.Material;
+import org.scijava.java3d.Node;
+import org.scijava.java3d.PolygonAttributes;
+import org.scijava.java3d.Shape3D;
+import org.scijava.java3d.Transform3D;
+import org.scijava.java3d.TransformGroup;
+import org.scijava.vecmath.AxisAngle4f;
+import org.scijava.vecmath.Color3f;
+import org.scijava.vecmath.Point3f;
+import org.scijava.vecmath.Vector3d;
+import org.scijava.vecmath.Vector3f;
 
 import cct.interfaces.AtomInterface;
 import cct.interfaces.BondInterface;
 import cct.modelling.ChemicalElements;
 
-import com.sun.j3d.utils.geometry.Cylinder;
-import com.sun.j3d.utils.geometry.Primitive;
+import org.scijava.java3d.utils.geometry.Cylinder;
+import org.scijava.java3d.utils.geometry.Primitive;
 import java.util.HashMap;
 import java.util.Map;
-import javax.media.j3d.*;
+import org.scijava.java3d.*;
 
 /**
  *

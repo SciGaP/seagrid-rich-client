@@ -42,9 +42,9 @@ package cct.j3d;
 import java.awt.GraphicsConfiguration;
 import java.awt.image.BufferedImage;
 
-import javax.media.j3d.Canvas3D;
-import javax.media.j3d.ImageComponent;
-import javax.media.j3d.ImageComponent2D;
+import org.scijava.java3d.Canvas3D;
+import org.scijava.java3d.ImageComponent;
+import org.scijava.java3d.ImageComponent2D;
 
 class OffScreenCanvas3D
     extends Canvas3D {
