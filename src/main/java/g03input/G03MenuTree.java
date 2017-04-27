@@ -212,7 +212,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
     private G03MenuTree() {
 
-        super("Gaussian 03 Input GUI");
+        super("Gaussian 09 Input GUI");
         //showMolEditor.molFrame.setVisible(false);
         //createtitlePanel();
         createkeyWordPanel();

@@ -59,7 +59,7 @@ public class InsertNode {
         int startRow = 0;
            
         /* Expand the tree if it is not ...*/
-        TreePath path2= G03MenuTree.tree.getNextMatch("G '03", startRow, Position.Bias.Forward);
+        TreePath path2= G03MenuTree.tree.getNextMatch("G '09", startRow, Position.Bias.Forward);
         Enumeration el=G03MenuTree.root.children();
         TreeNode nod = (TreeNode)el.nextElement();
         TreePath path1 = path2.pathByAddingChild(nod);
@@ -82,7 +82,7 @@ public class InsertNode {
     public static boolean nodeExists(String str)
     {
         int startRow = 0;
-	    TreePath path2= G03MenuTree.tree.getNextMatch("G '03", startRow, Position.Bias.Forward);
+	    TreePath path2= G03MenuTree.tree.getNextMatch("G '09", startRow, Position.Bias.Forward);
         Enumeration el=G03MenuTree.root.children();
         TreeNode nod = (TreeNode)el.nextElement();
         TreePath path1 = path2.pathByAddingChild(nod);
@@ -99,7 +99,7 @@ public class InsertNode {
      int startRow = 0;
       
      /* Expand the tree if it is not ...*/
-     TreePath path2= G03MenuTree.tree.getNextMatch("G '03", startRow, Position.Bias.Forward);
+     TreePath path2= G03MenuTree.tree.getNextMatch("G '09", startRow, Position.Bias.Forward);
      Enumeration el=G03MenuTree.root.children();
      TreeNode nod = (TreeNode)el.nextElement();
      TreePath path1 = path2.pathByAddingChild(nod);
@@ -128,7 +128,7 @@ public class InsertNode {
      int startRow = 0;
       
      /* Expand the tree if it is not ...*/
-     TreePath path2= G03MenuTree.tree.getNextMatch("G '03", startRow, Position.Bias.Forward);
+     TreePath path2= G03MenuTree.tree.getNextMatch("G '09", startRow, Position.Bias.Forward);
      Enumeration el=G03MenuTree.root.children();
      TreeNode nod = (TreeNode)el.nextElement();
      TreePath path1 = path2.pathByAddingChild(nod);
