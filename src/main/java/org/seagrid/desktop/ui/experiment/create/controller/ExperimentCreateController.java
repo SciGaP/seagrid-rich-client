@@ -561,7 +561,10 @@ public class ExperimentCreateController {
                     String filePath = (new URI(fileUri)).getPath();
                     handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
                 }else{
-//                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
+                    File file = new File(inputDataObjectType.getValue());
+                    if(file.exists()){
+                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
+                    }
                 }
             }else if(inputDataObjectType.getType().equals(DataType.URI_COLLECTION)){
                 expCreateInputsGridPane.add(labelObj, 0, index);

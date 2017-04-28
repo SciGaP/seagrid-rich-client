@@ -50,6 +50,7 @@ import cct.cprocessor.CommandProcessor;
 import cct.cprocessor.CommandProcessorDeprecated;
 import cct.cprocessor.MolProcessorInterface;
 import cct.gaussian.*;
+import cct.gaussian.ui.ExportSEAGridGaussian;
 import cct.gaussian.ui.GaussianInputEditorFrame;
 import cct.gaussian.ui.SaveG03GJFDialog;
 import cct.grid.ScriptSubmitterDialogInterface;
@@ -106,10 +107,14 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
   private static String OPEN_MOLECULE_FILE = "Open Molecule File";
   private static String OPENAS = "OpenAs";
   private ImageIcon saveFileImage = new ImageIcon(cct.dialogs.JamberooFrame.class.getResource("/cct/images/disk_blue.png"));
+  private ImageIcon seagridFileImage = new ImageIcon(cct.dialogs.JamberooFrame.class.getResource("/cct/images/seagrid.png"));
   private JMenuItem jMenuOpenMolecule = new JMenuItem();
   private JMenuItem jMenuAppendMolecule = new JMenuItem();
   private JMenu jSubmenuFileOpen = new JMenu();
   private JMenu jSubmenuFileSave = new JMenu();
+  private JMenu jSubmenuSEAGridExport = new JMenu();
+  private JMenuItem jSEAGridGaussian = new JMenuItem();
+  private ExportSEAGridGaussian exportSEAGridGaussian = null;
   private JMenu gaussianMenu = new JMenu("Gaussian");
   private JMenu mopacMenu = new JMenu("Mopac");
   private JMenu submenuLoadRemote = new JMenu();
@@ -256,6 +261,43 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
     jSubmenuFileOpen.setIcon(GlobalSettings.ICON_16x16_OPEN_FILE);
     jSubmenuFileSave.setText(messages != null ? messages.getString("save_as") : "Save As");
     jSubmenuFileSave.setIcon(saveFileImage);
+
+    // -- SEAGrid Export
+    jSubmenuSEAGridExport.setText(messages != null ? messages.getString("seagrid_export") : "SEAGrid Export");
+    jSubmenuSEAGridExport.setIcon(seagridFileImage);
+    String seagridGaussianText = messages != null ? messages.getString("seagrid_gaussian_export") : "Gaussian";
+    jSEAGridGaussian.setText(seagridGaussianText);
+    jSEAGridGaussian.setIcon(new ImageIcon(cct.dialogs.JamberooFrame.class.getResource("/cct/images/gaussian-16x16.png")));
+    jSubmenuSEAGridExport.add(jSEAGridGaussian);
+    jSEAGridGaussian.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        String arg = actionEvent.getActionCommand();
+
+        if (java3dUniverse.getMolecule() == null
+                || java3dUniverse.getMolecule().getNumberOfAtoms() < 1) {
+          JOptionPane.showMessageDialog(null, "Load Molecule first!",
+                  ERROR_MESSAGE,
+                  JOptionPane.ERROR_MESSAGE);
+          return;
+        }
+
+        if(arg.equals(seagridGaussianText)){
+          if (exportSEAGridGaussian == null) {
+            exportSEAGridGaussian = new ExportSEAGridGaussian(null, "Export Gaussian to SEAGrid", false);
+            //saveG03GJFDialog.setLinkZeroCommands("%nproc=1");
+            //saveG03GJFDialog.setRouteSection("# Opt HF/6-31g");
+            Gaussian g = new Gaussian();
+            g.setGraphicsRenderer(java3dUniverse);
+            exportSEAGridGaussian.setGJFParser(g);
+            exportSEAGridGaussian.setLocationRelativeTo(null);
+          }
+          SwingUtilities.updateComponentTreeUI(exportSEAGridGaussian);
+          exportSEAGridGaussian.setupMolecule(java3dUniverse.getMolecule());
+          exportSEAGridGaussian.setVisible(true);
+        }
+      }
+    });
 
     // --- "Open As" Submenu
     gaussianMenu.setIcon(GlobalSettings.ICON_16x16_GAUSSIAN);
@@ -419,6 +461,9 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
     addSeparator();
     add(jSubmenuFileSave);
     add(jSubmenuImageSave);
+    addSeparator();
+
+    add(jSubmenuSEAGridExport);
     addSeparator();
 
     if (executeScript) {

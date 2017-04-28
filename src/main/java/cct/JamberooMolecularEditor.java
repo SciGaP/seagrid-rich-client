@@ -216,12 +216,21 @@ public class JamberooMolecularEditor implements ActionListener {
       @Override
       public void windowClosing(WindowEvent we) {
         Window window = we.getWindow();
-        if (windows.size() == 1) {
-            window.setVisible(false);
-        }else {
-            windows.remove(window);
-            window.dispose();
+        windows.remove(window);
+        --Number_of_open_windows;
+        window.dispose();
+        if(windows.size() == 0){
+            JamberooFrame frame = createJamberooInstance("Jamberoo - Main Window", args);
+            windows.add(frame);
+            ++Number_of_open_windows;
+
+            frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            addNewEditorMenuItem(frame);
+            // Center the window
+            centerOnScreen(frame);
+            frame.setVisible(true);
         }
+
       }
     });
 
