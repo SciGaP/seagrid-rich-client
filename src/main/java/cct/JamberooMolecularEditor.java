@@ -228,7 +228,7 @@ public class JamberooMolecularEditor implements ActionListener {
             addNewEditorMenuItem(frame);
             // Center the window
             centerOnScreen(frame);
-            frame.setVisible(true);
+            frame.setVisible(false);
         }
 
       }
