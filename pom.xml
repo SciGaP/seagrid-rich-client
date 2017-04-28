@@ -182,14 +182,6 @@
                                         <argument>-BappVersion=${app.version}</argument>
                                         <argument>-Bicon=${app.icon}</argument>
                                         <argument>-Bmac.signing-key-user-name=${app.vendor}</argument>
-                                        <argument>-classpath</argument>
-                                        <!-- automatically creates the classpath using all project dependencies,
-
-
-                                             also adding the project build directory -->
-                                        <classpath/>
-
-
                                     </arguments>
                                 </configuration>
                             </execution>

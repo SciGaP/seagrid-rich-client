@@ -23,6 +23,7 @@ package org.seagrid.desktop.ui.login.controller;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -105,6 +106,14 @@ public class LoginController {
             if(userPrefs.isRememberPassword()){
                 rememberMe.setSelected(true);
                 passwordField.setText(userPrefs.getPassword());
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        passwordField.requestFocus();
+                        passwordField.end();
+                    }
+                });
+
             }
         }
 
