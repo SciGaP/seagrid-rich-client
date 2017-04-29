@@ -46,7 +46,6 @@ package g03input;
 
 import cct.JamberooMolecularEditor;
 import nanocad.nanocadMain;
-import org.jfree.ui.tabbedui.VerticalLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -422,7 +421,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
         viewMolStructure.setToolTipText("Click to View the Current Molecular Structure");
         molPanel = new JPanel(new BorderLayout());
         JPanel mainMolPanel = new JPanel();
-//        JPanel nanocadLabelPanel = new JPanel();
+        JPanel nanocadLabelPanel = new JPanel();
 
         TitledBorder molTitle = new TitledBorder("Molecular Specification");
         molPanel.setBorder(molTitle);
@@ -433,10 +432,10 @@ public class G03MenuTree extends JFrame implements MouseListener {
         mainMolPanel.add(viewMolStructure);
 
 
-//        nanocadNotice.setText("Molecular Specification not selected");
-//        nanocadLabelPanel.add(nanocadNotice);
+        nanocadNotice.setText("Molecular Specification not selected");
+        nanocadLabelPanel.add(nanocadNotice);
 
-//        molPanel.add(nanocadLabelPanel, BorderLayout.SOUTH);
+        molPanel.add(nanocadLabelPanel, BorderLayout.SOUTH);
         molPanel.add(mainMolPanel, BorderLayout.CENTER);
 
         viewMolStructure.addActionListener(new G03Listener());
@@ -593,11 +592,11 @@ public class G03MenuTree extends JFrame implements MouseListener {
         routeJobPanel.add(jobNamePanel, BorderLayout.SOUTH);
 
 
-        routeTitleMolPanel = new JPanel(new VerticalLayout());
+        routeTitleMolPanel = new JPanel(new BorderLayout());
 
         //routeTitleMolPanel.add(jobNamePanel,BorderLayout.CENTER);
-        routeTitleMolPanel.add(routeJobPanel);
-        routeTitleMolPanel.add(molPanel);
+        routeTitleMolPanel.add(molPanel, BorderLayout.CENTER);
+        routeTitleMolPanel.add(routeJobPanel, BorderLayout.NORTH);
 
 
         centerBasePanel = new JPanel(new BorderLayout());
