@@ -44,6 +44,9 @@ DEALINGS WITH THE SOFTWARE.
 
 package g03input;
 
+import nanocad.nanocadMain;
+import org.jfree.ui.tabbedui.VerticalLayout;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -57,6 +60,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -193,8 +198,8 @@ public class G03MenuTree extends JFrame implements MouseListener {
     // JLabel for displaying the nanocad status
     public static JLabel nanocadNotice = new JLabel();
 
-    public static void showG03MenuTree(){
-        if(mainFrame == null || !mainFrame.isShowing()){
+    public static void showG03MenuTree() {
+        if (mainFrame == null || !mainFrame.isShowing()) {
             mainFrame = new G03MenuTree();
             mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             mainFrame.pack();
@@ -344,7 +349,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
         // scrpane.setVisible(true);
 
 	    /*
-	    //It is a dummy panel, it does nothing
+        //It is a dummy panel, it does nothing
 	    JPanel dpanel=new JPanel();
     	JLabel lbl= new JLabel("Route Section cannot be modified");
     	Color c = dpanel.getBackground();
@@ -416,7 +421,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
         viewMolStructure.setToolTipText("Click to View the Current Molecular Structure");
         molPanel = new JPanel(new BorderLayout());
         JPanel mainMolPanel = new JPanel();
-        JPanel nanocadLabelPanel = new JPanel();
+//        JPanel nanocadLabelPanel = new JPanel();
 
         TitledBorder molTitle = new TitledBorder("Molecular Specification");
         molPanel.setBorder(molTitle);
@@ -427,10 +432,10 @@ public class G03MenuTree extends JFrame implements MouseListener {
         mainMolPanel.add(viewMolStructure);
 
 
-        nanocadNotice.setText("Molecular Specification not selected");
-        nanocadLabelPanel.add(nanocadNotice);
+//        nanocadNotice.setText("Molecular Specification not selected");
+//        nanocadLabelPanel.add(nanocadNotice);
 
-        molPanel.add(nanocadLabelPanel, BorderLayout.SOUTH);
+//        molPanel.add(nanocadLabelPanel, BorderLayout.SOUTH);
         molPanel.add(mainMolPanel, BorderLayout.CENTER);
 
         viewMolStructure.addActionListener(new G03Listener());
@@ -587,11 +592,12 @@ public class G03MenuTree extends JFrame implements MouseListener {
         routeJobPanel.add(jobNamePanel, BorderLayout.SOUTH);
 
 
-        routeTitleMolPanel = new JPanel(new BorderLayout());
+        routeTitleMolPanel = new JPanel(new VerticalLayout());
 
         //routeTitleMolPanel.add(jobNamePanel,BorderLayout.CENTER);
-        routeTitleMolPanel.add(molPanel, BorderLayout.CENTER);
-        routeTitleMolPanel.add(routeJobPanel, BorderLayout.NORTH);
+        routeTitleMolPanel.add(routeJobPanel);
+        routeTitleMolPanel.add(molPanel);
+
 
         centerBasePanel = new JPanel(new BorderLayout());
         centerBasePanel.add(linkoPanel, BorderLayout.NORTH);
@@ -725,15 +731,20 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
         molMenu = new JMenu("Molecular Specification");
 
-        //nanoItem=new JMenuItem("Molecular Editor");
+        nanoItem=new JMenuItem("Nanocad Editor");
         //cartItem = new JMenuItem("Cartesian Coordinates");
         //zItem= new JMenuItem("Z-matrix Format");
 
         //molMenu.add(cartItem);
-        // molMenu.add(nanoItem);
+         molMenu.add(nanoItem);
         //molMenu.add(zItem);
         // zItem.setEnabled(false);
-        // nanoItem.addActionListener(new showMolEditor());
+         nanoItem.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 nanocadMain.showNanocad();
+             }
+         });
         //cartItem.addActionListener(new MenuListeners());
         // zItem.addActionListener(new MenuListeners());
 	    
