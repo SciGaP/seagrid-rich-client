@@ -44,6 +44,7 @@ DEALINGS WITH THE SOFTWARE.
 
 package g03input;
 
+import cct.JamberooMolecularEditor;
 import nanocad.nanocadMain;
 import org.jfree.ui.tabbedui.VerticalLayout;
 
@@ -86,7 +87,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
     public static JPanel bottomPanel, basePanel, treePanel;
     public static JScrollPane treeScroll;
     public static JMenu methodMenu, basisSetMenu, freqSubMenu, addSubMenu, molMenu;
-    public static JMenuItem nanoItem, cartItem, zItem;
+    public static JMenuItem nanoItem, jamberooItem, cartItem, zItem;
     public static String freOptString = "", optString = "";
     public static String[] key_words = {"Methods", "Basis Sets", "Job Types", "Keywords"};
     public static JRadioButton pRadio, nRadio, tRadio, noneRadio;
@@ -732,17 +733,25 @@ public class G03MenuTree extends JFrame implements MouseListener {
         molMenu = new JMenu("Molecular Specification");
 
         nanoItem=new JMenuItem("Nanocad Editor");
+        jamberooItem=new JMenuItem("Jamberoo Editor");
         //cartItem = new JMenuItem("Cartesian Coordinates");
         //zItem= new JMenuItem("Z-matrix Format");
 
         //molMenu.add(cartItem);
          molMenu.add(nanoItem);
+         molMenu.add(jamberooItem);
         //molMenu.add(zItem);
         // zItem.setEnabled(false);
          nanoItem.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e) {
                  nanocadMain.showNanocad();
+             }
+         });
+         jamberooItem.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JamberooMolecularEditor.showJamberoo();
              }
          });
         //cartItem.addActionListener(new MenuListeners());

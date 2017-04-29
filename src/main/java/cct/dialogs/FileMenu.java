@@ -79,6 +79,9 @@ import cct.tools.ui.*;
 import cct.tripos.TriposParser;
 import cct.vasp.VasprunXML;
 import cct.vasp.ui.ReadPoscarDialog;
+import g03input.G03MenuTree;
+import g03input.showMolEditor;
+import legacy.editor.commons.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,6 +90,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.*;
@@ -283,18 +287,30 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
         }
 
         if(arg.equals(seagridGaussianText)){
-          if (exportSEAGridGaussian == null) {
-            exportSEAGridGaussian = new ExportSEAGridGaussian(null, "Export Gaussian to SEAGrid", false);
-            //saveG03GJFDialog.setLinkZeroCommands("%nproc=1");
-            //saveG03GJFDialog.setRouteSection("# Opt HF/6-31g");
-            Gaussian g = new Gaussian();
-            g.setGraphicsRenderer(java3dUniverse);
-            exportSEAGridGaussian.setGJFParser(g);
-            exportSEAGridGaussian.setLocationRelativeTo(null);
+          Gaussian g = new Gaussian();
+          try {
+            String gaussOut = Gaussian.getMoleculeSpecsAsString(java3dUniverse.getMolecule());
+            File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+                    + "tmp.txt");
+            FileWriter fw = new FileWriter(f, false);
+            fw.write(gaussOut);
+            System.err.println("gaussOut = ");
+            System.err.println(gaussOut);
+            fw.close();
+
+            G03MenuTree.showG03MenuTree();
+            showMolEditor forString = new showMolEditor();
+            forString.tempmol = gaussOut;
+
+            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                            " has been exported correctly. Make sure\n" +
+                            "to edit other sections of GUI.",
+                    "GridChem: Gaussian GUI",
+                    JOptionPane.WARNING_MESSAGE);
+          } catch (Exception e) {
+            e.printStackTrace();
           }
-          SwingUtilities.updateComponentTreeUI(exportSEAGridGaussian);
-          exportSEAGridGaussian.setupMolecule(java3dUniverse.getMolecule());
-          exportSEAGridGaussian.setVisible(true);
+
         }
       }
     });
