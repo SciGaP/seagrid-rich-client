@@ -549,7 +549,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
     public void createtreePanel() {
         root =
-                new DefaultMutableTreeNode("G '03 Input Selections");
+                new DefaultMutableTreeNode("G '09 Input Selections");
 
         for (int i = 0; i < key_words.length; i++) {
             child = new DefaultMutableTreeNode(key_words[i]);
@@ -1680,7 +1680,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
                     || (path.getLastPathComponent().toString().equals("Basis Sets"))
                     || (path.getLastPathComponent().toString().equals("Job Types"))
                     || (path.getLastPathComponent().toString().equals("Keywords"))
-                    || (path.getLastPathComponent().toString().equals("G '03 Input Selections"))
+                    || (path.getLastPathComponent().toString().equals("G '09 Input Selections"))
                     )
                 JOptionPane.showMessageDialog(this, "Invalid Operation !!!", "ERROR", JOptionPane.ERROR_MESSAGE);
             else {
