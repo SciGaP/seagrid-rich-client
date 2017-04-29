@@ -50,7 +50,6 @@ import cct.cprocessor.CommandProcessor;
 import cct.cprocessor.CommandProcessorDeprecated;
 import cct.cprocessor.MolProcessorInterface;
 import cct.gaussian.*;
-import cct.gaussian.ui.ExportSEAGridGaussian;
 import cct.gaussian.ui.GaussianInputEditorFrame;
 import cct.gaussian.ui.SaveG03GJFDialog;
 import cct.grid.ScriptSubmitterDialogInterface;
@@ -118,7 +117,6 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
   private JMenu jSubmenuFileSave = new JMenu();
   private JMenu jSubmenuSEAGridExport = new JMenu();
   private JMenuItem jSEAGridGaussian = new JMenuItem();
-  private ExportSEAGridGaussian exportSEAGridGaussian = null;
   private JMenu gaussianMenu = new JMenu("Gaussian");
   private JMenu mopacMenu = new JMenu("Mopac");
   private JMenu submenuLoadRemote = new JMenu();
