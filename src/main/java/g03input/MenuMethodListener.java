@@ -313,25 +313,20 @@ public static String exchngName="",corrName="",restrictione="",restrictionc="";
         
         
         if(e.getSource()==G03MenuTree.comB3ly||
-                e.getSource()==G03MenuTree.comB3p8 ||
-                e.getSource()==G03MenuTree.comB1ly || 
-                e.getSource()==G03MenuTree.comPbe1 ||
-                e.getSource()==G03MenuTree.comMpw1 ||
-                e.getSource()==G03MenuTree.comB3pw ||
-                e.getSource()==G03MenuTree.mhfItem ||
-                e.getSource()==G03MenuTree.mp2Item ||
-                e.getSource()== G03MenuTree.othB1b9 ||
-                e.getSource()== G03MenuTree.othB98 ||
-                e.getSource()== G03MenuTree.othB971 ||
-                e.getSource()== G03MenuTree.othB972 ||
-                e.getSource()== G03MenuTree.othBhan ||
-                e.getSource()== G03MenuTree.othBhlyp ||
-                e.getSource()== G03MenuTree.othLsda ||
-                e.getSource()== G03MenuTree.stdVsxc ||
-                e.getSource()== G03MenuTree.stdHcth ||
-                e.getSource()== G03MenuTree.stdHct9 ||
-                e.getSource()== G03MenuTree.stdHct14 ||
-                e.getSource()== G03MenuTree.stdHct40
+                e.getSource()==G03MenuTree.comB3p8 || e.getSource()==G03MenuTree.comB1ly ||
+                e.getSource()==G03MenuTree.comPbe1 || e.getSource()==G03MenuTree.comMpw1 ||
+                e.getSource()==G03MenuTree.comB3pw || e.getSource()==G03MenuTree.mhfItem ||
+                e.getSource()==G03MenuTree.mp2Item || e.getSource()== G03MenuTree.othB1b9 ||
+                e.getSource()== G03MenuTree.othB98 || e.getSource()== G03MenuTree.othB971 ||
+                e.getSource()== G03MenuTree.othB972 || e.getSource()== G03MenuTree.othBhan ||
+                e.getSource()== G03MenuTree.othBhlyp || e.getSource()== G03MenuTree.othLsda ||
+                (e.getSource()==G03MenuTree.oMN15)|| (e.getSource()==G03MenuTree.oM11)|| (e.getSource()==G03MenuTree.oMN12SX)||
+                (e.getSource()==G03MenuTree.oPW6b95)||(e.getSource()==G03MenuTree.oSOGGA11X)||(e.getSource()==G03MenuTree.oN12SX)||
+                (e.getSource()==G03MenuTree.oPW6B95D3)|| (e.getSource()==G03MenuTree.oMO8HX)|| (e.getSource()==G03MenuTree.oMO6)||
+                (e.getSource()==G03MenuTree.oMO6HF)|| (e.getSource()==G03MenuTree.oMO5)|| (e.getSource()==G03MenuTree.oMO52X)||
+                (e.getSource()==G03MenuTree.oMO62X)||(e.getSource()==G03MenuTree.APFD)|| (e.getSource()==G03MenuTree.wB97xD)||
+                e.getSource()== G03MenuTree.stdVsxc || e.getSource()== G03MenuTree.stdHcth || e.getSource()== G03MenuTree.stdHct9 ||
+                e.getSource()== G03MenuTree.stdHct14 || e.getSource()== G03MenuTree.stdHct40
                 )
         {
         System.out.println("Eureka!!!");
@@ -389,6 +384,8 @@ public static String exchngName="",corrName="",restrictione="",restrictionc="";
                 e.getSource()== G03MenuTree.g3mp2Item ||
                 e.getSource()== G03MenuTree.g3b3Item ||
                 e.getSource()== G03MenuTree.g3mp2b3Item||
+                e.getSource()== G03MenuTree.g4Item ||
+                e.getSource()== G03MenuTree.g4mp2Item ||
 				e.getSource()==G03MenuTree.mcasscfItem||
 				e.getSource()==G03MenuTree.mcasscfmItem
                   

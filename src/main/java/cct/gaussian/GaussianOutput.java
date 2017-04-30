@@ -36,21 +36,6 @@
  ***** END LICENSE BLOCK *****/
 package cct.gaussian;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
 import cct.interfaces.AtomInterface;
 import cct.interfaces.MoleculeInterface;
 import cct.modelling.ChemicalElements;
@@ -58,10 +43,15 @@ import cct.modelling.GeneralMolecularDataParser;
 import cct.modelling.MolecularGeometry;
 import cct.modelling.MolecularProperties;
 import cct.vecmath.Point3f;
-import java.util.Arrays;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.swing.JFileChooser;
 
 /**
  * <p>
@@ -288,10 +278,10 @@ public class GaussianOutput extends GeneralMolecularDataParser
           this.outputResume.put("Optimization completed", line);
         } else if (line.contains("Job cpu time")) {
           this.outputResume.put("Job cpu time", "\n" + line);
-        } else if (line.contains("Gaussian 03")) {
+        } else if (line.contains("Gaussian 09")) {
           g_version = VERSION_G03;
           if (Debug) {
-            logger.info("Gaussian 03");
+            logger.info("Gaussian 09");
           }
         } else if (line.contains("Gaussian 98")) {
           g_version = VERSION_G98;

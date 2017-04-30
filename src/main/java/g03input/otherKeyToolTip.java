@@ -104,7 +104,7 @@ public static String IOp = "<br><b>Iop: </b><br> Used to set internal options to
 "Consequently, if you wanterd to specify, say, an alternative grid for a DFT Opt Freq run, you would have to use an option to \n"+
 "the Int=Grid keyword in place of using the Iop keyword.\n"+
 "Note also that archiving is automatically turned off when using this keyword.\n"+
-"A complete list of options that can be used with this keyword can be found in the Gaussian 03 IOps Reference or online at <b> http://www.gaussian/com </b>";
+"A complete list of options that can be used with this keyword can be found in the Gaussian 09 IOps Reference or online at <b> http://www.gaussian/com </b>";
 
 
 

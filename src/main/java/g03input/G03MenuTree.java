@@ -155,13 +155,16 @@ public class G03MenuTree extends JFrame implements MouseListener {
     public static JMenuItem am1Item, pm3Item, pm3mmItem, cndoItem, indoItem, mindoItem, mndoItem;
     public static JMenuItem cbs4Item, cbslItem, cbsqItem, cbsqbItem, cbsaItem;
     public static JMenuItem g1Item, g2Item, g2mp2Item, g3Item, g3mp2Item, g3b3Item, g3mp2b3Item;
+    public static JMenuItem g4Item, g4mp2Item;
 
 
     // DFT Methods
-    public static JMenu dcHybridFunc, doHybridFunc, dstdAloneFunc, duserDefinedFunc;
+    public static JMenu dcHybridFunc, doHybridFunc, ddHybridFunc, dstdAloneFunc, duserDefinedFunc;
     public static JMenuItem dListAllFunc;
     public static JMenuItem comB3ly, comB3pw, comB3p8, comB1ly, comPbe1, comMpw1;
     public static JMenuItem othB1b9, othB98, othB971, othB972, othBhan, othBhlyp, othLsda;
+    public static JMenuItem oMN15, oM11, oMN12SX, oPW6b95,oSOGGA11X,oN12SX,oPW6B95D3,oMO8HX,oMO6,oMO6HF,oMO5,oMO52X,oMO62X;
+    public static JMenuItem APFD, wB97xD;
     public static JMenuItem stdVsxc, stdHcth, stdHct9, stdHct14, stdHct40;
 
 
@@ -169,8 +172,11 @@ public class G03MenuTree extends JFrame implements MouseListener {
     //06/14/05    Modified @ UKy
 
     public static JMenu freqKeyMenu, mmMenu, genMenu, genecpMenu;
-    public static JMenuItem otherKeyMenuItem, optKeyAmb, optKeyArc, optKeyCha, optKeyChk, optKeyCom, optKeyCon, optKeyCou, optKeyCph, optKeyDen, optKeyExt, optKeyExtB, optKeyExtD, optKeyFie;
-    public static JMenuItem mmAmbItem, optKeyFmm, optKeyGfi, optKeygfp, optKeyInt, optKeyIop, optKeyNam, optKeyOut, optKeyPre, optKeyPro, optKeyPse, optKeyPun, optKeySca, optKeySpa, optKeySym, optKeyTem, optKeyTesM, optKeyTra, optKeyTras, optKeyUni;
+    public static JMenuItem otherKeyMenuItem, optKeyAmb, optKeyArc, optKeyCha, optKeyChk,
+            optKeyCom, optKeyCon, optKeyCou, optKeyCph, optKeyDen, optKeyExt, optKeyExtB, optKeyExtD, optKeyFie;
+    public static JMenuItem mmAmbItem, optKeyFmm, optKeyGfi, optKeygfp, optKeyInt, optKeyIop,
+            optKeyNam, optKeyOut, optKeyPre, optKeyPro, optKeyPse, optKeyPun, optKeySca, optKeySpa,
+            optKeySym, optKeyTem, optKeyTesM, optKeyTra, optKeyTras, optKeyUni;
 
 
     //Menu Items for Density
@@ -1216,6 +1222,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
         dcHybridFunc = new JMenu("Common Hybrid Functionals");
         doHybridFunc = new JMenu("Other Hybrid Functionals");
+        ddHybridFunc = new JMenu("Hybrid Functionals with Dispersion");
         dListAllFunc = new JMenuItem("List All Functionals");
         dListAllFunc.addActionListener(new MenuListeners());
 
@@ -1247,6 +1254,20 @@ public class G03MenuTree extends JFrame implements MouseListener {
         othBhlyp = new JMenuItem("othBhlyp");
         othLsda = new JMenuItem("LSDA");
 
+        oMN15 =new JMenuItem("MN15");
+        oM11=new JMenuItem("M11");
+        oMN12SX=new JMenuItem("MN12SX");
+        oPW6b95=new JMenuItem("PW6B95");
+        oSOGGA11X=new JMenuItem("SOGGA11X");
+        oN12SX=new JMenuItem("N12SX");
+        oPW6B95D3=new JMenuItem("PW6B95D3");
+        oMO8HX=new JMenuItem("MO8HX");
+        oMO6=new JMenuItem("MO6");
+        oMO6HF=new JMenuItem("MO6HF");
+        oMO5=new JMenuItem("MO5");
+        oMO52X=new JMenuItem("MO52X");
+        oMO62X=new JMenuItem("MO62X");
+
         doHybridFunc.add(othB1b9);
         doHybridFunc.add(othB98);
         doHybridFunc.add(othB971);
@@ -1255,7 +1276,30 @@ public class G03MenuTree extends JFrame implements MouseListener {
         doHybridFunc.add(othBhlyp);
         doHybridFunc.add(othLsda);
 
+        doHybridFunc.add(oMN15);
+        doHybridFunc.add(oM11);
+        doHybridFunc.add(oMN12SX);
+        doHybridFunc.add(oPW6b95);
+        doHybridFunc.add(oSOGGA11X);
+        doHybridFunc.add(oN12SX);
+        doHybridFunc.add(oPW6B95D3);
+        doHybridFunc.add(oMO8HX);
+        doHybridFunc.add(oMO6);
+        doHybridFunc.add(oMO6HF);
+        doHybridFunc.add(oMO5);
+        doHybridFunc.add(oMO52X);
+        doHybridFunc.add(oMO62X);
+
         mdftMenu.add(doHybridFunc);
+
+        APFD = new JMenuItem("APFD");
+        wB97xD = new JMenuItem("wB97xD");
+
+        ddHybridFunc.add(APFD);
+        ddHybridFunc.add(wB97xD);
+
+        mdftMenu.add(ddHybridFunc);
+
         mdftMenu.add(dListAllFunc);
 
         stdVsxc = new JMenuItem("VSXC");
@@ -1316,6 +1360,8 @@ public class G03MenuTree extends JFrame implements MouseListener {
         g3mp2Item = new JMenuItem("G3MP2");
         g3b3Item = new JMenuItem("G3B3");
         g3mp2b3Item = new JMenuItem("G3MP2B3");
+        g4Item=new JMenuItem("G4");
+        g4mp2Item=new JMenuItem("G4MP2");
 
 
         gvbItem = new JMenuItem("GVB");
@@ -1376,6 +1422,8 @@ public class G03MenuTree extends JFrame implements MouseListener {
         gnMenu.add(g3mp2Item);
         gnMenu.add(g3b3Item);
         gnMenu.add(g3mp2b3Item);
+        gnMenu.add(g4Item);
+        gnMenu.add(g4mp2Item);
 
 
         methodMenu.add(mhfItem);
@@ -1574,6 +1622,23 @@ public class G03MenuTree extends JFrame implements MouseListener {
         othBhlyp.addActionListener(new MenuMethodListener());
         othLsda.addActionListener(new MenuMethodListener());
 
+        oMN15.addActionListener(new MenuMethodListener());
+        oM11.addActionListener(new MenuMethodListener());
+        oMN12SX.addActionListener(new MenuMethodListener());
+        oPW6b95.addActionListener(new MenuMethodListener());
+        oSOGGA11X.addActionListener(new MenuMethodListener());
+        oN12SX.addActionListener(new MenuMethodListener());
+        oPW6B95D3.addActionListener(new MenuMethodListener());
+        oMO8HX.addActionListener(new MenuMethodListener());
+        oMO6.addActionListener(new MenuMethodListener());
+        oMO6HF.addActionListener(new MenuMethodListener());
+        oMO5.addActionListener(new MenuMethodListener());
+        oMO52X.addActionListener(new MenuMethodListener());
+        oMO62X.addActionListener(new MenuMethodListener());
+
+        APFD.addActionListener(new MenuMethodListener());
+        wB97xD.addActionListener(new MenuMethodListener());
+
         stdVsxc.addActionListener(new MenuMethodListener());
         stdHcth.addActionListener(new MenuMethodListener());
         stdHct9.addActionListener(new MenuMethodListener());
@@ -1631,6 +1696,9 @@ public class G03MenuTree extends JFrame implements MouseListener {
         g3mp2Item.addActionListener(new MenuMethodListener());
         g3b3Item.addActionListener(new MenuMethodListener());
         g3mp2b3Item.addActionListener(new MenuMethodListener());
+        g4Item.addActionListener( new MenuMethodListener() );
+        g4mp2Item.addActionListener( new MenuMethodListener() );
+
 
 
     }

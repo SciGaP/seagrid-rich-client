@@ -80,9 +80,9 @@ public class G03Listener implements ActionListener,KeyListener{
     		try {
     			if(InputFile.inputfetched==1)
     				showMolEditor.tempmol=InputfileReader.geom;
-    			/*
+                 /*
 			     if(showMolEditor.nanoFlag==1)
-    				showMolEditor.tempmol=showMolEditor.exportedMol;	*/
+    				showMolEditor.tempmol=showMolEditor.exportedMol; */
 			} catch (RuntimeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -201,7 +201,7 @@ public class G03Listener implements ActionListener,KeyListener{
 //            		    SubmitJobsWindow.getInstance();
 //                        EditJobPanel ejp = new EditJobPanel(InputFile.tempinput,"Gaussian");
 //                        clearButtonFn();
-//                        showMolEditor.tempmol=null;
+                        showMolEditor.tempmol=null;
 						Platform.runLater(() -> {
                             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
 									.EXPORT_GAUSSIAN_EXP, InputFile.tempinput));
@@ -268,7 +268,7 @@ public class G03Listener implements ActionListener,KeyListener{
         if(ae.getSource()==G03MenuTree.exitButton)
         {
         	int ch;
-        	ch=JOptionPane.showConfirmDialog(null,"Are you sure?","Exit from Gaussian03",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+        	ch=JOptionPane.showConfirmDialog(null,"Are you sure?","Exit from Gaussian09 GUI",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
         	if(ch==0)
         	{        	
         	try {

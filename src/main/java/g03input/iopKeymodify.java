@@ -142,7 +142,8 @@ public iopKeymodify(){
         {inputFields[6],inputFields[7],inputFields[8]},
         {inputFields[9],inputFields[10],inputFields[11]},
         {inputFields[12],inputFields[13],inputFields[14]}},
-        new Object[]{"Op","Ov","N"});
+        //new Object[]{"Op","Ov","N"});
+        new Object[]{"Overlay","Option","Value"});
   	
      table = new JTable(dm) {
       public void tableChanged(TableModelEvent e) {
@@ -154,12 +155,18 @@ public iopKeymodify(){
     };
   
   table=new JTable(dm);
-    table.getColumn("Op").setCellRenderer(new TextFieldRenderer());
-    table.getColumn("Op").setCellEditor(new TextFieldEditor(new JTextField()));
-    table.getColumn("Ov").setCellRenderer(new TextFieldRenderer());
-    table.getColumn("Ov").setCellEditor(new TextFieldEditor(new JTextField()));
-    table.getColumn("N").setCellRenderer(new TextFieldRenderer());
-    table.getColumn("N").setCellEditor(new TextFieldEditor(new JTextField()));
+    //table.getColumn("Op").setCellRenderer(new TextFieldRenderer());
+		table.getColumn("Overlay").setCellRenderer(new TextFieldRenderer());
+    //table.getColumn("Op").setCellEditor(new TextFieldEditor(new JTextField()));
+		table.getColumn("Overlay").setCellEditor(new TextFieldEditor(new JTextField()));
+    //table.getColumn("Ov").setCellRenderer(new TextFieldRenderer());
+		table.getColumn("Option").setCellRenderer(new TextFieldRenderer());
+    //table.getColumn("Ov").setCellEditor(new TextFieldEditor(new JTextField()));
+		table.getColumn("Option").setCellEditor(new TextFieldEditor(new JTextField()));
+    //table.getColumn("N").setCellRenderer(new TextFieldRenderer());
+		table.getColumn("Value").setCellRenderer(new TextFieldRenderer());
+    //table.getColumn("N").setCellEditor(new TextFieldEditor(new JTextField()));
+		table.getColumn("Value").setCellEditor(new TextFieldEditor(new JTextField()));
     donePanel = new JPanel();
     doneButton = new JButton("Done");
     clearButton = new JButton("Reset");
