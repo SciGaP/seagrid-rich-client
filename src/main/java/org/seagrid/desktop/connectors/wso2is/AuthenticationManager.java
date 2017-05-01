@@ -34,6 +34,10 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.util.Map;
 
@@ -44,6 +48,30 @@ public class AuthenticationManager {
     String[] allowedUserRoles = SEAGridContext.getInstance().getAuthorisedUserRoles();
     String clientId = SEAGridContext.getInstance().getOAuthClientId();
     String clientSecret = SEAGridContext.getInstance().getOAuthClientSecret();
+
+    TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    //No need to implement.
+                }
+            }
+    };
+
+    public AuthenticationManager(){
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public AuthResponse authenticate(String username,String password) throws AuthenticationException, AuthorizationException {
         try {

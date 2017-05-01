@@ -216,6 +216,10 @@ public class SEAGridContext {
                 FileInputStream fis = new FileInputStream(getFileDownloadLocation()+"/.prefs/user_pref.ser");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 this.userPrefs = (UserPrefs)ois.readObject();
+                if(this.userPrefs == null){
+                    this.userPrefs = new UserPrefs();
+                    return this.userPrefs;
+                }
             }
             catch (Exception e){
                 this.userPrefs = new UserPrefs();
