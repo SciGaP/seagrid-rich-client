@@ -341,9 +341,11 @@ public class ExperimentCreateController {
         if(gaussianApps.size() > 0){
             expCreateAppField.getItems().setAll(gaussianApps);
             expCreateAppField.getSelectionModel().select(0);
-            List<InputDataObjectType> gaussianInputs = gaussianApps.get(0).getApplicationInputs();
-            gaussianInputs.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gaussianInputs, false);
+            for(ApplicationInterfaceDescription app : gaussianApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, false);
+            }
         }
     }
 
@@ -362,9 +364,11 @@ public class ExperimentCreateController {
         if(gamessApps.size() > 0){
             expCreateAppField.getItems().setAll(gamessApps);
             expCreateAppField.getSelectionModel().select(0);
-            List<InputDataObjectType> gamessAppInput = gamessApps.get(0).getApplicationInputs();
-            gamessAppInput.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gamessAppInput, false);
+            for(ApplicationInterfaceDescription app : gamessApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, false);
+            }
         }
     }
 

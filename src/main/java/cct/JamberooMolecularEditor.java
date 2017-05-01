@@ -291,7 +291,9 @@ public class JamberooMolecularEditor implements ActionListener {
 
     public static void showJamberoo() {
         if(windows == null){
-            main(new String[]{});
+          windows = new ArrayList<>();
+          Locale.setDefault(Locale.ENGLISH);
+          new JamberooMolecularEditor(new String []{});
         }else{
             for(JamberooFrame w : windows){
                 w.setVisible(true);

@@ -40,15 +40,26 @@ DEALINGS WITH THE SOFTWARE.
 
 package gamess;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import gamess.Dialogs.HelpDisplayer;
 import gamess.Dialogs.MolecularSpecification;
 import gamess.IncompatibilityPackage.ExcludeIncompatibility;
 import gamess.IncompatibilityPackage.RequiresIncompatibility;
 import gamess.Storage.Repository;
 import legacy.editor.commons.Settings;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.Element;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.util.Hashtable;
+
 /*import ExcludeIncompatibility;
 import IncompatibilityGetter;
 import RequiresIncompatibility;
@@ -69,16 +80,6 @@ import RWGetter;
 import IDBChangeListener;
 import Repository;
 */
-import java.awt.event.*;
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.Element;
-
-import java.io.*;
-import java.util.*;
 
 
 public class GamessGUI extends JFrame{
@@ -110,7 +111,7 @@ public class GamessGUI extends JFrame{
 
 
     public static void showGamesGUI(){
-        if(frame == null || !frame.isShowing()){
+        if(frame == null){
             frame = new GamessGUI("GAMESS Input GUI");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -121,6 +122,7 @@ public class GamessGUI extends JFrame{
             frame.setResizable(true);
             frame.setVisible(true);
         }
+        frame.setVisible(true);
         frame.toFront();
         frame.requestFocus();
     }

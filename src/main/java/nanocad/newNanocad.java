@@ -380,11 +380,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         InputfileReader.chrgStr = null;
                         InputfileReader.mulStr = null;
 
-                        G03MenuTree.showG03MenuTree();
-                        showMolEditor forString = new showMolEditor();
-
                         String gaussOut = GaussianOutput(grp.getXYZ());
-                        forString.tempmol = gaussOut;
+
                         JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
                                         " has been exported correctly. Make sure\n" +
                                         "to edit other sections of GUI.",
@@ -408,6 +405,15 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             System.err.println(ioe.toString());
                             ioe.printStackTrace();
                         }
+
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                G03MenuTree.showG03MenuTree();
+                                showMolEditor forString = new showMolEditor();
+                                forString.tempmol = gaussOut;
+                            }
+                        });
 
                         if (t != null) {
 //                            t.setVisible(false);
@@ -462,10 +468,15 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                                 cfw.close();
 
                                 exportedApplication = Settings.APP_NAME_GAMESS;
-                                GamessGUI.showGamesGUI();
-                                GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
-                                GamessGUI.molSpec.nanoCadHandler.nanWin.nano = this;
-                                GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        GamessGUI.showGamesGUI();
+                                        GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
+                                        GamessGUI.molSpec.nanoCadHandler.nanWin.nano = newNanocad.this;
+                                        GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+                                    }
+                                });
                             } catch (IOException ioe) {
                                 System.err.println("newNanocad:output Gamess:" +
                                         "IOException");

@@ -76,6 +76,7 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -289,17 +290,39 @@ public class HomeController {
                         "Failed to open Storage Browser");
             }
         });
-        nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
+        nanocadBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        nanocadMain.showNanocad();
+                    }
+                }));
         jamberooBtn.setOnAction(event -> {
             try{
-                JamberooMolecularEditor.showJamberoo();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JamberooMolecularEditor.showJamberoo();
+                    }
+                });
+
             }catch (Exception ex){
                 ex.printStackTrace();
             }
 
         });
-        g03Btn.setOnAction(event1 -> G03MenuTree.showG03MenuTree());
-        gamessBtn.setOnAction(event1 -> GamessGUI.showGamesGUI());
+        g03Btn.setOnAction(event1 -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                G03MenuTree.showG03MenuTree();
+            }
+        }));
+        gamessBtn.setOnAction(event1 -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                GamessGUI.showGamesGUI();
+            }
+        }));
         logoutBtn.setOnAction(event -> {
             ((Stage) logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
@@ -345,9 +368,26 @@ public class HomeController {
                         "Failed to open mass storage browser");
             }
         });
-        nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
-        g03MenuBtn.setOnAction(event -> G03MenuTree.showG03MenuTree());
-        gamessMenuBtn.setOnAction(event -> GamessGUI.showGamesGUI());
+        nanocadMenuBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        nanocadMain.showNanocad();
+                    }
+                }));
+
+        g03MenuBtn.setOnAction(event -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                G03MenuTree.showG03MenuTree();
+            }
+        }));
+        gamessMenuBtn.setOnAction(event -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                GamessGUI.showGamesGUI();
+            }
+        }));
         launchSelectedBtn.setOnAction(event -> expSummaryTable.getItems().stream()
                 .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
                     try {
