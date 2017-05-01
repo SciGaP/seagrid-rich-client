@@ -113,8 +113,9 @@
                   <items>
                     <MenuItem mnemonicParsing="false" text="Storage" fx:id="storageMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
+                    <MenuItem mnemonicParsing="false" text="Jamberoo" visible="true" fx:id="jamberooMenuBtn" />
                     <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="Gamess" visible="false" fx:id="gamessMenuBtn" />
+                    <MenuItem mnemonicParsing="false" text="Gamess" visible="true" fx:id="gamessMenuBtn" />
                   </items>
                 </Menu>
                 <SeparatorMenuItem mnemonicParsing="false" />

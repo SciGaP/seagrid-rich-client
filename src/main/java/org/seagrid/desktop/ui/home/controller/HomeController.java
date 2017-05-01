@@ -162,6 +162,9 @@ public class HomeController {
     private MenuItem nanocadMenuBtn;
 
     @FXML
+    private MenuItem jamberooMenuBtn;
+
+    @FXML
     private MenuItem g03MenuBtn;
 
     @FXML
@@ -375,7 +378,13 @@ public class HomeController {
                         nanocadMain.showNanocad();
                     }
                 }));
-
+        jamberooMenuBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JamberooMolecularEditor.showJamberoo();
+                    }
+                }));
         g03MenuBtn.setOnAction(event -> SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
