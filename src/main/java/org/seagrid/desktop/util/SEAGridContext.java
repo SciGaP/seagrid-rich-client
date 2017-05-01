@@ -179,11 +179,11 @@ public class SEAGridContext {
         }
     }
 
-    public CharSequence getGaussianAppName() {
+    public String getGaussianAppName() {
         return "gaussian";
     }
 
-    public CharSequence getGamessAppName() {
+    public String getGamessAppName() {
         return "gamess";
     }
 
