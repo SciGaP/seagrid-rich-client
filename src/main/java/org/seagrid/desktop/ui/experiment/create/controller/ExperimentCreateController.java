@@ -316,7 +316,9 @@ public class ExperimentCreateController {
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gaussianInput);
         out.close();
+        int bcount=0;
         String[] lines = gaussianInput.split("\n");
+        String desc="";
         for(String temp : lines){
             //These properties are set in the input file we are reusing it.
             if(temp.contains("%nproc=")){
@@ -332,7 +334,21 @@ public class ExperimentCreateController {
                 temp = temp.replace("MB", "");
                 expCreatePhysicalMemField.setText(temp);
             }
+            else if(temp.equals("")){
+                //blank
+                bcount++;
+                if (bcount == 1) {
+                    desc="";
+                    temp="";
+                }
+            }
+            if (bcount < 2) {
+                desc=desc+temp;
+            }
+
         }
+        expCreateNameField.setText("Default_job" );
+        expCreateDescField.setText(desc);
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
         List<ApplicationInterfaceDescription> gaussianApps = new ArrayList<>();
         for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
