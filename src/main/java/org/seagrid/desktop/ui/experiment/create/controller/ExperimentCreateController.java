@@ -321,10 +321,12 @@ public class ExperimentCreateController {
             //These properties are set in the input file we are reusing it.
             if(temp.contains("%nproc=")){
                 temp = temp.replace("%nproc=", "");
-                expCreateNodeCountField.setText(temp);
+                expCreateNodeCountField.setText("1");
+                expCreateTotalCoreCountField.setText(temp);
             }else if(temp.contains("%nprocl=")){
                 temp = temp.replace("%nprocl=", "");
-                expCreateTotalCoreCountField.setText(temp);
+                //expCreateTotalCoreCountField.setText(temp);
+                expCreateNodeCountField.setText(temp);
             }else if(temp.contains("%mem=")){
                 temp = temp.replace("%mem=", "");
                 temp = temp.replace("MB", "");

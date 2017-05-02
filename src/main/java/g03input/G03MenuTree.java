@@ -373,9 +373,9 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
         jobArea = new JTextArea();
         jobArea.setText("default_job");
-        jobArea.setToolTipText("Enter the name of the Job");
+        jobArea.setToolTipText("Enter the title and description of the Job");
         jobNamePanel = new JPanel(new BorderLayout());
-        TitledBorder jobPanelTitle = new TitledBorder("Job Name");
+        TitledBorder jobPanelTitle = new TitledBorder("Job Title & Description");
         jobNamePanel.setBorder(jobPanelTitle);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         //mainFrame.setSize(screenSize.width-20,screenSize.height-100);
