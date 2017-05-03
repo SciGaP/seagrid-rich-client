@@ -109,17 +109,20 @@
                     <MenuItem mnemonicParsing="false" text="Project" fx:id="projCreateMenuItem" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Open">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Storage" fx:id="storageMenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="Jamberoo" visible="true" fx:id="jamberooMenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
-                    <MenuItem mnemonicParsing="false" text="Gamess" visible="true" fx:id="gamessMenuBtn" />
-                  </items>
-                </Menu>
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" text="Close" fx:id="appExitMenuItem" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Molecular Editors">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
+                <MenuItem mnemonicParsing="false" text="Jamberoo" visible="true" fx:id="jamberooMenuBtn" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Application Editors">
+              <items>
+                <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
+                <MenuItem mnemonicParsing="false" text="Gamess" visible="true" fx:id="gamessMenuBtn" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -153,18 +156,18 @@
               </HBox.margin>
             </Button>
             <Button fx:id="browseMassStorageBtn" mnemonicParsing="false" text="Storage" HBox.margin="$x5" />
-            <Button id="browseMassStorageBtn" fx:id="nanocadBtn" mnemonicParsing="false" text="Nanocad" HBox.margin="$x5" />
-            <Button id="browseMassStorageBtn" fx:id="jamberooBtn" mnemonicParsing="false" text="Jamberoo">
+            <Button id="browseMassStorageBtn" fx:id="nanocadBtn" mnemonicParsing="false" text="Nanocad" visible="false" HBox.margin="$x5" />
+            <Button id="browseMassStorageBtn" fx:id="jamberooBtn" mnemonicParsing="false" text="Jamberoo" visible="false">
               <HBox.margin>
                 <Insets bottom="3.0" right="3.0" top="3.0" fx:id="x5" />
               </HBox.margin>
             </Button>
-            <Button id="browseMassStorageBtn" fx:id="g03Btn" mnemonicParsing="false" prefWidth="53.0" text="G09">
+            <Button id="browseMassStorageBtn" fx:id="g03Btn" mnemonicParsing="false" prefWidth="53.0" text="G09" visible="false">
               <HBox.margin>
                 <Insets bottom="3.0" right="3.0" top="3.0" fx:id="x5" />
               </HBox.margin>
             </Button>
-            <Button id="browseMassStorageBtn" fx:id="gamessBtn" mnemonicParsing="false" prefWidth="71.9998779296875" text="Gamess" visible="true">
+            <Button id="browseMassStorageBtn" fx:id="gamessBtn" mnemonicParsing="false" prefWidth="71.9998779296875" text="Gamess" visible="false">
               <HBox.margin>
                 <Insets bottom="3.0" right="3.0" top="3.0" fx:id="x5" />
               </HBox.margin>
