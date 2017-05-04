@@ -368,7 +368,7 @@ public class ExperimentCreateController {
     }
 
     public void initGamessExperiment(String gamessInput) throws FileNotFoundException, TException, URISyntaxException {
-        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gamess.in";
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "gamess.inp";
         PrintWriter out = new PrintWriter(tempFilePath);
         out.println(gamessInput);
         out.close();

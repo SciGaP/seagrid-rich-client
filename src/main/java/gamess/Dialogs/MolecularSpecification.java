@@ -317,7 +317,9 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 			Object item=e.getItem();
 			if(e.getStateChange()==ItemEvent.SELECTED){
 				symmetryBoxValue=item.toString();
-				if(item.toString().equals("Cn")||item.toString().equals("S2n")||item.toString().equals("Cnh")||item.toString().equals("Cnv")||item.toString().equals("Dn")||item.toString().equals("Dnh")||item.toString().equals("Dnd")){
+				if(item.toString().equals("Cn")||item.toString().equals("S2n")||item.toString().equals("Cnh")||
+						item.toString().equals("Cnv")||item.toString().equals("Dn")||item.toString().equals("Dnh")||
+						item.toString().equals("Dnd")){
 					nBox.setEnabled(true);
 					nBoxValue=nBox.getItemAt(0).toString();
 				}

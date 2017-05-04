@@ -618,7 +618,8 @@ public class GamessGUI extends JFrame{
     	for (int i = 0; i < menuBar.getMenuCount() ; i++) 
     	{
 			JMenu currentMenu = menuBar.getMenu(i);
-			if(currentMenu != null && (currentMenu.getText().equalsIgnoreCase("File") || currentMenu.getText().equalsIgnoreCase("Edit") || currentMenu.getText().equalsIgnoreCase("Help")))
+			if(currentMenu != null && (currentMenu.getText().equalsIgnoreCase("File") || currentMenu.getText().equalsIgnoreCase("Edit")
+					|| currentMenu.getText().equalsIgnoreCase("Help")))
 				continue;
 			if(currentMenu != null)
 				currentMenu.setEnabled(updateStatus);
