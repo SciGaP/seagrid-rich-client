@@ -69,19 +69,20 @@ try {
 	coordinates="";
 	atomIndex=0;
 	temp=br.readLine();
-		boolean matched= Pattern.matches("[\\s]*[\\+|\\-]?[0-9]+\\.?[0-9]*[\\s]*[\\+|\\-]?[0-9]+\\.?[0-9]*[\\s]*",temp); //Charge and Multiplicity
+		boolean matched = Pattern.matches("[\\s]*[\\+|\\-]?[0-9]+\\.?[0-9]*[\\s]*[\\+|\\-]?[0-9]+\\.?[0-9]*[\\s]*",temp); //Charge and Multiplicity
 		if(matched){
 			temp=br.readLine();
 			while(temp!=null){
-				boolean molmatched=
-					Pattern.matches("[A-Z][a-z]?[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]*",temp);
+				boolean molmatched =
+						Pattern.matches("[\\w]?[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]*",temp);
+					//Pattern.matches("[A-Z][a-z]?[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]+[\\+|\\-]?[0-9]+\\.?[0-9]+[\\s]*",temp);
 				String[] tempArray=temp.split("[\\s]+");
-			System.out.println(tempArray);
+			System.out.println("AtomCoordParser_79:"+tempArray);
 			atomArray+=tempArray[0]+" ";  //Stores the Atom Name
 			coordinates+=tempArray[1]+" "+tempArray[2]+" "+tempArray[3]+" ";
 			atomIndex++;
 			if((molmatched==false)){
-			JOptionPane.showMessageDialog(null,"Incoherent Molecular Specification","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Incoherent Molecular Specification, missing Atom ID or Coordinates","Error",JOptionPane.ERROR_MESSAGE);
 			System.out.println("G03GUI:atomCoordintaeParser:Matched incoherent input line:"+temp);
 			break;
 			}

@@ -342,17 +342,174 @@ public static  class GeometryReader
                         case 0:  
                             // Read in first atom from line of molecular specification 
                                 atomID.add(strToken);
+                            int tempAtId1=0, tempAtId2=0, tempAtId3=0;
+
 
                             for (j = 0; j < nchar; j++)
                             {
                                 if (Character.isLetter(strToken.charAt(j)))
                                 {
                                     atomicSymbol.append(strToken.charAt(j));
+                                    System.out.println(" # of Characters in atom symbol " + nchar + "Atomic Symbol: "+ atomicSymbol);
+                                }
+                                else if (Character.isDigit(strToken.charAt(j))){
+
+                                    // it is number and it could 1 or 2 or 3 character long
+
+                                        tempAtId1 = Character.getNumericValue(strToken.charAt(0));
+                                        System.out.println("Digit Character 1 in At Symb "+ tempAtId1);
+                                        if (nchar == 1)
+                                        {
+                                            switch (tempAtId1)
+                                            {
+                                            case 1: atomicSymbol.append("H" ); break;
+                                            case 3: atomicSymbol.append("Li"); break;
+                                            case 4: atomicSymbol.append("Be"); break;
+                                            case 5: atomicSymbol.append("B"); break;
+                                            case 6: atomicSymbol.append("C"); break;
+                                            case 7: atomicSymbol.append( "N" ); break;
+                                            case 8: atomicSymbol.append( "O" ); break;
+                                            case 9: atomicSymbol.append( "F" ); break;
+                                            }
+                                        }
+                                        else if (nchar == 2)
+                                        {
+                                           tempAtId2 = Character.getNumericValue(strToken.charAt(1));
+                                           System.out.println("Digit Character 2 in At Symb "+ tempAtId2);
+                                           atomicSymbol.delete(0,atomicSymbol.length());
+                                            if (tempAtId1 == 1)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Ne"); break;
+                                                case 1: atomicSymbol.append("Na"); break;
+                                                case 2: atomicSymbol.append("Mg"); break;
+                                                case 3: atomicSymbol.append("Al"); break;
+                                                case 4: atomicSymbol.append("Si"); break;
+                                                case 5: atomicSymbol.append("P"); break;
+                                                case 6: atomicSymbol.append("S"); break;
+                                                case 7: atomicSymbol.append("Cl"); break;
+                                                case 8: atomicSymbol.append("Ar"); break;
+                                                case 9: atomicSymbol.append("K"); break;
+                                                }
+                                            }
+                                            else if ( tempAtId1 == 2)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Ca"); break;
+                                                case 1: atomicSymbol.append("Sc"); break;
+                                                case 2: atomicSymbol.append("Ti"); break;
+                                                case 3: atomicSymbol.append("V"); break;
+                                                case 4: atomicSymbol.append("Cr"); break;
+                                                case 5: atomicSymbol.append("Mn"); break;
+                                                case 6: atomicSymbol.append("Fe"); break;
+                                                case 7: atomicSymbol.append("Co"); break;
+                                                case 8: atomicSymbol.append("Ni"); break;
+                                                case 9: atomicSymbol.append("Cu"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 3)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Zn"); break;
+                                                case 1: atomicSymbol.append("Ga"); break;
+                                                case 2: atomicSymbol.append("Ge"); break;
+                                                case 3: atomicSymbol.append("As"); break;
+                                                case 4: atomicSymbol.append("Se"); break;
+                                                case 5: atomicSymbol.append("Br"); break;
+                                                case 6: atomicSymbol.append("Kr"); break;
+                                                case 7: atomicSymbol.append("Rb"); break;
+                                                case 8: atomicSymbol.append("Sr"); break;
+                                                case 9: atomicSymbol.append("Y"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 4)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Zr"); break;
+                                                case 1: atomicSymbol.append("Nb"); break;
+                                                case 2: atomicSymbol.append("Mo"); break;
+                                                case 3: atomicSymbol.append("Tc"); break;
+                                                case 4: atomicSymbol.append("Ru"); break;
+                                                case 5: atomicSymbol.append("Rh"); break;
+                                                case 6: atomicSymbol.append("Pd"); break;
+                                                case 7: atomicSymbol.append("Ag"); break;
+                                                case 8: atomicSymbol.append("Cd"); break;
+                                                case 9: atomicSymbol.append("In"); break;
+                                                }
+                                            }
+                                            else if ( tempAtId1 == 5)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Sn"); break;
+                                                case 1: atomicSymbol.append("Sb"); break;
+                                                case 2: atomicSymbol.append("Te"); break;
+                                                case 3: atomicSymbol.append("I"); break;
+                                                case 4: atomicSymbol.append("Xe"); break;
+                                                case 5: atomicSymbol.append("Cs"); break;
+                                                case 6: atomicSymbol.append("Ba"); break;
+                                                case 7: atomicSymbol.append("La"); break;
+                                                case 8: atomicSymbol.append("Ce"); break;
+                                                case 9: atomicSymbol.append("Pr"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 6)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Nd"); break;
+                                                case 1: atomicSymbol.append("Pm"); break;
+                                                case 2: atomicSymbol.append("Sm"); break;
+                                                case 3: atomicSymbol.append("Eu"); break;
+                                                case 4: atomicSymbol.append("Gd"); break;
+                                                case 5: atomicSymbol.append("Tb"); break;
+                                                case 6: atomicSymbol.append("Dy"); break;
+                                                case 7: atomicSymbol.append("Ho"); break;
+                                                case 8: atomicSymbol.append("Er"); break;
+                                                case 9: atomicSymbol.append("Tm"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 7)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Yb"); break;
+                                                case 1: atomicSymbol.append("Lu"); break;
+                                                case 2: atomicSymbol.append("Hf"); break;
+                                                case 3: atomicSymbol.append("Ta"); break;
+                                                case 4: atomicSymbol.append("W"); break;
+                                                case 5: atomicSymbol.append("Re"); break;
+                                                case 6: atomicSymbol.append("Os"); break;
+                                                case 7: atomicSymbol.append("Ir"); break;
+                                                case 8: atomicSymbol.append("Pt"); break;
+                                                case 9: atomicSymbol.append("Au"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 8)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Hg"); break;
+                                                case 1: atomicSymbol.append("Tl"); break;
+                                                case 2: atomicSymbol.append("Pb"); break;
+                                                case 3: atomicSymbol.append("Bi"); break;
+                                                case 4: atomicSymbol.append("Po"); break;
+                                                case 5: atomicSymbol.append("At"); break;
+                                                case 6: atomicSymbol.append("Rn"); break;
+                                                case 7: atomicSymbol.append("Fr"); break;
+                                                case 8: atomicSymbol.append("Ra"); break;
+                                                case 9: atomicSymbol.append("Ac"); break;
+                                               }
+                                            }
+                                            else if ( tempAtId1 == 9)
+                                            {switch (tempAtId2)
+                                               {case 0: atomicSymbol.append("Th"); break;
+                                                case 1: atomicSymbol.append("Pa"); break;
+                                                case 2: atomicSymbol.append("U"); break;
+                                                case 3: atomicSymbol.append("Np"); break;
+                                                case 4: atomicSymbol.append("Pu"); break;
+                                                case 5: atomicSymbol.append("Am"); break;
+                                                case 6: atomicSymbol.append("Cm"); break;
+                                                case 7: atomicSymbol.append("Bk"); break;
+                                                case 8: atomicSymbol.append("Cf"); break;
+                                                case 9: atomicSymbol.append("Es"); break;
+                                               }
+                                            }
+                                        }
+                                System.out.println(" # of Characters in atom symbol " + nchar + " Atomic Symbol by Digit: "+ atomicSymbol);
                                 }
                             }
 
                             atomSymb[atomIndex] = new String(atomicSymbol.toString());
-
+                            System.out.println("AtomIndex: " + atomIndex +" Atomic Symbol: "+ atomSymb[atomIndex] );
                             // Clear contents of string buffer
                             atomicSymbol.delete(0, atomicSymbol.length());
 
@@ -933,12 +1090,12 @@ public static  class GeometryReader
             
             
             System.out.println(" ");
-            System.out.println("The coordinates of the atoms are:");
+            System.out.println("GeometryEditor_1001:The coordinates of the atoms are:");
             for (j = 0; j < natoms; j++)
             {
                 k = 3 * j;
 
-                System.out.print("atom " + atomSymb[j] + ": " + atomCoord[k] + ", " + atomCoord[k + 1] + ", " + atomCoord[k + 2]);
+                System.out.print("atom " + atomSymb[j] + ": " + atomCoord[k] + ", " + atomCoord[k + 1] + ", " + atomCoord[k + 2]+"\n");
                 validateGeom += atomSymb[j]+" "+ atomCoord[k] + " " + atomCoord[k+1] + " " + atomCoord[k+2]+ "\n" ;
             }
 ///////            

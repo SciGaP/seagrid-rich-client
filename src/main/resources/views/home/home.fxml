@@ -121,7 +121,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Application Editors">
               <items>
-                <MenuItem mnemonicParsing="false" text="G03" fx:id="g03MenuBtn" />
+                <MenuItem mnemonicParsing="false" text="G09" fx:id="g03MenuBtn" />
                 <MenuItem mnemonicParsing="false" text="Gamess" visible="true" fx:id="gamessMenuBtn" />
               </items>
             </Menu>
