@@ -147,38 +147,6 @@ public class SEAGridContext {
         return Integer.parseInt(properties.getProperty(SEAGridConfig.SFTP_PORT));
     }
 
-    public String getIdpUrl() {
-        return properties.getProperty(SEAGridConfig.IDP_URL);
-    }
-
-    public String[] getAuthorisedUserRoles() {
-        return properties.getProperty(SEAGridConfig.IDP_AUTHORISED_ROLES).split(",");
-    }
-
-    public String getOAuthClientId() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_ID);
-        }else{
-            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_ID);
-        }
-    }
-
-    public String getOAuthClientSecret() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_SECRET);
-        }else{
-            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_SECRET);
-        }
-    }
-
-    public String getIdpTenantId() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_TENANT_ID);
-        }else {
-            return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
-        }
-    }
-
     public String getGaussianAppName() {
         return "gaussian";
     }

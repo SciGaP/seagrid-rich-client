@@ -20,23 +20,17 @@
 */
 package org.seagrid.desktop.ui.commons;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
-import javafx.concurrent.Worker;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.ExceptionDialog;
 import org.controlsfx.dialog.ProgressDialog;
 import org.slf4j.Logger;
@@ -90,7 +84,7 @@ public class SEAGridDialogHelper {
         alert.showAndWait();
     }
 
-    public static void showInformationNotification(String title, String message, Window parentWindow){
+    public static void showInformationNotification(String title, String message, Window parentWindow) {
         Notifications notification = Notifications.create();
         notification.hideAfter(new Duration(3000));
         notification.position(Pos.TOP_RIGHT);

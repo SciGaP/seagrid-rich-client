@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.*?>
 
-<StackPane minHeight="450.0" minWidth="750.0" prefHeight="491.0" prefWidth="783.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.login.controller.LoginController">
+<StackPane minHeight="600.0" minWidth="1020.0" prefHeight="600.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.seagrid.desktop.ui.login.controller.LoginController">
   <children>
     <StackPane>
       <children>
         <VBox prefWidth="424.0" spacing="10.0">
           <children>
-            <WebView fx:id="loginWebView" minHeight="298.0" prefHeight="298.0" prefWidth="730.0" VBox.vgrow="ALWAYS" />
+            <WebView fx:id="loginWebView" minHeight="298.0" prefHeight="389.0" prefWidth="763.0" VBox.vgrow="ALWAYS" />
             <Label fx:id="notificationLabel" alignment="CENTER" contentDisplay="CENTER" focusTraversable="true" prefHeight="49.0" prefWidth="762.999977929685" text="" textAlignment="CENTER" textFill="RED" wrapText="true">
               <font>
                 <Font size="16.0" />
               </font>
             </Label>
-            <GridPane id="loginGridPane" alignment="TOP_CENTER" prefHeight="83.99990000000253" prefWidth="587.0" VBox.vgrow="NEVER">
+            <GridPane id="loginGridPane" alignment="TOP_CENTER" disable="true" maxHeight="0.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0" visible="false" VBox.vgrow="NEVER">
               <children>
                 <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
