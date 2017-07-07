@@ -42,8 +42,10 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
 import java.awt.*;
 import java.net.URI;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,6 +72,37 @@ public class LoginController {
     }
 
     public void initialize() {
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }
+        };
+
+        try{
+            // Install the all-trusting trust manager
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // Create all-trusting host name verifier
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+
+            // Install the all-trusting host verifier
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
         loginButton.setOnMouseClicked(event -> {
             handleSEAGridWebLogin();
         });
@@ -210,13 +243,14 @@ public class LoginController {
 
     private Map<String, String> getQueryMap(String query)
     {
-        String[] params = query.split("\\?")[1].split("&");
         Map<String, String> map = new HashMap<>();
-        for (String param : params)
-        {
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
-            map.put(name, value);
+        if(query.contains("?")) {
+            String[] params = query.split("\\?")[1].split("&");
+            for (String param : params) {
+                String name = param.split("=")[0];
+                String value = param.split("=")[1];
+                map.put(name, value);
+            }
         }
         return map;
     }
