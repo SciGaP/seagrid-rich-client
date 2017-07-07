@@ -181,6 +181,15 @@ public class LoginController {
                         SEAGridContext.getInstance().setTokenExpiaryTime(validTime);
                         SEAGridContext.getInstance().setUserName(userName);
                         stage.close();
+                    }else if(params.get("status").equals("less_privileged")){
+                        //login failed
+                        java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                        webEngine.load(url);
+                        loginWebView.setVisible(false);
+                        SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
+                                "You don't have permission to access this client." +
+                                        " Please contact the Gateway Admin to get your account authorized.", stage);
+                        loginWebView.setVisible(true);
                     }else{
                         //login failed
                         java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
