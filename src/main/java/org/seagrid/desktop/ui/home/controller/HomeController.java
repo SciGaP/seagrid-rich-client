@@ -821,7 +821,6 @@ public class HomeController {
                 Duration.millis(60*60*1000),
                 ae -> {
                     try {
-                        System.out.println("updating access token");
                         String url;
                         if(SEAGridConfig.DEV){
                             url = "https://dev.seagrid.org/refreshed-token-desktop?refresh_code="
