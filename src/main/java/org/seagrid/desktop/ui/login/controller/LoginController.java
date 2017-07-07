@@ -188,7 +188,8 @@ public class LoginController {
                         loginWebView.setVisible(false);
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
-                                        " Please contact the Gateway Admin to get your account authorized.", stage);
+                                        " Please contact the Gateway Admin to get your account authorized by sending an" +
+                                        " email to help@seagrid.org.", stage);
                         loginWebView.setVisible(true);
                     }else{
                         //login failed
