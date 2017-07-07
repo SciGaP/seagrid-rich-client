@@ -23,33 +23,29 @@ package org.seagrid.desktop.ui.login.controller;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.binding.BooleanBinding;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
-import javafx.scene.control.*;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.airavata.model.error.AuthorizationException;
 import org.apache.airavata.model.workspace.Notification;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.wso2is.AuthResponse;
-import org.seagrid.desktop.connectors.wso2is.AuthenticationException;
-import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
+import org.seagrid.desktop.util.SEAGridConfig;
 import org.seagrid.desktop.util.SEAGridContext;
-import org.seagrid.desktop.util.UserPrefs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LoginController {
@@ -58,20 +54,9 @@ public class LoginController {
     @FXML
     public Label notificationLabel;
 
-    @FXML
-    public RadioButton rememberMe;
-
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private PasswordField passwordField;
 
     @FXML
     private Button loginButton;
-
-    @FXML
-    private Label loginAuthFailed;
 
     @FXML
     private Hyperlink dontHaveAccountLink;
@@ -85,41 +70,19 @@ public class LoginController {
     }
 
     public void initialize() {
-        loginButton.disableProperty().bind(new BooleanBinding() {
-            {super.bind(passwordField.textProperty(),usernameField.textProperty());}
-            @Override
-            protected boolean computeValue() {
-                return usernameField.getText().isEmpty() || passwordField.getText().isEmpty();
-            }
-        });
         loginButton.setOnMouseClicked(event -> {
-            handleLogin();
+            handleSEAGridWebLogin();
         });
-        passwordField.setOnAction(event->{if(!usernameField.getText().isEmpty() && !passwordField.getText().isEmpty())
-            handleLogin();});
-        usernameField.setOnAction(event->{if(!usernameField.getText().isEmpty() && !passwordField.getText().isEmpty())
-            handleLogin();});
-
-        UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
-        if(userPrefs != null){
-            usernameField.setText(userPrefs.getUserName());
-            if(userPrefs.isRememberPassword()){
-                rememberMe.setSelected(true);
-                passwordField.setText(userPrefs.getPassword());
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        passwordField.requestFocus();
-                        passwordField.end();
-                    }
-                });
-
-            }
-        }
 
         dontHaveAccountLink.setOnAction(event -> {
             try {
-                Desktop.getDesktop().browse(new URI("https://seagrid.org/create"));
+                String url;
+                if(SEAGridConfig.DEV){
+                    url = "https://dev.seagrid.org/create";
+                }else{
+                    url = "https://seagrid.org/create";
+                }
+                Desktop.getDesktop().browse(new URI(url));
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -188,44 +151,63 @@ public class LoginController {
         }
     }
 
-    public boolean handleLogin(){
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        AuthenticationManager authenticationManager = new AuthenticationManager();
-        try {
-            AuthResponse authResponse = authenticationManager.authenticate(username,password);
-            if(authResponse != null){
-                SEAGridContext.getInstance().setAuthenticated(true);
-                SEAGridContext.getInstance().setUserName(username);
-                SEAGridContext.getInstance().setOAuthToken(authResponse.getAccess_token());
-                SEAGridContext.getInstance().setRefreshToken(authResponse.getRefresh_token());
-                SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
-                        + System.currentTimeMillis());
-                Stage stage = (Stage) loginButton.getScene().getWindow();
-
-                UserPrefs userPrefs = SEAGridContext.getInstance().getUserPrefs();
-                userPrefs.setUserName(username);
-                userPrefs.setPassword(password);
-                userPrefs.setRememberPassword(rememberMe.isSelected());
-
-                stage.close();
-            }else{
-                loginAuthFailed.setText("Authentication Failed !");
-                loginAuthFailed.setFont(new Font(10));
-                loginAuthFailed.setTextFill(Color.RED);
-                passwordField.setText("");
-            }
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", loginButton.getScene().getWindow(),
-                    "Login operation failed !");
-        } catch (AuthorizationException e){
-            loginAuthFailed.setText("Your account is not yet approved by the Admin !");
-            loginAuthFailed.setFont(new Font(10));
-            loginAuthFailed.setTextFill(Color.RED);
-            passwordField.setText("");
+    public boolean handleSEAGridWebLogin(){
+        final WebEngine webEngine = loginWebView.getEngine();
+        final Label location = new Label();
+        String url;
+        if(SEAGridConfig.DEV){
+            url = "https://dev.seagrid.org/login-desktop";
+        }else{
+            url = "https://seagrid.org/login-desktop";
         }
+
+
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (Worker.State.SUCCEEDED.equals(newValue)) {
+                String locationUrl = webEngine.getLocation();
+                location.setText(locationUrl);
+                Map<String, String> params = getQueryMap(locationUrl);
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                if(params.containsKey("status")){
+                    if(params.get("status").equals("ok")){
+                        //login successful
+                        String token = params.get("code");
+                        String refreshToken = params.get("refresh_code");
+                        int validTime = Integer.parseInt(params.get("valid_time").trim());
+                        String userName = params.get("username");
+                        SEAGridContext.getInstance().setAuthenticated(true);
+                        SEAGridContext.getInstance().setOAuthToken(token);
+                        SEAGridContext.getInstance().setRefreshToken(refreshToken);
+                        SEAGridContext.getInstance().setTokenExpiaryTime(validTime);
+                        SEAGridContext.getInstance().setUserName(userName);
+                        stage.close();
+                    }else{
+                        //login failed
+                        webEngine.load(url);
+                        loginWebView.setVisible(false);
+                        SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
+                                "You don't have permission to access this client." +
+                                " Please use a correct user credentials and try again.", stage);
+                        loginWebView.setVisible(true);
+                    }
+                }
+            }
+        });
+        webEngine.load(url);
         return false;
+    }
+
+    private Map<String, String> getQueryMap(String query)
+    {
+        String[] params = query.split("\\?")[1].split("&");
+        Map<String, String> map = new HashMap<>();
+        for (String param : params)
+        {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+        }
+        return map;
     }
 
 }
