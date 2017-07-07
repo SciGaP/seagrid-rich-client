@@ -183,6 +183,7 @@ public class LoginController {
                         stage.close();
                     }else{
                         //login failed
+                        java.net.CookieHandler.setDefault(new java.net.CookieManager());
                         webEngine.load(url);
                         loginWebView.setVisible(false);
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",

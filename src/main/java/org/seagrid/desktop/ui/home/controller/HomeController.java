@@ -329,6 +329,7 @@ public class HomeController {
             }
         }));
         logoutBtn.setOnAction(event -> {
+            java.net.CookieHandler.setDefault(new java.net.CookieManager());
             ((Stage) logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
         });
