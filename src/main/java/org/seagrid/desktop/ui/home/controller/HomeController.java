@@ -329,6 +329,7 @@ public class HomeController {
             }
         }));
         logoutBtn.setOnAction(event -> {
+            java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
             ((Stage) logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
         });
@@ -817,7 +818,7 @@ public class HomeController {
     private void initTokenUpdateDaemon() {
         Timeline oauthTokenUpdateTimer = new Timeline(new KeyFrame(
                 //It seems the OAuthTokenExpiration time is in GMT
-                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime()*1000 + 60*60*6*1000 - System.currentTimeMillis()) * 5 / 6),
+                Duration.millis(60*60*1000),
                 ae -> {
                     try {
                         String url;
