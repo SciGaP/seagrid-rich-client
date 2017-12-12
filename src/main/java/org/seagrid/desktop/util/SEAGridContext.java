@@ -147,43 +147,11 @@ public class SEAGridContext {
         return Integer.parseInt(properties.getProperty(SEAGridConfig.SFTP_PORT));
     }
 
-    public String getIdpUrl() {
-        return properties.getProperty(SEAGridConfig.IDP_URL);
-    }
-
-    public String[] getAuthorisedUserRoles() {
-        return properties.getProperty(SEAGridConfig.IDP_AUTHORISED_ROLES).split(",");
-    }
-
-    public String getOAuthClientId() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_ID);
-        }else{
-            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_ID);
-        }
-    }
-
-    public String getOAuthClientSecret() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_OAUTH_CLIENT_SECRET);
-        }else{
-            return properties.getProperty(SEAGridConfig.IDP_OAUTH_CLIENT_SECRET);
-        }
-    }
-
-    public String getIdpTenantId() {
-        if(SEAGridConfig.DEV){
-            return properties.getProperty(SEAGridConfig.DEV_IDP_TENANT_ID);
-        }else {
-            return properties.getProperty(SEAGridConfig.IDP_TENANT_ID);
-        }
-    }
-
-    public CharSequence getGaussianAppName() {
+    public String getGaussianAppName() {
         return "gaussian";
     }
 
-    public CharSequence getGamessAppName() {
+    public String getGamessAppName() {
         return "gamess";
     }
 
@@ -216,6 +184,10 @@ public class SEAGridContext {
                 FileInputStream fis = new FileInputStream(getFileDownloadLocation()+"/.prefs/user_pref.ser");
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 this.userPrefs = (UserPrefs)ois.readObject();
+                if(this.userPrefs == null){
+                    this.userPrefs = new UserPrefs();
+                    return this.userPrefs;
+                }
             }
             catch (Exception e){
                 this.userPrefs = new UserPrefs();

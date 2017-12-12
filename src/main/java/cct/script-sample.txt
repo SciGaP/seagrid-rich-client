@@ -1,0 +1,41 @@
+#!/bin/csh
+
+#PBS -V
+
+### Job name
+#PBS -N MyJobName
+
+### Join queuing system output and error files into a single output file
+#PBS -j oe
+
+### Send email to user when job ends or aborts
+#PBS -m ae
+
+### email address for user
+#PBS -M vvv900@gmail.com
+
+### Queue name that job is submitted to
+#PBS -q hydra
+
+### Request nodes NB THIS IS REQUIRED
+####NOTE: ncpus=1-8  then progress to nodes=1-67
+####           after 8 cpus, you need to use nodes= instead of ncpus=
+#PBS -l ncpus=1
+#PBS -l mem=1000mb,vmem=1000mb
+####NOTE: need to specify in MB used to be able to use GB
+#PBS -l walltime=1:00:00
+
+
+# This job's working directory
+echo Working directory is $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+echo Running on host `hostname`
+echo Time is `date`
+
+#Load module(s) if required
+#module load application_module
+module load gaussian/G09
+
+# Run the executable
+@@EXECUTABLE@@ < @@INPUT@@ > @@OUTPUT@@
+###or   g09 < ${PBS_JOBNAME}.gif > ${PBS_JOBNAME}.${PBS_JOBID}.log

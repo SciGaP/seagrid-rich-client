@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formatDescriptors>
+    <simpleCoordinateBuilders>
+        <simpleCoordinateBuilder name="XMol XYZ" desc="XMol XYZ Format" class="cct.tools.XMolXYZ"/>
+        <simpleCoordinateBuilder name="PDB" desc="Protein Database Format" class="cct.pdb.PDB"/>
+        <simpleCoordinateBuilder name="Gau Cartesian" desc="Gaussian Symbolic Cartesian Coordinates Format" class="cct.gaussian.GaussianSymbolicCartesianCoordinates"/>
+    </simpleCoordinateBuilders>
+    <simpleCoordinateParsers>
+        <simpleCoordinateParser name="XMol XYZ" desc="XMol XYZ Format" class="cct.tools.XMolXYZ"/>
+        <simpleCoordinateParser name="Gaussian XYZ" desc="Gaussian Input/Standard Orientation" class="cct.gaussian.InputOrientationParser"/>
+        <simpleCoordinateParser name="PDB" desc="Protein Database Format" class="cct.pdb.PDB"/>
+        <simpleCoordinateParser name="CPMD Output" desc="CPMD Output File" class="cct.cpmd.CPMDOutput"/>
+        <simpleCoordinateParser name="Tripos Mol2" desc="Tripos Mol2 Input File" class="cct.tripos.TriposParser"/>
+    </simpleCoordinateParsers>
+</formatDescriptors>

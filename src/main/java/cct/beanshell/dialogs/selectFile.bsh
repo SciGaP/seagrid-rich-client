@@ -1,0 +1,59 @@
+/**
+	Opens dialog to select directory. Returns null is dialog was cancelled
+*/
+
+String selectFile(String dialogTitle, javax.swing.filechooser.FileFilter [] fileFilters, String saveLabel) {
+    java.util.prefs.Preferences prefs = null;
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle(dialogTitle);
+    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    if ( fileFilters != null ) {
+        for(int i=0; i<fileFilters.length; i++) {
+            if ( fileFilters[i] != null ) fc.addChoosableFileFilter( fileFilters[i] );
+        }
+    }
+
+    if ( saveLabel != null && saveLabel.trim().length() > 0 ) {
+        prefs = java.util.prefs.Preferences.userNodeForPackage(this.getClass());
+        String lastPWD = prefs.get(saveLabel, "");
+        if (lastPWD.length() > 0) {
+            File cwd = new File(lastPWD);
+            if (cwd.isDirectory() && cwd.exists()) {
+                fc.setCurrentDirectory(cwd);
+            }
+        }
+    }
+
+    int returnVal = fc.showOpenDialog(new Frame());
+    if (returnVal != JFileChooser.APPROVE_OPTION ) {
+        return null;
+    }
+
+    if (prefs != null ) {
+        cwd = fc.getCurrentDirectory();
+        try {
+            prefs.put(saveLabel, cwd.getAbsolutePath());
+            } catch (Exception ex) {
+                System.err.println("Cannot save cwd: " + ex.getMessage()
+                        + " Ignored...");
+            }
+    }
+
+    return fc.getSelectedFile().toString();
+}
+
+String selectFile(String dialogTitle, javax.swing.filechooser.FileFilter fileFilter, String saveLabel) {
+    return selectFile(dialogTitle, new javax.swing.filechooser.FileFilter [] {fileFilter}, saveLabel);
+}
+
+String selectFile(String dialogTitle, String saveLabel) {
+    return selectFile(dialogTitle, null, saveLabel);
+}
+
+String selectFile(String dialogTitle) {
+    return selectFile(dialogTitle, null, null);
+}
+
+String selectFile() {
+    return selectFile("Select a File", null, null);
+}

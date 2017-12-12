@@ -44,6 +44,9 @@ DEALINGS WITH THE SOFTWARE.
 
 package g03input;
 
+import cct.JamberooMolecularEditor;
+import nanocad.nanocadMain;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -57,6 +60,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -81,7 +86,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
     public static JPanel bottomPanel, basePanel, treePanel;
     public static JScrollPane treeScroll;
     public static JMenu methodMenu, basisSetMenu, freqSubMenu, addSubMenu, molMenu;
-    public static JMenuItem nanoItem, cartItem, zItem;
+    public static JMenuItem nanoItem, jamberooItem, cartItem, zItem;
     public static String freOptString = "", optString = "";
     public static String[] key_words = {"Methods", "Basis Sets", "Job Types", "Keywords"};
     public static JRadioButton pRadio, nRadio, tRadio, noneRadio;
@@ -193,8 +198,8 @@ public class G03MenuTree extends JFrame implements MouseListener {
     // JLabel for displaying the nanocad status
     public static JLabel nanocadNotice = new JLabel();
 
-    public static void showG03MenuTree(){
-        if(mainFrame == null || !mainFrame.isShowing()){
+    public static void showG03MenuTree() {
+        if (mainFrame == null || !mainFrame.isShowing()) {
             mainFrame = new G03MenuTree();
             mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             mainFrame.pack();
@@ -212,7 +217,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
     private G03MenuTree() {
 
-        super("Gaussian 03 Input GUI");
+        super("Gaussian 09 Input GUI");
         //showMolEditor.molFrame.setVisible(false);
         //createtitlePanel();
         createkeyWordPanel();
@@ -344,7 +349,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
         // scrpane.setVisible(true);
 
 	    /*
-	    //It is a dummy panel, it does nothing
+        //It is a dummy panel, it does nothing
 	    JPanel dpanel=new JPanel();
     	JLabel lbl= new JLabel("Route Section cannot be modified");
     	Color c = dpanel.getBackground();
@@ -544,7 +549,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
     public void createtreePanel() {
         root =
-                new DefaultMutableTreeNode("G '03 Input Selections");
+                new DefaultMutableTreeNode("G '09 Input Selections");
 
         for (int i = 0; i < key_words.length; i++) {
             child = new DefaultMutableTreeNode(key_words[i]);
@@ -592,6 +597,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
         //routeTitleMolPanel.add(jobNamePanel,BorderLayout.CENTER);
         routeTitleMolPanel.add(molPanel, BorderLayout.CENTER);
         routeTitleMolPanel.add(routeJobPanel, BorderLayout.NORTH);
+
 
         centerBasePanel = new JPanel(new BorderLayout());
         centerBasePanel.add(linkoPanel, BorderLayout.NORTH);
@@ -725,15 +731,28 @@ public class G03MenuTree extends JFrame implements MouseListener {
 
         molMenu = new JMenu("Molecular Specification");
 
-        //nanoItem=new JMenuItem("Molecular Editor");
+        nanoItem=new JMenuItem("Nanocad Editor");
+        jamberooItem=new JMenuItem("Jamberoo Editor");
         //cartItem = new JMenuItem("Cartesian Coordinates");
         //zItem= new JMenuItem("Z-matrix Format");
 
         //molMenu.add(cartItem);
-        // molMenu.add(nanoItem);
+         molMenu.add(nanoItem);
+         molMenu.add(jamberooItem);
         //molMenu.add(zItem);
         // zItem.setEnabled(false);
-        // nanoItem.addActionListener(new showMolEditor());
+         nanoItem.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 nanocadMain.showNanocad();
+             }
+         });
+         jamberooItem.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 JamberooMolecularEditor.showJamberoo();
+             }
+         });
         //cartItem.addActionListener(new MenuListeners());
         // zItem.addActionListener(new MenuListeners());
 	    
@@ -1661,7 +1680,7 @@ public class G03MenuTree extends JFrame implements MouseListener {
                     || (path.getLastPathComponent().toString().equals("Basis Sets"))
                     || (path.getLastPathComponent().toString().equals("Job Types"))
                     || (path.getLastPathComponent().toString().equals("Keywords"))
-                    || (path.getLastPathComponent().toString().equals("G '03 Input Selections"))
+                    || (path.getLastPathComponent().toString().equals("G '09 Input Selections"))
                     )
                 JOptionPane.showMessageDialog(this, "Invalid Operation !!!", "ERROR", JOptionPane.ERROR_MESSAGE);
             else {

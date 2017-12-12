@@ -80,6 +80,7 @@ public class GuiFileUploadTask extends GuiFileTask {
                 }
                 catch ( SftpException e ) {
                     channelSftp.mkdir( folder );
+                    channelSftp.chmod(Integer.parseInt("777",8), folder);
                     channelSftp.cd( folder );
                 }
             }

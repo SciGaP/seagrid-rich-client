@@ -1,0 +1,4 @@
+
+cct.JamberooMolecularEditor jamberoo() {
+  return new cct.JamberooMolecularEditor(null);
+}

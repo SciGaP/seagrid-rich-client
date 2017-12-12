@@ -1,0 +1,4 @@
+
+cct.interfaces.AtomInterface getAtom( cct.interfaces.MoleculeInterface mol, int nAtom) {
+  return mol.getAtomInterface( nAtom-1 );;
+}

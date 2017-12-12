@@ -332,21 +332,20 @@ public class ExperimentCreateController {
             }
         }
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
-        ApplicationInterfaceDescription gaussianApp = null;
+        List<ApplicationInterfaceDescription> gaussianApps = new ArrayList<>();
         for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
-            if(appInter.getApplicationName().toLowerCase().contains(SEAGridContext.getInstance().getGaussianAppName())){
-                gaussianApp = appInter;
-                break;
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getGaussianAppName())){
+                gaussianApps.add(appInter);
             }
         }
-        if(gaussianApp !=  null){
-            List<ApplicationInterfaceDescription> gaussianAppList = new ArrayList();
-            gaussianAppList.add(gaussianApp);
-            expCreateAppField.getItems().setAll(gaussianAppList);
+        if(gaussianApps.size() > 0){
+            expCreateAppField.getItems().setAll(gaussianApps);
             expCreateAppField.getSelectionModel().select(0);
-            List<InputDataObjectType> gaussianInputs = gaussianApp.getApplicationInputs();
-            gaussianInputs.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gaussianInputs, false);
+            for(ApplicationInterfaceDescription app : gaussianApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, false);
+            }
         }
     }
 
@@ -356,21 +355,20 @@ public class ExperimentCreateController {
         out.println(gamessInput);
         out.close();
         List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
-        ApplicationInterfaceDescription gamessApp = null;
+        List<ApplicationInterfaceDescription> gamessApps = new ArrayList<>();
         for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
-            if(appInter.getApplicationName().toLowerCase().contains(SEAGridContext.getInstance().getGamessAppName())){
-                gamessApp = appInter;
-                break;
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getGamessAppName())){
+                gamessApps.add(appInter);
             }
         }
-        if(gamessApp !=  null){
-            List<ApplicationInterfaceDescription> gamessAppList = new ArrayList();
-            gamessAppList.add(gamessApp);
-            expCreateAppField.getItems().setAll(gamessAppList);
+        if(gamessApps.size() > 0){
+            expCreateAppField.getItems().setAll(gamessApps);
             expCreateAppField.getSelectionModel().select(0);
-            List<InputDataObjectType> gamessAppInput = gamessApp.getApplicationInputs();
-            gamessAppInput.get(0).setValue(tempFilePath);
-            updateExperimentInputs(gamessAppInput, false);
+            for(ApplicationInterfaceDescription app : gamessApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, false);
+            }
         }
     }
 
@@ -561,7 +559,10 @@ public class ExperimentCreateController {
                     String filePath = (new URI(fileUri)).getPath();
                     handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(filePath));
                 }else{
-                    handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
+                    File file = new File(inputDataObjectType.getValue());
+                    if(file.exists()){
+                        handleExperimentFileSelect(inputDataObjectType, hBox, localFilePickBtn, remoteFilePickBtn, new File(inputDataObjectType.getValue()));
+                    }
                 }
             }else if(inputDataObjectType.getType().equals(DataType.URI_COLLECTION)){
                 expCreateInputsGridPane.add(labelObj, 0, index);

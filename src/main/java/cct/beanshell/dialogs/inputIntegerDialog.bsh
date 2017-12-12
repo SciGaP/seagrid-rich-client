@@ -1,0 +1,70 @@
+
+Integer inputIntegerDialog(String title) {
+    while(true) {
+        String inputValue = javax.swing.JOptionPane.showInputDialog(title); 
+        if ( inputValue ==  null ) return null;
+        inputValue = inputValue.trim();
+        if ( inputValue.length() == 0 ) {
+            return null;
+        } else {
+            try {
+                Integer maxToProcess = Integer.parseInt(inputValue);
+                return maxToProcess;
+            } catch (Exception ex ) {
+                System.err.println("Error parsing "+inputValue+" : "+ex.getMessage()+" Try again");
+            }
+        }
+    }
+
+    return null;
+}
+
+Integer inputIntegerDialog(String title, Integer defaultValue) {
+    while(true) {
+        String inputValue = javax.swing.JOptionPane.showInputDialog(null, title, defaultValue ); 
+        if ( inputValue ==  null ) return null;
+        inputValue = inputValue.trim();
+        if ( inputValue.length() == 0 ) {
+            return null;
+        } else {
+            try {
+                Integer maxToProcess = Integer.parseInt(inputValue);
+                return maxToProcess;
+            } catch (Exception ex ) {
+                System.err.println("Error parsing "+inputValue+" : "+ex.getMessage()+" Try again");
+            }
+        }
+    }
+
+    return null;
+}
+
+Integer inputIntegerDialog(String title, int defaultValue) {
+    return inputIntegerDialog(title, new Integer(defaultValue));
+}
+
+Integer inputIntegerDialog(String title, Integer defaultValue, Integer minValue, Integer maxValue) {
+    Integer value=null;
+    while(true) {
+        value = inputIntegerDialog(title, defaultValue);
+        if (value == null ) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Input value cannot be empty", 
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            continue;
+        }
+        if ( minValue != null && value < minValue ) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Input value cannot be less than " + minValue.toString(), 
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            continue;
+        } else if ( maxValue != null && value > maxValue ) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Input value cannot be larger than " + maxValue.toString(), 
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            continue;
+        }
+        return value;
+    }
+}
+
+Integer inputIntegerDialog(String title, int defaultValue, Integer minValue, Integer maxValue) {
+    return inputIntegerDialog(title, new Integer(defaultValue), minValue, maxValue);
+}

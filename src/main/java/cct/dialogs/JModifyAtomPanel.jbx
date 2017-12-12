@@ -1,0 +1,35 @@
+[PropertyInfo]
+Blue,javax.swing.JSpinner,false,false, , ,false,<default>
+Choose_color,javax.swing.JButton,false,false, , ,false,<default>
+colorBuffer,java.awt.Color,false,false, , ,false,<default>
+Element,javax.swing.JComboBox,false,false, , ,false,<default>
+flowLayout1,java.awt.FlowLayout,false,false, , ,false,<default>
+flowLayout2,java.awt.FlowLayout,false,false, , ,false,<default>
+flowLayout3,java.awt.FlowLayout,false,false, , ,false,<default>
+graphicsRenderer,cct.interfaces.GraphicsRendererInterface,false,false, , ,true,<default>
+Green,javax.swing.JSpinner,false,false, , ,false,<default>
+gridBagLayout1,java.awt.GridBagLayout,false,false, , ,false,<default>
+JLabel1,javax.swing.JLabel,false,false, , ,false,<default>
+JLabel2,javax.swing.JLabel,false,false, , ,false,<default>
+JLabel3,javax.swing.JLabel,false,false, , ,false,<default>
+JLabel4,javax.swing.JLabel,false,false, , ,false,<default>
+JLabel5,javax.swing.JLabel,false,false, , ,false,<default>
+JLabel6,javax.swing.JLabel,false,false, , ,false,<default>
+JPanel1,javax.swing.JPanel,false,false, , ,false,<default>
+JPanel2,javax.swing.JPanel,false,false, , ,false,<default>
+JPanel3,javax.swing.JPanel,false,false, , ,false,<default>
+Label,javax.swing.JTextField,false,false, , ,false,<default>
+Radius,javax.swing.JSpinner,false,false, , ,false,<default>
+Red,javax.swing.JSpinner,false,false, , ,false,<default>
+renderer,cct.interfaces.GraphicsRendererInterface,false,false, , ,false,<default>
+X,javax.swing.JLabel,false,false, , ,false,<default>
+Xcoord,javax.swing.JTextField,false,false, , ,false,<default>
+Y,javax.swing.JLabel,false,false, , ,false,<default>
+Ycoord,javax.swing.JTextField,false,false, , ,false,<default>
+Z,javax.swing.JLabel,false,false, , ,false,<default>
+Zcoord,javax.swing.JTextField,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

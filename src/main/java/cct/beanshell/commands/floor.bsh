@@ -1,0 +1,40 @@
+
+double floor(double value) {
+  return Math.floor(value);
+}
+
+double floor(Double value) {
+  return Math.floor(value);
+}
+
+double floor(float value) {
+  return Math.floor(value);
+}
+
+double floor(Float value) {
+  return Math.floor(value);
+}
+
+double floor(Number value) {
+  return Math.floor(((Number)value).doubleValue());
+}
+
+double floor(int value) {
+  return Math.floor((double)value);
+}
+
+double floor(long value) {
+  return Math.floor((double)value);
+}
+
+double floor(Integer value) {
+  return Math.floor(value.doubleValue());
+}
+
+double floor(Long value) {
+  return Math.floor(value.doubleValue());
+}
+
+double floor(String value) {
+  return Math.floor(Double.parseDouble(value.trim() ) );
+}

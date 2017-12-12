@@ -1,0 +1,40 @@
+
+double cbrt(double value) {
+  return Math.cbrt(value);
+}
+
+double cbrt(Double value) {
+  return Math.cbrt(value);
+}
+
+double cbrt(float value) {
+  return Math.cbrt(value);
+}
+
+double cbrt(Float value) {
+  return Math.cbrt(value);
+}
+
+double cbrt(Number value) {
+  return Math.cbrt(((Number)value).doubleValue());
+}
+
+double cbrt(int value) {
+  return Math.cbrt((double)value);
+}
+
+double cbrt(long value) {
+  return Math.cbrt((double)value);
+}
+
+double cbrt(Integer value) {
+  return Math.cbrt(value.doubleValue());
+}
+
+double cbrt(Long value) {
+  return Math.cbrt(value.doubleValue());
+}
+
+double cbrt(String value) {
+  return Math.cbrt(Double.parseDouble(value.trim() ) );
+}

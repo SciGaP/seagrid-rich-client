@@ -21,7 +21,10 @@
 package org.seagrid.desktop.ui.home.controller;
 
 
+import cct.JamberooMolecularEditor;
 import com.google.common.eventbus.Subscribe;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import g03input.G03MenuTree;
 import gamess.GamessGUI;
 import javafx.animation.Animation;
@@ -59,8 +62,6 @@ import org.apache.airavata.model.workspace.Notification;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.wso2is.AuthResponse;
-import org.seagrid.desktop.connectors.wso2is.AuthenticationManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.experiment.create.ExperimentCreateWindow;
 import org.seagrid.desktop.ui.experiment.summary.ExperimentSummaryWindow;
@@ -69,15 +70,21 @@ import org.seagrid.desktop.ui.home.model.ProjectTreeModel;
 import org.seagrid.desktop.ui.home.model.TreeModel;
 import org.seagrid.desktop.ui.project.ProjectWindow;
 import org.seagrid.desktop.ui.storage.MassStorageBrowserWindow;
+import org.seagrid.desktop.util.SEAGridConfig;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.seagrid.desktop.util.messaging.SEAGridEvent;
 import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -145,16 +152,19 @@ public class HomeController {
     private Button nanocadBtn;
 
     @FXML
+    private Button jamberooBtn;
+
+    @FXML
     private MenuItem aboutMenuItem;
 
     @FXML
     private MenuItem appExitMenuItem;
 
     @FXML
-    private MenuItem storageMenuBtn;
+    private MenuItem nanocadMenuBtn;
 
     @FXML
-    private MenuItem nanocadMenuBtn;
+    private MenuItem jamberooMenuBtn;
 
     @FXML
     private MenuItem g03MenuBtn;
@@ -198,7 +208,7 @@ public class HomeController {
             initExperimentList();
         } catch (TException e) {
             e.printStackTrace();
-            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
+            SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", null,
                     "Failed initialising experiment list !");
         }
         initTokenUpdateDaemon();
@@ -285,10 +295,41 @@ public class HomeController {
                         "Failed to open Storage Browser");
             }
         });
-        nanocadBtn.setOnAction(event -> nanocadMain.showNanocad());
-        g03Btn.setOnAction(event1 -> G03MenuTree.showG03MenuTree());
-        gamessBtn.setOnAction(event1 -> GamessGUI.showGamesGUI());
+        nanocadBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        nanocadMain.showNanocad();
+                    }
+                }));
+        jamberooBtn.setOnAction(event -> {
+            try{
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JamberooMolecularEditor.showJamberoo();
+                    }
+                });
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        });
+        g03Btn.setOnAction(event1 -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                G03MenuTree.showG03MenuTree();
+            }
+        }));
+        gamessBtn.setOnAction(event1 -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                GamessGUI.showGamesGUI();
+            }
+        }));
         logoutBtn.setOnAction(event -> {
+            java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
             ((Stage) logoutBtn.getScene().getWindow()).close();
             SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
         });
@@ -325,17 +366,32 @@ public class HomeController {
                 System.exit(0);
             }
         });
-        storageMenuBtn.setOnAction(event -> {
-            try {
-                MassStorageBrowserWindow.displayFileBrowse(null);
-            } catch (Exception e) {
-                SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
-                        "Failed to open mass storage browser");
+        nanocadMenuBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        nanocadMain.showNanocad();
+                    }
+                }));
+        jamberooMenuBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JamberooMolecularEditor.showJamberoo();
+                    }
+                }));
+        g03MenuBtn.setOnAction(event -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                G03MenuTree.showG03MenuTree();
             }
-        });
-        nanocadMenuBtn.setOnAction(event -> nanocadMain.showNanocad());
-        g03MenuBtn.setOnAction(event -> G03MenuTree.showG03MenuTree());
-        gamessMenuBtn.setOnAction(event -> GamessGUI.showGamesGUI());
+        }));
+        gamessMenuBtn.setOnAction(event -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                GamessGUI.showGamesGUI();
+            }
+        }));
         launchSelectedBtn.setOnAction(event -> expSummaryTable.getItems().stream()
                 .filter(e -> e.getChecked() && e.getStatus().equals("CREATED")).forEach(e -> {
                     try {
@@ -761,26 +817,35 @@ public class HomeController {
 
     private void initTokenUpdateDaemon() {
         Timeline oauthTokenUpdateTimer = new Timeline(new KeyFrame(
-                Duration.millis((SEAGridContext.getInstance().getOAuthTokenExpirationTime() - System.currentTimeMillis()) * 5 / 6),
+                //It seems the OAuthTokenExpiration time is in GMT
+                Duration.millis(60*60*1000),
                 ae -> {
-                    AuthenticationManager authenticationManager = new AuthenticationManager();
                     try {
-                        AuthResponse authResponse = authenticationManager.getRefreshedOAuthToken(SEAGridContext
-                                .getInstance().getRefreshToken());
-                        if (authResponse != null) {
-                            SEAGridContext.getInstance().setOAuthToken(authResponse.getAccess_token());
-                            SEAGridContext.getInstance().setRefreshToken(authResponse.getAccess_token());
-                            SEAGridContext.getInstance().setTokenExpiaryTime(authResponse.getExpires_in() * 1000
-                                    + System.currentTimeMillis());
-                        } else {
-                            throw new Exception("AuthResponse is null");
+                        String url;
+                        if(SEAGridConfig.DEV){
+                            url = "https://dev.seagrid.org/refreshed-token-desktop?refresh_code="
+                                    + SEAGridContext.getInstance().getRefreshToken();
+                        }else{
+                            url = "https://seagrid.org/refreshed-token-desktop?refresh_code="
+                                    + SEAGridContext.getInstance().getRefreshToken();
+                        }
+                        String json = readUrl(url);
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<Map<String, String>>(){}.getType();
+                        Map<String, String> params = gson.fromJson(json, type);
+
+                        if(!params.get("status").equals("ok")){
+                            throw new Exception("Token refresh failed.");
+                        }else{
+                            SEAGridContext.getInstance().setOAuthToken(params.get("code"));
+                            SEAGridContext.getInstance().setRefreshToken(params.get("refresh_code"));
+                            SEAGridContext.getInstance().setTokenExpiaryTime(Integer.parseInt(params.get("valid_time").trim()));
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();
-//                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", tabbedPane.getScene().getWindow(),
-//                                "Failed updating OAuth refresh token");
                         //Initiating a logout
-                        SEAGridDialogHelper.showInformationDialog("Session Timed Out...", "Session Timed Out...", "Your session has timed out. Please re-login to continue work.", null);
+                        SEAGridDialogHelper.showInformationDialog("Session Timed Out...", "Session Timed Out...",
+                                "Your session has timed out. Please re-login to continue work.", null);
                         ((Stage) logoutBtn.getScene().getWindow()).close();
                         SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
                     }
@@ -942,6 +1007,24 @@ public class HomeController {
                             "Failed to launch gamess experiment dialog");
                 }
             }
+        }
+    }
+
+    private  String readUrl(String urlString) throws Exception {
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuffer buffer = new StringBuffer();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read);
+
+            return buffer.toString();
+        } finally {
+            if (reader != null)
+                reader.close();
         }
     }
 

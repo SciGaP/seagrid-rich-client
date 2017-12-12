@@ -1,0 +1,40 @@
+
+double toRadians(double value) {
+  return Math.toRadians(value);
+}
+
+double toRadians(Double value) {
+  return Math.toRadians(value);
+}
+
+double toRadians(float value) {
+  return Math.toRadians(value);
+}
+
+double toRadians(Float value) {
+  return Math.toRadians(value);
+}
+
+double toRadians(Number value) {
+  return Math.toRadians(((Number)value).doubleValue());
+}
+
+double toRadians(int value) {
+  return Math.toRadians((double)value);
+}
+
+double toRadians(long value) {
+  return Math.toRadians((double)value);
+}
+
+double toRadians(Integer value) {
+  return Math.toRadians(value.doubleValue());
+}
+
+double toRadians(Long value) {
+  return Math.toRadians(value.doubleValue());
+}
+
+double toRadians(String value) {
+  return Math.toRadians(Double.parseDouble(value.trim() ) );
+}

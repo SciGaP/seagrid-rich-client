@@ -1,0 +1,40 @@
+
+double toDegrees(double value) {
+  return Math.toDegrees(value);
+}
+
+double toDegrees(Double value) {
+  return Math.toDegrees(value);
+}
+
+double toDegrees(float value) {
+  return Math.toDegrees(value);
+}
+
+double toDegrees(Float value) {
+  return Math.toDegrees(value);
+}
+
+double toDegrees(Number value) {
+  return Math.toDegrees(((Number)value).doubleValue());
+}
+
+double toDegrees(int value) {
+  return Math.toDegrees((double)value);
+}
+
+double toDegrees(long value) {
+  return Math.toDegrees((double)value);
+}
+
+double toDegrees(Integer value) {
+  return Math.toDegrees(value.doubleValue());
+}
+
+double toDegrees(Long value) {
+  return Math.toDegrees(value.doubleValue());
+}
+
+double toDegrees(String value) {
+  return Math.toDegrees(Double.parseDouble(value.trim() ) );
+}

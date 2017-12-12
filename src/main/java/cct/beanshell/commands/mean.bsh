@@ -1,0 +1,33 @@
+
+double mean(float [] data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(Float [] data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(double [] data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(Double [] data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(java.util.List data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(java.util.ArrayList data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+
+double mean(Number [] data ) {
+  return cct.math.Statistics.mean( data );
+}
+
+double mean(Object [] data ) {
+  return cct.math.Statistics.mean( data );
+}

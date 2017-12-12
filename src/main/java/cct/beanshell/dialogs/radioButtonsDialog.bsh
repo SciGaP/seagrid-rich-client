@@ -1,0 +1,19 @@
+
+String radioButtonsDialog(String title, String [] options) {
+    javax.swing.JPanel panel = new javax.swing.JPanel();
+    panel.setLayout(new java.awt.GridLayout(options.length, 1));
+    javax.swing.ButtonGroup buttonGroup = new javax.swing.ButtonGroup();
+    for(String opt:options) {
+        javax.swing.JRadioButton button = new javax.swing.JRadioButton(opt);
+        button.setActionCommand(opt);
+        buttonGroup.add(button);
+        panel.add(button);
+    }
+
+    javax.swing.JOptionPane.showMessageDialog(null, panel, title, 
+        javax.swing.JOptionPane.QUESTION_MESSAGE);
+    if (buttonGroup.getSelection() != null) {
+      return buttonGroup.getSelection().getActionCommand();
+    }
+    return null;
+}

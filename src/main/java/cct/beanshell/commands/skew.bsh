@@ -1,0 +1,32 @@
+
+double skew(float [] data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(Float [] data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(double [] data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(Double [] data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(java.util.List data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(java.util.ArrayList data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(Number [] data ) {
+  return cct.math.Statistics.skew( data );
+}
+
+double skew(Object [] data ) {
+  return cct.math.Statistics.skew( data );
+}

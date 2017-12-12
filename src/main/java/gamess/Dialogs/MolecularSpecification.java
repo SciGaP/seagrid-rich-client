@@ -41,31 +41,22 @@ DEALINGS WITH THE SOFTWARE.
 package gamess.Dialogs;
 
 
-import java.awt.event.*;
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import javax.swing.*;
-import javax.swing.event.MenuListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.undo.UndoManager;
-
-import gamess.Dictionary;
-import gamess.EditMenuListener;
-import gamess.FileMenuListener;
-import gamess.MolDisplay;
-import gamess.UndoRedoHandler;
+import gamess.*;
 import gamess.InputFileHandlers.InputFileReader;
 import gamess.InputFileHandlers.InputFileWriter;
 import gamess.Storage.Repository;
 import legacy.editor.commons.Settings;
 import nanocad.nanocadFrame2;
 import nanocad.newNanocad;
+
+import javax.swing.*;
+import javax.swing.event.MenuListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
 public class MolecularSpecification extends JDialog implements ItemListener{
 

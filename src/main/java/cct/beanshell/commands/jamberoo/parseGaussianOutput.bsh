@@ -1,0 +1,37 @@
+import cct.gaussian.*;
+
+GaussianJob parseGaussianOutput(String fileName, Molecule mol, java.util.logging.Level level) {
+    GaussianJob gaussianJob = null;
+    try {
+        GaussianOutput gaussianOutput = new GaussianOutput();
+        gaussianOutput.setLoggerLevel(level);
+        gaussianJob = gaussianOutput.parseFile(mol, fileName, false);
+        } catch (Exception ex) {
+          System.err.println("Error Loading Gaussian Output file : " + ex.getMessage());
+          return null;
+        }
+
+    if (gaussianJob.countSteps() < 1) {
+        System.err.println("Didn't find gaussian steps in output file...");
+        return null;
+    }
+
+    return gaussianJob;
+}
+
+GaussianJob parseGaussianOutput(String fileName, Molecule mol) {
+    return parseGaussianOutput(fileName, mol, java.util.logging.Level.WARNING);
+}
+
+GaussianJob parseGaussianOutput(String fileName) {
+    Molecule mol = new Molecule();
+    GaussianJob gaussianJob = parseGaussianOutput(fileName, mol, java.util.logging.Level.WARNING);
+    return gaussianJob;
+}
+
+GaussianJob parseGaussianOutput(String fileName, java.util.logging.Level level) {
+    Molecule mol = new Molecule();
+    GaussianJob gaussianJob = parseGaussianOutput(fileName, mol, level);
+    return gaussianJob;
+}
+

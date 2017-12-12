@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : cct-config.xml
+    Created on : 9 November 2011, 3:35 PM
+    Author     : vvv900
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+  <formats type="">
+    <format name="allFormats"   desc="All Chemistry Format Files" ext="*" className=""/>
+    <format name="adfInput"     desc="Amsterdam Density Functional package (ADF) Files" ext="in;inp;dat;run;Z;gz;zip;jar;bz2" 
+            parser="cct.adf.ADF" className=""/>
+    <format name="adfOutput"    desc="ADF Output" ext="out;log" className=""/>
+    <format name="g03Input"     desc="Gaussian G03 Input" ext="gjf;com;inp;dat;in;g03" parser="cct.gaussian.Gaussian" className=""/>
+    <format name="g03Output"    desc="Gaussian G03 Output" ext="log;out" parser="cct.gaussian.GaussianOutput" className=""/>
+    <format name="gaussianCube" desc="Gaussian cube" ext="cub;cube" className=""/>
+    <format name="gaussianFragment" desc="Gaussian G03 Fragment" ext="frg" className=""/>
+    <format name="gaussianTraj"   desc="Gaussian G03 Trajectory" ext="trj;7;log;out" className=""/>
+    <format name="gaussianFCHK"   desc="Gaussian G03 Formatted Checkpoint" ext="fchk;fch" className=""/>
+    <format name="gamessInput"    desc="GAMESS Input" ext="inp;zip;Z;gz;jar;bz2" parser="cct.gamess.Gamess" className=""/>
+    <format name="gamessOutput"   desc="GAMESS Output" ext="out;log;Z;gz;zip;jar;bz2" parser="cct.gamess.GamessOutput" 
+            className=""/>
+    <format name="mopacInput"     desc="MOPAC Input" ext="dat;inp;mop" className=""/>
+    <format name="mopacOutput"    desc="MOPAC Output" ext="out" className=""/>
+    <format name="mopac2002Log"   desc="Mopac2002 Log" ext="log" className=""/>
+    <format name="pdb"            desc="PDB" ext="pdb;ent;Z" className=""/>
+    <format name="geom"           desc="Geom Format" ext="gf" className=""/>
+    <format name="vrml"           desc="VRML Format" ext="wrl" className=""/>
+    <format name="triposMol2"     desc="Tripos Mol2" ext="mol2;Z;gz;zip;jar;bz2" parser="cct.tripos.TriposParser" className=""/>
+    <format name="cct"            desc="CCT Format" ext="cct" className=""/>
+    <format name="mdlMol"       desc="MDL Molfile Format" ext="mol;sd;sdf" className=""/>
+    <format name="xmolXYZ"      desc="XMol XYZ Format" ext="xyz" className=""/>
+    <format name="gromacsGRO"    desc="Gromacs Coordinate Format" ext="gro" className=""/>
+    <format name="amberPrmtop"  desc="Amber prmtop Format" ext="top;prmtop" className=""/>
+    <format name="amberPrep"    desc="Amber PREP Format" ext="in;prepin;prep" className=""/>
+    <format name="amberLib"     desc="Amber Lib Format" ext="off;lib" className=""/>
+    <format name="amberCRD"          desc="Amber coordinate/restart format" ext="crd;rst;inpcrd" className=""/>
+    <format name="amberMDCRD"   desc="Amber Trajectory Format" ext="crd;rst;mdcrd" className=""/>
+    <format name="povray"       desc="Povray format" ext="pov" className=""/>
+    <format name="vaspPoscar"   desc="VASP Poscar format" ext="dat;inp;poscar" className=""/>
+    <format name="vaspVasprun"      desc="VASP Vasprun Format" ext="xml" className=""/>
+    <format name="qchemInput"       desc="QChem Input Format" ext="in" className=""/>
+    <format name="qchemOutput"      desc="QChem Output Format" ext="out;log" className=""/>
+    <format name="gulpInput"        desc="GULP Input Format" ext="in;inp;gin;grs" className=""/>
+    <format name="gulpTraj"         desc="GULP Trajectory Format" ext="trg;trj" className=""/>
+    <format name="siestaInput"  desc="SIESTA Input Format" ext="fdf;dat;inp;in" className=""/>
+    <format name="cpmdOutput"   desc="CPMD Output Format" ext="out" className=""/>
+    <format name="cpmdTraj"     desc="CPMD MD Trajectory" ext="xyz" className=""/>
+  </formats>
+  
+  <archivers type="">
+    <archiver name="Z archiver"   desc="Z archiver" ext="Z" className=""/>
+    <archiver name="gz archiver"   desc="gz archiver" ext="gz" className=""/>
+    <archiver name="jar archiver"   desc="jar archiver" ext="jar" className=""/>
+    <archiver name="bz2Z archiver"   desc="bz2 archiver" ext="bz2" className=""/>
+    <archiver name="zip archiver"   desc="zip archiver" ext="zip" className=""/>
+  </archivers>
+  
+  <menuBar className="cct.dialogs.JEditorFrame">
+    <menu>
+      
+    </menu>
+  </menuBar>
+</root>

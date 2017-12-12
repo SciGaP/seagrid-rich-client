@@ -37,8 +37,13 @@
         <app.url>https://seagrid.org/seagrid-rich-client/</app.url>
 
         <!-- Optional scp target for application artifacts hosted at the above url -->
+
         <!--<app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client-->
-        <app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client
+        <app.deploy.target>root@gf4.ucs.indiana.edu:/var/www/portals/seagrid/public/seagrid-rich-client
+
+        <!--<app.deploy.target>mvn:/var/www/portals/seagrid/public/seagrid-rich-client-->
+        <!-- app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client -->
+
         </app.deploy.target>
 
         <!-- The app and launcher will be assembled in this folder -->
@@ -82,6 +87,7 @@
                         <configuration>
                             <outputDirectory>${app.dir}</outputDirectory>
                         </configuration>
+
                     </plugin>
                     <!-- Copy dependencies to appdir -->
                     <plugin>
@@ -121,6 +127,7 @@
                                         <argument>${app.mainClass}</argument>
                                         <argument>${app.dir}</argument>
                                         <argument>${app.parameters}</argument>
+
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -138,6 +145,7 @@
                                         <argument>uf</argument>
                                         <argument>fxlauncher.jar</argument>
                                         <argument>app.xml</argument>
+
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -285,24 +293,100 @@
             <version>18.0</version>
         </dependency>
 
-        <!--Jogl dependencies for legacy GAMESS editor-->
-        <dependency>
-            <groupId>org.jogamp.gluegen</groupId>
-            <artifactId>gluegen-rt-main</artifactId>
-            <version>2.0-rc11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>jogl-all-main</artifactId>
-            <version>2.0-rc11</version>
-        </dependency>
-
-
         <!-- Logging  -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.12</version>
+        </dependency>
+
+        <!-- Jamberoo dependencies -->
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>bsh-2.0b4</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>cct-globus</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>Fragments</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>j2ssh-common</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>j2ssh-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>Jamberoo-help</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>jbzip2-0.9.1</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>jcommon-1.0.12</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>jfreechart-1.0.9</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>jhall</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>mysql-connector-java-5.1.33-bin</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jamberoo</groupId>
+            <artifactId>Solvents</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.jogl</groupId>
+            <artifactId>jogl-all-main</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen-rt-main</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- Java 3D dependencies -->
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>j3dutils</artifactId>
+            <version>1.6.0-scijava-2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>j3dcore</artifactId>
+            <version>1.6.0-scijava-2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scijava</groupId>
+            <artifactId>vecmath</artifactId>
+            <version>1.6.0-scijava-2</version>
         </dependency>
     </dependencies>
 
@@ -315,6 +399,12 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>Codehaus Mojo</id>
+            <name>Codehaus Mojo</name>
+            <url>https://nexus.codehaus.org/contents/repositories/releases</url>
+        </repository>
     </repositories>
+
 
 </project>

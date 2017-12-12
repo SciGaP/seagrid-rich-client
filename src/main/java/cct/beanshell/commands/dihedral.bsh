@@ -1,0 +1,4 @@
+
+double dihedral(cct.vecmath.Point3f p1, cct.vecmath.Point3f p2, cct.vecmath.Point3f p3, cct.vecmath.Point3f p4) {
+  return cct.vecmath.Point3f.dihedralAngle( p1, p2, p3, p4 );
+}

@@ -1,0 +1,19 @@
+/**
+	Opens dialog to select directory. Returns null is dialog was cancelled
+*/
+
+String selectFile(String dialogTitle) {
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle(dialogTitle);
+    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    fc.setAcceptAllFileFilterUsed(false);
+    int returnVal = fc.showOpenDialog(new Frame());
+    if (returnVal != JFileChooser.APPROVE_OPTION ) {
+        return null;
+    }
+    return fc.getSelectedFile().toString();
+}
+
+String selectFile() {
+    return selectDirectory("Select Directory");
+}

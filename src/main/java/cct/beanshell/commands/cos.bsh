@@ -1,0 +1,40 @@
+
+double cos(double value) {
+  return Math.cos(value);
+}
+
+double cos(Double value) {
+  return Math.cos(value);
+}
+
+double cos(float value) {
+  return Math.cos(value);
+}
+
+double cos(Float value) {
+  return Math.cos(value);
+}
+
+double cos(Number value) {
+  return Math.cos(((Number)value).doubleValue());
+}
+
+double cos(int value) {
+  return Math.cos((double)value);
+}
+
+double cos(long value) {
+  return Math.cos((double)value);
+}
+
+double cos(Integer value) {
+  return Math.cos(value.doubleValue());
+}
+
+double cos(Long value) {
+  return Math.cos(value.doubleValue());
+}
+
+double cos(String value) {
+  return Math.cos(Double.parseDouble(value.trim() ) );
+}

@@ -1,0 +1,32 @@
+
+double kurtosis(float [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(Float [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(double [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(Double [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(java.util.List data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(java.util.ArrayList data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(Number [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}
+
+double kurtosis(Object [] data ) {
+  return cct.math.Statistics.kurtosis( data );
+}

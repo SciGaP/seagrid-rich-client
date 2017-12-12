@@ -1,0 +1,21 @@
+#!/bin/csh
+#PBS -N @@JOBNAME@@
+#PBS -q corvus
+#PBS -l walltime=@@WALLTIME@@
+#PBS -l mem=@@MEMORY@@@@MEMORY-UNITS@@,  vmem=@@MUL(2,@@MEMORY@@)@@@@MEMORY-UNITS@@
+#PBS -l other=jamberoo
+#PBS -l ncpus=@@NCPUS@@
+#PBS -o @@STDOUT@@
+#PBS -e @@STDERR@@
+
+module load dos2unix
+
+dos2unix @@INPUT@@
+
+module load gaussian/G09
+
+echo 'Running @@EXECUTABLE@@'
+@@EXECUTABLE@@ <@@INPUT@@ >@@OUTPUT@@
+
+echo 'Finish Running @@EXECUTABLE@@'
+

@@ -1,0 +1,4 @@
+
+double angle(cct.vecmath.Point3f p1, cct.vecmath.Point3f p2, cct.vecmath.Point3f p3) {
+  return cct.vecmath.Point3f.angle( p1, p2, p3 );
+}

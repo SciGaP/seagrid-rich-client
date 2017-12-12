@@ -1,0 +1,40 @@
+
+double getExponent(double value) {
+  return Math.getExponent(value);
+}
+
+double getExponent(Double value) {
+  return Math.getExponent(value);
+}
+
+double getExponent(float value) {
+  return Math.getExponent(value);
+}
+
+double getExponent(Float value) {
+  return Math.getExponent(value);
+}
+
+double getExponent(Number value) {
+  return Math.getExponent(((Number)value).doubleValue());
+}
+
+double getExponent(int value) {
+  return Math.getExponent((double)value);
+}
+
+double getExponent(long value) {
+  return Math.getExponent((double)value);
+}
+
+double getExponent(Integer value) {
+  return Math.getExponent(value.doubleValue());
+}
+
+double getExponent(Long value) {
+  return Math.getExponent(value.doubleValue());
+}
+
+double getExponent(String value) {
+  return Math.getExponent(Double.parseDouble(value.trim() ) );
+}
