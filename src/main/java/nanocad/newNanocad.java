@@ -1,11 +1,14 @@
 
 package nanocad;
 
+import javafx.application.Platform;
 import legacy.editor.commons.Settings;
 import g03input.*;
 import gamess.GamessGUI;
 import nanocad.minimize.mm3.mm3MinimizeAlgorythm;
 import nanocad.minimize.uff.uffMinimizeAlgorythm;
+import org.seagrid.desktop.util.messaging.SEAGridEvent;
+import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -621,7 +624,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
                                 exportedApplication = Settings.APP_NAME_NWCHEM;
                             } catch (IOException ioe) {
-                                System.err.println("newNanocad:output Gamess:" +
+                                System.err.println("newNanocad:output NWChem:" +
                                         "IOException");
                                 System.err.println(ioe.toString());
                                 ioe.printStackTrace();
@@ -632,7 +635,11 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             if (t != null) {
                                 t.setVisible(false);
                             }
-                            this.setVisible(false);
+                            //this.setVisible(false);
+                            Platform.runLater(() -> {
+                                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                                        .EXPORT_NWCHEM_EXP, nwchemOut));
+                            });
                             break;
                         }
                     }
@@ -694,6 +701,51 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         if (clearFlag == true) break;
                         else {
                             // runAsApplication
+                            System.out.println(" Case 9 PSI4 Input Template being Generated");
+                            //
+                            // call editjobpaneltextwindow and add text to display
+                            // RHB: change the text on the editJobPanel!!!
+                            // This should not take too terribly long to do now that
+                            // I have figured out where it goes
+                            String PSI4Out = PSI4Output(grp.getXYZ());
+                            // write to a file now
+                            boolean append = false;
+                            try {
+                                File f = new File(applicationDataDir + fileSeparator
+                                        + "tmp.txt");
+                                FileWriter fw = new FileWriter(f, append);
+                                fw.write(PSI4Out);
+                                System.err.println("PSI4Out = ");
+                                System.err.println(PSI4Out);
+                                fw.close();
+
+                                exportedApplication = Settings.APP_NAME_PSI4;
+
+                            } catch (IOException ioe) {
+                                System.err.println("newNanocad:output PSI4:" +
+                                        "IOException");
+                                System.err.println(ioe.toString());
+                                ioe.printStackTrace();
+                            }
+
+                            // close molecular editor
+//              close the structure panel
+                            if (t != null) {
+                                t.setVisible(false);
+                            }
+                            //this.setVisible(false);
+                            Platform.runLater(() -> {
+                                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
+                                        .EXPORT_PSI4_EXP, PSI4Out));
+                            });
+                            break;
+                        }
+                    }
+                    /*
+                    else {
+                        if (clearFlag == true) break;
+                        else {
+                            // runAsApplication
                             System.out.println(" Case 9 Molpro Input Template being Generated");
                             //
                             // call editjobpaneltextwindow and add text to display
@@ -715,7 +767,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                                 exportedApplication = Settings.APP_NAME_MOLPRO;
 
                             } catch (IOException ioe) {
-                                System.err.println("newNanocad:output Gamess:" +
+                                System.err.println("newNanocad:output Molpro:" +
                                         "IOException");
                                 System.err.println(ioe.toString());
                                 ioe.printStackTrace();
@@ -729,7 +781,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             this.setVisible(false);
                             break;
                         }
-                    }
+                    } */
                     // lixh_4/27/05
                 case 1: //open saved PDB/MOL2
                     if (clearFlag)
@@ -1533,7 +1585,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         getSetStructure.addItem("GAMESS Input");
 
 //      FIXME-SEAGrid
-//        getSetStructure.addItem("NWChem Input");
+        getSetStructure.addItem("NWChem Input");
+        getSetStructure.addItem( "PSI4 Input" );
 //        getSetStructure.addItem("Molpro Input");
 
 //        getSetStructure.addItem("View PDB");
@@ -3246,6 +3299,47 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         }
         text = text + "end \n" + "\n";
         text = text + templateBottom;
+
+        return text;
+    }
+
+    public String PSI4Output(String molInfo) {
+        String text;
+        String templateTop = "#SEAGrid PSI4 Template Title\n" +
+                "memory 2gb \n";
+                 //+  "set basis cc-pVDZ \n" +  "gprint,basis,orbital,civector; \n";
+
+
+        text = templateTop;
+        text = text + "molecule { \n";
+        StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
+        //int n = molInfsplit.size();
+        //int i;
+        // ignore first line of molInfo
+        String line = molTok.nextToken();
+        int i = 0;
+        while (molTok.hasMoreTokens()) {
+            line = molTok.nextToken();
+            if ((line.length() > 0) && (i > 0)) {
+                text = text + line + "\n";
+                System.err.println(line);
+            }
+            i++;
+        }
+        text = text + " } \n";
+        String templateSettings;
+        templateSettings = "set {\n" +
+                "basis cc-pVDZ \n" +
+                "e_convergence 10 \n" +
+                "d_convergence 10 \n";
+        //text = "It has not been supported yet. \n"
+        //+ "Please type input by yourself";
+        text = text + templateSettings;
+        text = text + " } \n";
+        String templateRun;
+        templateRun = "set qc_module detci \n" +
+                      "thisenergy = optimize('cisd', dertype = 0) \n";
+        text = text + templateRun;
 
         return text;
     }

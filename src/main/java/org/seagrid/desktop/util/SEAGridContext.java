@@ -151,9 +151,11 @@ public class SEAGridContext {
         return "gaussian";
     }
 
-    public String getGamessAppName() {
-        return "gamess";
-    }
+    public String getGamessAppName() { return "gamess"; }
+
+    public String getNwchemAppName() { return "nwchem"; }
+
+    public String getPsi4AppName() { return "psi4"; }
 
     public String getGatewayaStorageId(){
         if(SEAGridConfig.DEV){

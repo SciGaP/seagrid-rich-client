@@ -362,7 +362,7 @@ public class ExperimentCreateController {
             for(ApplicationInterfaceDescription app : gaussianApps){
                 List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
                 gaussianInputs.get(0).setValue(tempFilePath);
-                updateExperimentInputs(gaussianInputs, false);
+                updateExperimentInputs(gaussianInputs, true);
             }
         }
     }
@@ -385,7 +385,54 @@ public class ExperimentCreateController {
             for(ApplicationInterfaceDescription app : gamessApps){
                 List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
                 gaussianInputs.get(0).setValue(tempFilePath);
-                updateExperimentInputs(gaussianInputs, false);
+                updateExperimentInputs(gaussianInputs, true);
+            }
+        }
+    }
+
+    public void initNwchemExperiment(String nwchemInput) throws FileNotFoundException, TException, URISyntaxException {
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "input.nw";
+        PrintWriter out = new PrintWriter(tempFilePath);
+        out.println(nwchemInput);
+        out.close();
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        List<ApplicationInterfaceDescription> nwchemApps = new ArrayList<>();
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getNwchemAppName())){
+                nwchemApps.add(appInter);
+            }
+        }
+        if(nwchemApps.size() > 0){
+            expCreateAppField.getItems().setAll(nwchemApps);
+            expCreateAppField.getSelectionModel().select(0);
+            for(ApplicationInterfaceDescription app : nwchemApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, true);
+            }
+        }
+    }
+
+    public void initPsi4Experiment(String processors, String psi4Input) throws FileNotFoundException, TException, URISyntaxException {
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "input.dat";
+        PrintWriter out = new PrintWriter(tempFilePath);
+        out.println(psi4Input);
+        out.close();
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        List<ApplicationInterfaceDescription> psi4Apps = new ArrayList<>();
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getPsi4AppName())){
+                psi4Apps.add(appInter);
+            }
+        }
+        if(psi4Apps.size() > 0){
+            expCreateAppField.getItems().setAll(psi4Apps);
+            expCreateAppField.getSelectionModel().select(0);
+            for(ApplicationInterfaceDescription app : psi4Apps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(0).setValue(processors);
+                gaussianInputs.get(1).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, true);
             }
         }
     }

@@ -108,6 +108,38 @@ public class ExperimentCreateWindow extends Application{
         primaryStage.show();
     }
 
+    public static void displayCreateNwchemExp(String nwchemInput) throws IOException, TException, URISyntaxException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Create NWChem Experiment");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentCreateController controller = loader.getController();
+        controller.initNwchemExperiment(nwchemInput);
+        primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.show();
+    }
+
+    public static void displayCreatePsi4Exp(String processors, String psi4Input) throws IOException, TException, URISyntaxException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Create PSI4 Experiment");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        ExperimentCreateController controller = loader.getController();
+        controller.initPsi4Experiment(processors, psi4Input);
+        primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

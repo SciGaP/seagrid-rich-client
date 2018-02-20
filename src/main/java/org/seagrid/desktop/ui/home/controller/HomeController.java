@@ -1007,7 +1007,29 @@ public class HomeController {
                             "Failed to launch gamess experiment dialog");
                 }
             }
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_NWCHEM_EXP)) {
+            if (event.getPayload() instanceof String) {
+                String nwchemInput = (String) event.getPayload();
+                try {
+                    ExperimentCreateWindow.displayCreateNwchemExp( nwchemInput );
+                } catch (Exception e) {
+                    SEAGridDialogHelper.showExceptionDialog( e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                            "Failed to launch nwchem experiment dialog" );
+                }
+            }
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_PSI4_EXP)) {
+                if (event.getPayload() instanceof String) {
+                    String psi4Input = (String) event.getPayload();
+                    String processors = "$SLURM_NPROCS";
+                    try {
+                        ExperimentCreateWindow.displayCreatePsi4Exp(processors, psi4Input);
+                    } catch (Exception e) {
+                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                                "Failed to launch PSI4 experiment dialog");
+                    }
+                }
         }
+
     }
 
     private  String readUrl(String urlString) throws Exception {

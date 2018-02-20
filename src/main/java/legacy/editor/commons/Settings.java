@@ -8,6 +8,8 @@ public class Settings {
     public static final String APP_NAME_GAMESS = "GAMES";
     public static final String APP_NAME_NWCHEM = "NWCHEM";
     public static final String APP_NAME_MOLPRO = "MOLPRO";
+    public static final String APP_NAME_PSI4 = "PSI4";
+
     private static Settings ourInstance = new Settings();
     public static boolean authenticated = true;
     public static String username = "master";
