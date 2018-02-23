@@ -157,6 +157,8 @@ public class SEAGridContext {
 
     public String getPsi4AppName() { return "psi4"; }
 
+    public String getMolcasAppName() { return "molcas"; }
+
     public String getGatewayaStorageId(){
         if(SEAGridConfig.DEV){
             return properties.getProperty(SEAGridConfig.DEV_GATEWAY_STORAGE_ID);

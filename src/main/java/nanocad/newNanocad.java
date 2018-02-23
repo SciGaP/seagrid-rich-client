@@ -294,7 +294,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     new VMDClass(1);
                     getSetStructure.select(0);
                     break;
-                case 10: // View PDB;
+                case 12: // View PDB;
                     if (clearFlag) break;
 
                     saveWin = new textwin("PDB file as text", "", false);
@@ -610,6 +610,11 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             // RHB: change the text on the editJobPanel!!!
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
+                            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                                            " has been exported  into template input.nw. Make sure\n" +
+                                            "to edit this file from the Experiment Panel.",
+                                    "SEAGrid: NWChem Input Template",
+                                    JOptionPane.WARNING_MESSAGE);
                             String nwchemOut = NWchemOutput(grp.getXYZ());
                             // write to a file now
                             boolean append = false;
@@ -707,6 +712,11 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             // RHB: change the text on the editJobPanel!!!
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
+                            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                                            " has been exported  into template input.dat. Make sure\n" +
+                                            "to edit this file from the Experiment Panel.",
+                                    "SEAGrid: PSI4 input Template",
+                                    JOptionPane.WARNING_MESSAGE);
                             String PSI4Out = PSI4Output(grp.getXYZ());
                             // write to a file now
                             boolean append = false;
@@ -782,7 +792,57 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             break;
                         }
                     } */
-                    // lixh_4/27/05
+
+                case 10: // Create a Molpro Input Template close and go back to edit mode //lixh_3_4
+                  if (clearFlag)
+                      break;
+                  else {
+
+                      if (clearFlag == true) break;
+                      else {
+                          // runAsApplication
+                          System.out.println( " Case 10 Molcas Input Template being Generated" );
+                          JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                                          " has been exported  into template molcas.input. Make sure\n" +
+                                          "to edit this file from the Experiment Panel.",
+                                  "SEAGrid: Molcas input Template",
+                                  JOptionPane.WARNING_MESSAGE);
+                          String MolcasOut = MolcasOutput( grp.getXYZ() );
+                          // write to a file now
+                          boolean append = false;
+                          try {
+                              File f = new File( applicationDataDir + fileSeparator
+                                      + "tmp.txt" );
+                              FileWriter fw = new FileWriter( f, append );
+                              fw.write( MolcasOut );
+                              System.err.println( "MolcasOut = " );
+                              System.err.println( MolcasOut );
+                              fw.close();
+
+                              exportedApplication = Settings.APP_NAME_MOLCAS;
+
+                          } catch (IOException ioe) {
+                              System.err.println( "newNanocad:output MOLCAS:" +
+                                      "IOException" );
+                              System.err.println( ioe.toString() );
+                              ioe.printStackTrace();
+                          }
+
+                          // close molecular editor
+                          // close the structure panel
+                          if (t != null) {
+                              t.setVisible( false );
+                          }
+                          //this.setVisible(false);
+                          Platform.runLater( () -> {
+                              SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
+                                      .EXPORT_MOLCAS_EXP, MolcasOut ) );
+                          } );
+                          break;
+                      }
+
+                  }
+                            // lixh_4/27/05
                 case 1: //open saved PDB/MOL2
                     if (clearFlag)
                         break;
@@ -1587,6 +1647,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 //      FIXME-SEAGrid
         getSetStructure.addItem("NWChem Input");
         getSetStructure.addItem( "PSI4 Input" );
+        getSetStructure.addItem( "Molcas Input" );
 //        getSetStructure.addItem("Molpro Input");
 
 //        getSetStructure.addItem("View PDB");
@@ -3307,7 +3368,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         String text;
         String templateTop = "#SEAGrid PSI4 Template Title\n" +
                 "memory 2gb \n";
-                 //+  "set basis cc-pVDZ \n" +  "gprint,basis,orbital,civector; \n";
+        //+  "set basis cc-pVDZ \n" +  "gprint,basis,orbital,civector; \n";
 
 
         text = templateTop;
@@ -3338,7 +3399,61 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         text = text + " } \n";
         String templateRun;
         templateRun = "set qc_module detci \n" +
-                      "thisenergy = optimize('cisd', dertype = 0) \n";
+                "thisenergy = optimize('cisd', dertype = 0) \n";
+        text = text + templateRun;
+
+        return text;
+    }
+
+    public String MolcasOutput(String molInfo) {
+        String text;
+        String templateTop = "*SEAGrid Molcas Template Title\n" +
+                "&gateway \n" +
+                //"TITLE Molcas Run \n" +
+                " ";
+                 //+  "set basis cc-pVDZ \n" +  "gprint,basis,orbital,civector; \n";
+
+
+        text = templateTop;
+        text = text + "Coord  \n";
+        StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
+        //int n = molInfsplit.size();
+        //int i;
+        // ignore first line of molInfo
+        String line = molTok.nextToken();
+        int i = 0;
+        String coords = "";
+        while (molTok.hasMoreTokens()) {
+            line = molTok.nextToken();
+            if ((line.length() > 0) && (i > 0)) {
+                coords = coords + line + "\n";
+                System.err.println(line);
+            }
+            i++;
+        }
+           i=i-1;
+        text = text + i +"  \n";
+        text = text + " Angstroms \n";
+        text = text + coords +" \n";
+        String templateSettings;
+        templateSettings = "Basis=cc-pVDZ \n" +
+                "Group=Nosym  \n" +
+                "\n";
+        //text = "It has not been supported yet. \n"
+        //+ "Please type input by yourself";
+        text = text + templateSettings;
+        text = text + ">>   Do   While \n";
+        String templateRun;
+        templateRun = " \n" +
+                      "&seward \n" +
+                      "&scf \n"  +
+                      "Charge=0 \n" +
+                       "Spin=1 \n" +
+                       "\n" +
+                      "&mp2 \n" +
+                      "&slapaf \n" +
+                      " \n"+
+                      ">>>   EndDo";
         text = text + templateRun;
 
         return text;

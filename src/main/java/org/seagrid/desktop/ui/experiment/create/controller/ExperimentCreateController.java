@@ -436,6 +436,29 @@ public class ExperimentCreateController {
             }
         }
     }
+    public void initMolcasExperiment(String processors, String molcasInput) throws FileNotFoundException, TException, URISyntaxException {
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "molcas.input";
+        PrintWriter out = new PrintWriter(tempFilePath);
+        out.println(molcasInput);
+        out.close();
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        List<ApplicationInterfaceDescription> molcasApps = new ArrayList<>();
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getMolcasAppName())){
+                molcasApps.add(appInter);
+            }
+        }
+        if(molcasApps.size() > 0){
+            expCreateAppField.getItems().setAll(molcasApps);
+            expCreateAppField.getSelectionModel().select(0);
+            for(ApplicationInterfaceDescription app : molcasApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                gaussianInputs.get(1).setValue(processors);
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, true);
+            }
+        }
+    }
 
     private void initFileChooser(){
         fileChooser = new FileChooser();

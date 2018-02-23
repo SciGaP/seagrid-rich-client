@@ -9,6 +9,7 @@ public class Settings {
     public static final String APP_NAME_NWCHEM = "NWCHEM";
     public static final String APP_NAME_MOLPRO = "MOLPRO";
     public static final String APP_NAME_PSI4 = "PSI4";
+    public static final String APP_NAME_MOLCAS = "MOLCAS";
 
     private static Settings ourInstance = new Settings();
     public static boolean authenticated = true;
