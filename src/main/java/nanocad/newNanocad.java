@@ -2830,9 +2830,9 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         toadd[0].add(tempItem);
 
         toadd[1] = new NcadMenu("Database");
-        tempItem = new MenuItem("Indiana Database");
-        tempItem.addActionListener(t);
-        toadd[1].add(tempItem);
+        //tempItem = new MenuItem("Indiana Database");
+        //tempItem.addActionListener(t);
+        //toadd[1].add(tempItem);
         tempItem = new MenuItem("CSD");
         tempItem.addActionListener(t);
         toadd[1].add(tempItem);
