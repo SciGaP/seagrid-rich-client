@@ -611,8 +611,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
                             JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-                                            " has been exported  into template input.nw. Make sure\n" +
-                                            "to edit this file from the Experiment Panel.",
+                                            " has been exported  into default input.nw. Make sure\n" +
+                                            "to edit this file from the Create Experiment Panel.",
                                     "SEAGrid: NWChem Input Template",
                                     JOptionPane.WARNING_MESSAGE);
                             String nwchemOut = NWchemOutput(grp.getXYZ());
@@ -713,8 +713,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
                             JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-                                            " has been exported  into template input.dat. Make sure\n" +
-                                            "to edit this file from the Experiment Panel.",
+                                            " has been exported  into default input.dat. Make sure\n" +
+                                            "to edit this file from the Create Experiment Panel.",
                                     "SEAGrid: PSI4 input Template",
                                     JOptionPane.WARNING_MESSAGE);
                             String PSI4Out = PSI4Output(grp.getXYZ());
@@ -803,8 +803,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                           // runAsApplication
                           System.out.println( " Case 10 Molcas Input Template being Generated" );
                           JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-                                          " has been exported  into template molcas.input. Make sure\n" +
-                                          "to edit this file from the Experiment Panel.",
+                                          " has been exported  into default molcas.input file. Make sure\n" +
+                                          "to edit this file from the Create Experiment Panel.",
                                   "SEAGrid: Molcas input Template",
                                   JOptionPane.WARNING_MESSAGE);
                           String MolcasOut = MolcasOutput( grp.getXYZ() );
