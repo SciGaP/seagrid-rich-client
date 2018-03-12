@@ -156,13 +156,13 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             switch (emin.getSelectedIndex()) {
                 case 1: // Conjugate gradient
                     updateUndo();
-                    energyMinimize(true);
-                    emin.select(0);
+                    energyMinimize( true );
+                    emin.select( 0 );
                     break;
                 case 2: // Steepest descent
                     updateUndo();
-                    energyMinimize(false);
-                    emin.select(0);
+                    energyMinimize( false );
+                    emin.select( 0 );
                     break;
                 default:
                     break;
@@ -189,34 +189,34 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                 //end grp act
                 grpClearFlag = false;
 
-                chgGroup = new group(drawingArea);
+                chgGroup = new group( drawingArea );
 
                 for (int i = 0; i < selectedAtomList.size(); i++)
-                    ((atom) selectedAtomList.elementAt(i)).setSelected(false);
+                    ((atom) selectedAtomList.elementAt( i )).setSelected( false );
                 selectedAtomList.removeAllElements();
             }
         } else if (e.target == showForces) {
-            grp.setShowForces(showForces.getState());
+            grp.setShowForces( showForces.getState() );
             repaint();
             return true;
         } else if (e.target == geometry) {
             geometryFlag = geometry.getState();
-            drawingArea.setGeometryMode(geometryFlag);
+            drawingArea.setGeometryMode( geometryFlag );
             if (!geometryFlag) {
                 for (int i = 0; i < selectedAtomList.size(); i++)
-                    ((atom) selectedAtomList.elementAt(i)).setSelected(false);
+                    ((atom) selectedAtomList.elementAt( i )).setSelected( false );
                 repaint();
             } else selectedAtomList.removeAllElements();
         } else if (e.target == knownStructure) {
             //lixh_3_4_05
             if (t == null) {
                 //System.out.println("***test1*****");
-                t = new Template("Import Structure", this);
+                t = new Template( "Import Structure", this );
                 repaint();
                 energyMinimizer = null;
-                grp.setShowForces(showForces.getState());
+                grp.setShowForces( showForces.getState() );
                 //debugWindow.clear();
-                grp.setTextwin(debugWindow);
+                grp.setTextwin( debugWindow );
 
                 grp.updateViewSize();
 
@@ -225,22 +225,22 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             }
             //
             else
-                t.setVisible(true);
+                t.setVisible( true );
         } else if (e.target == clear) {
             //to get rid of the line at bottom
-            atomInfo(spaces + spaces + spaces + spaces + spaces + spaces + spaces);
+            atomInfo( spaces + spaces + spaces + spaces + spaces + spaces + spaces );
             newFF = true;
             if (grpFlag) {
                 //grp delete
                 //this is to keep a group from being selected if it is undone
                 for (int j = 0; j < grp.atomList.size(); j++)
-                    ((atom) grp.atomList.elementAt(j)).setSelected(false);
+                    ((atom) grp.atomList.elementAt( j )).setSelected( false );
 
                 updateUndo();
                 for (int j = 0; j < grp.atomList.size(); j++) {
-                    atom tmpAtom = (atom) grp.atomList.elementAt(j);
-                    if (belongTo(tmpAtom, selectedAtomList)) {
-                        grp.deleteAtom(tmpAtom);
+                    atom tmpAtom = (atom) grp.atomList.elementAt( j );
+                    if (belongTo( tmpAtom, selectedAtomList )) {
+                        grp.deleteAtom( tmpAtom );
                         j--;
                     }
                 }
@@ -251,7 +251,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
                 grpFlag = false;
                 e.target = groupMode;
-                groupMode.setState(false);
+                groupMode.setState( false );
             } else {
                 drawingArea.clear();
                 clearFlag = true;
@@ -270,13 +270,13 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             addHydrogens();
             return true;
         } else if (e.target == undo) {
-            tmpGroup.copy(undoGroup);
-            undoGroup.copy(grp);
-            grp.copy(tmpGroup);
+            tmpGroup.copy( undoGroup );
+            undoGroup.copy( grp );
+            grp.copy( tmpGroup );
 
             grpFlag = false;
 
-            groupMode.setState(grpFlag);
+            groupMode.setState( grpFlag );
             e.target = groupMode;
             repaint();
 
@@ -290,35 +290,35 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     break;
 
                 case 11: //View with VMD
-                    saveFile("vmd.pdb");
-                    new VMDClass(1);
-                    getSetStructure.select(0);
+                    saveFile( "vmd.pdb" );
+                    new VMDClass( 1 );
+                    getSetStructure.select( 0 );
                     break;
                 case 12: // View PDB;
                     if (clearFlag) break;
 
-                    saveWin = new textwin("PDB file as text", "", false);
-                    saveWin.setVisible(true);
-                    saveWin.setText(grp.getPDB(true));  //to obtain default PDB
-                    getSetStructure.select(0);
+                    saveWin = new textwin( "PDB file as text", "", false );
+                    saveWin.setVisible( true );
+                    saveWin.setText( grp.getPDB( true ) );  //to obtain default PDB
+                    getSetStructure.select( 0 );
                     break;
 
                 case 4: // View XYZ;
                     if (clearFlag) break;
 
-                    saveWin = new textwin("XYZ file as text", "", false);
-                    saveWin.setVisible(true);
-                    saveWin.setText(grp.getXYZ());
-                    getSetStructure.select(0);
+                    saveWin = new textwin( "XYZ file as text", "", false );
+                    saveWin.setVisible( true );
+                    saveWin.setText( grp.getXYZ() );
+                    getSetStructure.select( 0 );
                     break;
 
                 case 5: // View Native Format
                     if (clearFlag) break;
 
-                    saveWin = new textwin("Native Format as text", "", false);
-                    saveWin.setVisible(true);
-                    saveWin.setText(grp.getNativeFormat());
-                    getSetStructure.select(0);
+                    saveWin = new textwin( "Native Format as text", "", false );
+                    saveWin.setVisible( true );
+                    saveWin.setText( grp.getNativeFormat() );
+                    getSetStructure.select( 0 );
                     break;
 
 
@@ -373,8 +373,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         OptTable.optC = 0;
 
                         //Create new Gaussian GUI.
-                        JFrame.setDefaultLookAndFeelDecorated(true);
-                        JDialog.setDefaultLookAndFeelDecorated(true);
+                        JFrame.setDefaultLookAndFeelDecorated( true );
+                        JDialog.setDefaultLookAndFeelDecorated( true );
 
                         InputFile.tempinput = new String();
                         InputfileReader.route = new String();
@@ -383,40 +383,40 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         InputfileReader.chrgStr = null;
                         InputfileReader.mulStr = null;
 
-                        String gaussOut = GaussianOutput(grp.getXYZ());
+                        String gaussOut = GaussianOutput( grp.getXYZ() );
 
-                        JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                        JOptionPane.showMessageDialog( null, "WARNING: Molecule information" +
                                         " has been exported correctly. Make sure\n" +
                                         "to edit other sections of GUI.",
                                 "GridChem: Gaussian GUI",
-                                JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.WARNING_MESSAGE );
                         // write to a file now
                         boolean append = false;
                         try {
-                            File f = new File(applicationDataDir + fileSeparator
-                                    + "tmp.txt");
-                            FileWriter fw = new FileWriter(f, append);
-                            fw.write(gaussOut);
-                            System.err.println("gaussOut = ");
-                            System.err.println(gaussOut);
+                            File f = new File( applicationDataDir + fileSeparator
+                                    + "tmp.txt" );
+                            FileWriter fw = new FileWriter( f, append );
+                            fw.write( gaussOut );
+                            System.err.println( "gaussOut = " );
+                            System.err.println( gaussOut );
                             fw.close();
 
                             exportedApplication = Settings.APP_NAME_GAUSSIAN;
                         } catch (IOException ioe) {
-                            System.err.println("newNanocad:output Gaussian:" +
-                                    "IOException");
-                            System.err.println(ioe.toString());
+                            System.err.println( "newNanocad:output Gaussian:" +
+                                    "IOException" );
+                            System.err.println( ioe.toString() );
                             ioe.printStackTrace();
                         }
 
-                        SwingUtilities.invokeLater(new Runnable() {
+                        SwingUtilities.invokeLater( new Runnable() {
                             @Override
                             public void run() {
                                 G03MenuTree.showG03MenuTree();
                                 showMolEditor forString = new showMolEditor();
                                 forString.tempmol = gaussOut;
                             }
-                        });
+                        } );
 
                         if (t != null) {
 //                            t.setVisible(false);
@@ -442,48 +442,48 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     //if yes (save as pdb file and exit nanocad)
                     if (result == 0) {
                         if (!runAsApplication) {
-                            tosave = new savewin("Save file", "", false, this);
-                            tosave.setVisible(true);
+                            tosave = new savewin( "Save file", "", false, this );
+                            tosave.setVisible( true );
                             String tosavefile = null;
                             String fileName = new String();
                         } else {
 //						stuffInside.selectedGUI = 1;
                             //Open the Gamess and export the molecule to it
-                            String gamessOut = GamessOutput(grp.getXYZ());
-                            String gamessCoordOut = GamessCoordOutput(grp.getXYZ());
+                            String gamessOut = GamessOutput( grp.getXYZ() );
+                            String gamessCoordOut = GamessCoordOutput( grp.getXYZ() );
                             // write to a file now
                             boolean append = false;
                             try {
-                                File f = new File(applicationDataDir + fileSeparator
-                                        + "tmp.txt");
-                                FileWriter fw = new FileWriter(f, append);
-                                fw.write(gamessOut);
-                                System.err.println("gamessOut = ");
-                                System.err.println(gamessOut);
+                                File f = new File( applicationDataDir + fileSeparator
+                                        + "tmp.txt" );
+                                FileWriter fw = new FileWriter( f, append );
+                                fw.write( gamessOut );
+                                System.err.println( "gamessOut = " );
+                                System.err.println( gamessOut );
                                 fw.close();
 
-                                File fc = new File(applicationDataDir + fileSeparator
-                                        + "coord.txt");
-                                FileWriter cfw = new FileWriter(fc, append);
-                                cfw.write(gamessCoordOut);
-                                System.err.println("gamessCoords = ");
-                                System.err.println(gamessCoordOut);
+                                File fc = new File( applicationDataDir + fileSeparator
+                                        + "coord.txt" );
+                                FileWriter cfw = new FileWriter( fc, append );
+                                cfw.write( gamessCoordOut );
+                                System.err.println( "gamessCoords = " );
+                                System.err.println( gamessCoordOut );
                                 cfw.close();
 
                                 exportedApplication = Settings.APP_NAME_GAMESS;
-                                SwingUtilities.invokeLater(new Runnable() {
+                                SwingUtilities.invokeLater( new Runnable() {
                                     @Override
                                     public void run() {
                                         GamessGUI.showGamesGUI();
                                         GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
                                         GamessGUI.molSpec.nanoCadHandler.nanWin.nano = newNanocad.this;
-                                        GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+                                        GamessGUI.molSpec.nanoCadHandler.componentHidden( null );
                                     }
-                                });
+                                } );
                             } catch (IOException ioe) {
-                                System.err.println("newNanocad:output Gamess:" +
-                                        "IOException");
-                                System.err.println(ioe.toString());
+                                System.err.println( "newNanocad:output Gamess:" +
+                                        "IOException" );
+                                System.err.println( ioe.toString() );
                                 ioe.printStackTrace();
                             }
                         }
@@ -604,47 +604,47 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         if (clearFlag == true) break;
                         else {
                             // runAsApplication
-                            System.out.println(" Case 8 NWchem Input Template being Generated");
+                            System.out.println( " Case 8 NWchem Input Template being Generated" );
                             //
                             // call editjobpaneltextwindow and add text to display
                             // RHB: change the text on the editJobPanel!!!
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
-                            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                            JOptionPane.showMessageDialog( null, "WARNING: Molecule information" +
                                             " has been exported  into default input.nw. Make sure\n" +
                                             "to edit this file from the Create Experiment Panel.",
                                     "SEAGrid: NWChem Input Template",
-                                    JOptionPane.WARNING_MESSAGE);
-                            String nwchemOut = NWchemOutput(grp.getXYZ());
+                                    JOptionPane.WARNING_MESSAGE );
+                            String nwchemOut = NWchemOutput( grp.getXYZ() );
                             // write to a file now
                             boolean append = false;
                             try {
-                                File f = new File(applicationDataDir + fileSeparator
-                                        + "tmp.txt");
-                                FileWriter fw = new FileWriter(f, append);
-                                fw.write(nwchemOut);
-                                System.err.println("nwchemOut = ");
-                                System.err.println(nwchemOut);
+                                File f = new File( applicationDataDir + fileSeparator
+                                        + "tmp.txt" );
+                                FileWriter fw = new FileWriter( f, append );
+                                fw.write( nwchemOut );
+                                System.err.println( "nwchemOut = " );
+                                System.err.println( nwchemOut );
                                 fw.close();
 
                                 exportedApplication = Settings.APP_NAME_NWCHEM;
                             } catch (IOException ioe) {
-                                System.err.println("newNanocad:output NWChem:" +
-                                        "IOException");
-                                System.err.println(ioe.toString());
+                                System.err.println( "newNanocad:output NWChem:" +
+                                        "IOException" );
+                                System.err.println( ioe.toString() );
                                 ioe.printStackTrace();
                             }
 
                             // close molecular editor
 //              close the structure panel
                             if (t != null) {
-                                t.setVisible(false);
+                                t.setVisible( false );
                             }
                             //this.setVisible(false);
-                            Platform.runLater(() -> {
-                                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
-                                        .EXPORT_NWCHEM_EXP, nwchemOut));
-                            });
+                            Platform.runLater( () -> {
+                                SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
+                                        .EXPORT_NWCHEM_EXP, nwchemOut ) );
+                            } );
                             break;
                         }
                     }
@@ -706,48 +706,48 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         if (clearFlag == true) break;
                         else {
                             // runAsApplication
-                            System.out.println(" Case 9 PSI4 Input Template being Generated");
+                            System.out.println( " Case 9 PSI4 Input Template being Generated" );
                             //
                             // call editjobpaneltextwindow and add text to display
                             // RHB: change the text on the editJobPanel!!!
                             // This should not take too terribly long to do now that
                             // I have figured out where it goes
-                            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                            JOptionPane.showMessageDialog( null, "WARNING: Molecule information" +
                                             " has been exported  into default input.dat. Make sure\n" +
                                             "to edit this file from the Create Experiment Panel.",
                                     "SEAGrid: PSI4 input Template",
-                                    JOptionPane.WARNING_MESSAGE);
-                            String PSI4Out = PSI4Output(grp.getXYZ());
+                                    JOptionPane.WARNING_MESSAGE );
+                            String PSI4Out = PSI4Output( grp.getXYZ() );
                             // write to a file now
                             boolean append = false;
                             try {
-                                File f = new File(applicationDataDir + fileSeparator
-                                        + "tmp.txt");
-                                FileWriter fw = new FileWriter(f, append);
-                                fw.write(PSI4Out);
-                                System.err.println("PSI4Out = ");
-                                System.err.println(PSI4Out);
+                                File f = new File( applicationDataDir + fileSeparator
+                                        + "tmp.txt" );
+                                FileWriter fw = new FileWriter( f, append );
+                                fw.write( PSI4Out );
+                                System.err.println( "PSI4Out = " );
+                                System.err.println( PSI4Out );
                                 fw.close();
 
                                 exportedApplication = Settings.APP_NAME_PSI4;
 
                             } catch (IOException ioe) {
-                                System.err.println("newNanocad:output PSI4:" +
-                                        "IOException");
-                                System.err.println(ioe.toString());
+                                System.err.println( "newNanocad:output PSI4:" +
+                                        "IOException" );
+                                System.err.println( ioe.toString() );
                                 ioe.printStackTrace();
                             }
 
                             // close molecular editor
 //              close the structure panel
                             if (t != null) {
-                                t.setVisible(false);
+                                t.setVisible( false );
                             }
                             //this.setVisible(false);
-                            Platform.runLater(() -> {
-                                SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType
-                                        .EXPORT_PSI4_EXP, PSI4Out));
-                            });
+                            Platform.runLater( () -> {
+                                SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
+                                        .EXPORT_PSI4_EXP, PSI4Out ) );
+                            } );
                             break;
                         }
                     }
@@ -794,67 +794,67 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     } */
 
                 case 10: // Create a Molpro Input Template close and go back to edit mode //lixh_3_4
-                  if (clearFlag)
-                      break;
-                  else {
+                    if (clearFlag)
+                        break;
+                    else {
 
-                      if (clearFlag == true) break;
-                      else {
-                          // runAsApplication
-                          System.out.println( " Case 10 Molcas Input Template being Generated" );
-                          JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-                                          " has been exported  into default molcas.input file. Make sure\n" +
-                                          "to edit this file from the Create Experiment Panel.",
-                                  "SEAGrid: Molcas input Template",
-                                  JOptionPane.WARNING_MESSAGE);
-                          String MolcasOut = MolcasOutput( grp.getXYZ() );
-                          // write to a file now
-                          boolean append = false;
-                          try {
-                              File f = new File( applicationDataDir + fileSeparator
-                                      + "tmp.txt" );
-                              FileWriter fw = new FileWriter( f, append );
-                              fw.write( MolcasOut );
-                              System.err.println( "MolcasOut = " );
-                              System.err.println( MolcasOut );
-                              fw.close();
+                        if (clearFlag == true) break;
+                        else {
+                            // runAsApplication
+                            System.out.println( " Case 10 Molcas Input Template being Generated" );
+                            JOptionPane.showMessageDialog( null, "WARNING: Molecule information" +
+                                            " has been exported  into default molcas.input file. Make sure\n" +
+                                            "to edit this file from the Create Experiment Panel.",
+                                    "SEAGrid: Molcas input Template",
+                                    JOptionPane.WARNING_MESSAGE );
+                            String MolcasOut = MolcasOutput( grp.getXYZ() );
+                            // write to a file now
+                            boolean append = false;
+                            try {
+                                File f = new File( applicationDataDir + fileSeparator
+                                        + "tmp.txt" );
+                                FileWriter fw = new FileWriter( f, append );
+                                fw.write( MolcasOut );
+                                System.err.println( "MolcasOut = " );
+                                System.err.println( MolcasOut );
+                                fw.close();
 
-                              exportedApplication = Settings.APP_NAME_MOLCAS;
+                                exportedApplication = Settings.APP_NAME_MOLCAS;
 
-                          } catch (IOException ioe) {
-                              System.err.println( "newNanocad:output MOLCAS:" +
-                                      "IOException" );
-                              System.err.println( ioe.toString() );
-                              ioe.printStackTrace();
-                          }
+                            } catch (IOException ioe) {
+                                System.err.println( "newNanocad:output MOLCAS:" +
+                                        "IOException" );
+                                System.err.println( ioe.toString() );
+                                ioe.printStackTrace();
+                            }
 
-                          // close molecular editor
-                          // close the structure panel
-                          if (t != null) {
-                              t.setVisible( false );
-                          }
-                          //this.setVisible(false);
-                          Platform.runLater( () -> {
-                              SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
-                                      .EXPORT_MOLCAS_EXP, MolcasOut ) );
-                          } );
-                          break;
-                      }
+                            // close molecular editor
+                            // close the structure panel
+                            if (t != null) {
+                                t.setVisible( false );
+                            }
+                            //this.setVisible(false);
+                            Platform.runLater( () -> {
+                                SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
+                                        .EXPORT_MOLCAS_EXP, MolcasOut ) );
+                            } );
+                            break;
+                        }
 
-                  }
-                            // lixh_4/27/05
+                    }
+                    // lixh_4/27/05
                 case 1: //open saved PDB/MOL2
                     if (clearFlag)
                         break;
                     else {
                         JFileChooser chooser = new JFileChooser();
-                        chooser.addChoosableFileFilter(new PDBorMOL2FileFilter());
-                        chooser.setDialogTitle("Open pdb/mol2 file");
-                        int retVal = chooser.showOpenDialog(null);
+                        chooser.addChoosableFileFilter( new PDBorMOL2FileFilter() );
+                        chooser.setDialogTitle( "Open pdb/mol2 file" );
+                        int retVal = chooser.showOpenDialog( null );
                         if (retVal == JFileChooser.APPROVE_OPTION) {
                             String filename = chooser.getSelectedFile().getAbsolutePath();
-                            if (filename.endsWith("pdb") || filename.endsWith("mol2")) {
-                                loadFile(filename, "");
+                            if (filename.endsWith( "pdb" ) || filename.endsWith( "mol2" )) {
+                                loadFile( filename, "" );
                             }
                         }
                         break;
@@ -880,21 +880,21 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     if (clearFlag)
                         break;
                     else if (!runAsApplication) {
-                        tosave = new savewin("Save file", "", false, this);
-                        tosave.setVisible(true);
+                        tosave = new savewin( "Save file", "", false, this );
+                        tosave.setVisible( true );
                         String tosavefile = null;
                         String fileName = new String();
                     } else {
                         JFileChooser chooser = new JFileChooser();
-                        chooser.setDialogTitle("Save as pdb file");
-                        int retVal = chooser.showSaveDialog(null);
+                        chooser.setDialogTitle( "Save as pdb file" );
+                        int retVal = chooser.showSaveDialog( null );
                         if (retVal == JFileChooser.APPROVE_OPTION) {
                             String filename = chooser.getSelectedFile().getAbsolutePath();
                             if (filename != null) {
-                                if (filename.indexOf(".pdb") == -1) filename = filename + ".pdb";
-                                getSetStructure.select(0);
-                                chooser.setSelectedFile(new File(filename));
-                                saveFile(filename);
+                                if (filename.indexOf( ".pdb" ) == -1) filename = filename + ".pdb";
+                                getSetStructure.select( 0 );
+                                chooser.setSelectedFile( new File( filename ) );
+                                saveFile( filename );
                             }
 
                         }
@@ -913,7 +913,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 			    }
 			    */
                     }
-                    getSetStructure.select(0);
+                    getSetStructure.select( 0 );
                     break;
 
                 case 3: //View with chime
@@ -924,27 +924,27 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         try {
                             urlis = "http://chemviz.ncsa.uiuc.edu/cgi-bin/chimepdb.cgi";
 
-                            sendFile(urlis, grp.getPDB(true), "chimepdb.cgi");
-                            String output_url = "http://pine.ncsa.uiuc.edu/csd/temp/" + getParameter("username") + "/chime.pdb";
+                            sendFile( urlis, grp.getPDB( true ), "chimepdb.cgi" );
+                            String output_url = "http://pine.ncsa.uiuc.edu/csd/temp/" + getParameter( "username" ) + "/chime.pdb";
 
-                            callWaltz(e, output_url);
+                            callWaltz( e, output_url );
                         } catch (Exception e1) {
-                            System.err.println(e1);
+                            System.err.println( e1 );
                         }
                     } else {
                         String URL = applicationDataDir + sepStr + "chimeout.pdb";
-                        saveFile(URL);
+                        saveFile( URL );
 
                         try {
 
                             //Runtime.getRuntime().exec(new String[] {"C:\\Program Files\\Internet Explorer\\IEXPLORE", URL});
 
-                            openURL(URL);
+                            openURL( URL );
                         }
                         //catch (java.io.IOException excep)
                         //  {   System.err.println( excep.toString() );    }
                         catch (SecurityException exceps) {
-                            System.err.println(exceps.toString());
+                            System.err.println( exceps.toString() );
                         }
                     }
                     break;
@@ -955,18 +955,18 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             repaint();
             return true;
         } else if (e.target == help) {
-
-            if (!runAsApplication) {
-                try {
-                    URL helpURL = new URL("http://pine.ncsa.uiuc.edu/nanocad/NanocadHelp.html");
-                    getAppletContext().showDocument(helpURL, "_blank");
-                } catch (Exception roar) {
-                    System.err.println(roar);
-                }
-
-                return true;
-            } else {
-                //lixh_4/30/05
+            ;
+                if (!runAsApplication) {
+                    try {
+                    //URL helpURL = new URL("http://pine.ncsa.uiuc.edu/nanocad/NanocadHelp.html");
+                    URL helpURL = new URL( "js-169-116.jetstream-cloud.org/gridchem/chemviz/htdocs/content/NanocadHelp.html");
+                    getAppletContext().showDocument( helpURL, "_blank" );
+                    } catch (Exception roar) {
+                        System.err.println( roar );
+                        return true;
+                    }
+                } else {
+                    //lixh_4/30/05
 			/*
 		    try
 		    {
@@ -983,18 +983,16 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 			{   System.out.println( exceps.toString() );    }
 			*/
 
-                try {
-                    String osName = System.getProperty("os.name");
-                    if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows XP"))
-                        Runtime.getRuntime().exec(new String[]{"\"C:\\Program Files\\Internet Explorer\\iexplore.exe\"",
-                                "http://chemviz.ncsa.uiuc.edu/content/doc-nanocad.html"});
-                    else Runtime.getRuntime().exec(new String[]{"start", pathvar + sepStr + "NanocadHelp.html"});
+                    try {
+                        //String osName = System.getProperty( "os.name" );;
+                        String helpURL = "http://js-169-116.jetstream-cloud.org/gridchem/chemviz/htdocs/content/Nanocad_Help.html";
+                        Desktop.getDesktop().browse( new URI( helpURL ) );
+                        //if (osName.equals("Windows NT") || osName.equals("Windows 2000") || osName.equals("Windows XP"))
+                        //Runtime.getRuntime().exec(new String[]{"\"C:\\Program Files\\Internet Explorer\\iexplore.exe\"",
+                        //"http://chemviz.ncsa.uiuc.edu/content/doc-nanocad.html"});
+                        //else Runtime.getRuntime().exec(new String[]{"start", pathvar + sepStr + "NanocadHelp.html"});
 
-                } catch (IOException excep) {
-                    System.out.println(excep.toString());
-                } catch (SecurityException exceps) {
-                    System.out.println(exceps.toString());
-                }
+
 			/*
 			JDialog helpDialog = new JDialog();
 			JEditorPane editorPane = new JEditorPane();
@@ -1010,15 +1008,19 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 		    catch (Exception roar)
 		    {    System.err.println(roar);	}
 		    */
-            }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+        }
         } else if (e.target == about) {
-            aboutWin = new textwin("About Nanocad", "", false);
-            aboutWin.setVisible(true);
-            aboutWin.setText(instructions);
+            aboutWin = new textwin( "About Nanocad", "", false );
+            aboutWin.setVisible( true );
+            aboutWin.setText( instructions );
             return true;
         }
         return false;
-    }
+
+}
 
     /**
      * redirect to waltz
@@ -3399,7 +3401,7 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         text = text + " } \n";
         String templateRun;
         templateRun = "set qc_module detci \n" +
-                "thisenergy = optimize('cisd', dertype = 0) \n";
+                "thisenergy = optimize('scf', dertype = 0) \n";
         text = text + templateRun;
 
         return text;

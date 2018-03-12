@@ -37,21 +37,6 @@ the terms of any one of the Apache 2.0, the GPL or the LGPL.
 package cct.gamess;
 
 import cct.Constants;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
 import cct.interfaces.AtomInterface;
 import cct.interfaces.MoleculeInterface;
 import cct.math.PointGroup;
@@ -60,7 +45,11 @@ import cct.modelling.ChemicalElements;
 import cct.modelling.GeneralMolecularDataParser;
 import cct.modelling.Molecule;
 import cct.vecmath.Geometry3d;
+
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -2901,32 +2890,43 @@ public class Gamess extends GeneralMolecularDataParser {
 
   public static void main(String[] args) {
     Gamess gamess = new Gamess();
-    MoleculeInterface mol = new Molecule();
-    try {
-      gamess.parseGamessInput(args[0], 0);
-      gamess.getMolecularInterface(mol);
-    } catch (Exception ex) {
-      System.err.println(ex.getMessage());
-      ex.printStackTrace();
-    }
 
-    logger.info("Number of atoms " + mol.getNumberOfAtoms());
-    for (int i = 0; i < mol.getNumberOfAtoms(); i++) {
-      AtomInterface atom = mol.getAtomInterface(i);
-      logger.info((i + 1) + " " + atom.getName() + " "
-          + atom.getX()
-          + " " + atom.getY() + " " + atom.getZ());
-    }
-    Map controls = gamess.getControlSection();
-    Set set = controls.entrySet();
-    Iterator iter = set.iterator();
-    while (iter.hasNext()) {
-      Map.Entry me = (Map.Entry) iter.next();
-      logger.info(me.getKey().toString() + "="
-          + me.getValue().toString());
-    }
+    /*
+    Java3dUniverse java3dUniverse;
+    if (java3dUniverse.getMolecule() != null) {
+      // Create Input from molecule section
+      System.out.println( "Creating input template" );
+    } else {
 
-  }
+    */
+    // Create Molecule from input or output section
+
+      MoleculeInterface mol = new Molecule();
+      try {
+        gamess.parseGamessInput( args[0], 0 );
+        gamess.getMolecularInterface( mol );
+      } catch (Exception ex) {
+        System.err.println( ex.getMessage() );
+        ex.printStackTrace();
+      }
+
+      logger.info( "Number of atoms " + mol.getNumberOfAtoms() );
+      for (int i = 0; i < mol.getNumberOfAtoms(); i++) {
+        AtomInterface atom = mol.getAtomInterface( i );
+        logger.info( (i + 1) + " " + atom.getName() + " "
+                + atom.getX()
+                + " " + atom.getY() + " " + atom.getZ() );
+      }
+      Map controls = gamess.getControlSection();
+      Set set = controls.entrySet();
+      Iterator iter = set.iterator();
+      while (iter.hasNext()) {
+        Map.Entry me = (Map.Entry) iter.next();
+        logger.info( me.getKey().toString() + "="
+                + me.getValue().toString() );
+      }
+
+    }
 
   public void applySymmetry(String symbol, int axisOrder, List<GamessAtom> points) throws Exception {
 
@@ -3176,7 +3176,7 @@ public class Gamess extends GeneralMolecularDataParser {
 
   public void parseData(BufferedReader in) throws Exception {
     MoleculeInterface mol = getMoleculeInterface();
-    this.addMolecule(mol);
+    this.addMolecule( mol );
 
     String line;
     ignoreDataSection = false;
@@ -3199,80 +3199,80 @@ public class Gamess extends GeneralMolecularDataParser {
           continue;
         }
 
-        if (line.startsWith("!")) { // Comment
+        if (line.startsWith( "!" )) { // Comment
           continue;
         }
 
-        StringTokenizer st = new StringTokenizer(line, " \t=");
+        StringTokenizer st = new StringTokenizer( line, " \t=" );
 
         while (st.hasMoreTokens()) {
           String token = st.nextToken();
-          if (!readingSection && !token.startsWith("$")) { // Looking for a new section
+          if (!readingSection && !token.startsWith( "$" )) { // Looking for a new section
             continue;
-          } else if (!readingSection && token.equalsIgnoreCase(endSection)) { // Found (unexpectedly) end section
-            System.err.println("Unexpectedly found $END section...");
+          } else if (!readingSection && token.equalsIgnoreCase( endSection )) { // Found (unexpectedly) end section
+            System.err.println( "Unexpectedly found $END section..." );
             readingSection = false;
             readingSwitch = false;
             //throw new Exception("Unexpectedly found $END section...");
             continue;
-          } else if (!readingSection && token.startsWith("$")) { // Found a new section
+          } else if (!readingSection && token.startsWith( "$" )) { // Found a new section
             token = token.toUpperCase();
-            logger.info("Starting to read section " + token);
-            if (!validSections.contains(token)) {
-              logger.warning("Unknown section " + token);
+            logger.info( "Starting to read section " + token );
+            if (!validSections.contains( token )) {
+              logger.warning( "Unknown section " + token );
               references = null;
             } else {
-              references = sectionVarsReference.get(token);
+              references = sectionVarsReference.get( token );
             }
 
             // -- Special case for some sections...
-            if (token.equalsIgnoreCase(dataSection) && (!ignoreDataSection)) {
-              this.parseDataSection(in);
+            if (token.equalsIgnoreCase( dataSection ) && (!ignoreDataSection)) {
+              this.parseDataSection( in );
               break;
             }
 
-            if (token.equalsIgnoreCase(fmoxyzSection)) {
+            if (token.equalsIgnoreCase( fmoxyzSection )) {
               ignoreDataSection = true;
-              this.readFMOXYZSection(in);
+              this.readFMOXYZSection( in );
             }
 
             readingSwitch = true;
             currentSection = token;
-            if (currentVars.containsKey(currentSection)) {
-              currentOptions = currentVars.get(currentSection);
+            if (currentVars.containsKey( currentSection )) {
+              currentOptions = currentVars.get( currentSection );
             } else {
               currentOptions = new HashMap();
             }
             readingSection = true;
             continue;
-          } else if (readingSection && token.equalsIgnoreCase(endSection) && !readingSwitch) { // Found end section
-            logger.warning("Unexpected end of section " + currentSection + " while expecting value for switch " + currentSwitch);
-            currentOptions.put(currentSection, "");
-            currentVars.put(currentSection, currentOptions);
-            printSection(currentSection, currentOptions);
+          } else if (readingSection && token.equalsIgnoreCase( endSection ) && !readingSwitch) { // Found end section
+            logger.warning( "Unexpected end of section " + currentSection + " while expecting value for switch " + currentSwitch );
+            currentOptions.put( currentSection, "" );
+            currentVars.put( currentSection, currentOptions );
+            printSection( currentSection, currentOptions );
             currentSection = "";
             readingSection = false;
-          } else if (readingSection && token.equalsIgnoreCase(endSection)) { // Found end section
-            logger.info("Finished to read section " + currentSection);
-            currentVars.put(currentSection, currentOptions);
-            printSection(currentSection, currentOptions);
+          } else if (readingSection && token.equalsIgnoreCase( endSection )) { // Found end section
+            logger.info( "Finished to read section " + currentSection );
+            currentVars.put( currentSection, currentOptions );
+            printSection( currentSection, currentOptions );
             currentSection = "";
             readingSection = false;
           } else if (readingSection && readingSwitch) { // Reading switch
             token = token.toUpperCase();
-            if (references != null && !references.containsKey(token)) {
-              logger.warning("Unknown switch: " + token);
+            if (references != null && !references.containsKey( token )) {
+              logger.warning( "Unknown switch: " + token );
             }
             currentSwitch = token;
             readingSwitch = false;
           } else if (readingSection && !readingSwitch) { // Reading value
             if (references != null) {
-              GamessSwitch refSwitch = (GamessSwitch) references.get(currentSwitch);
-              if (refSwitch == null || (!refSwitch.isValidValue(token))) {
-                logger.warning("Check value " + token + " for switch " + currentSwitch);
+              GamessSwitch refSwitch = (GamessSwitch) references.get( currentSwitch );
+              if (refSwitch == null || (!refSwitch.isValidValue( token ))) {
+                logger.warning( "Check value " + token + " for switch " + currentSwitch );
               }
             }
-            currentOptions.put(currentSwitch, token);
+            currentOptions.put( currentSwitch, token );
             readingSwitch = true;
           }
 
@@ -3280,13 +3280,15 @@ public class Gamess extends GeneralMolecularDataParser {
 
       }
     } catch (IOException e) {
-      logger.severe("Error parsing gamess input: " + e.getMessage());
+      logger.severe( "Error parsing gamess input: " + e.getMessage() );
       throw e;
     }
 
+
     // --- Build molecule 
-    getMolecularInterface(mol);
-    Molecule.guessCovalentBonds(mol);
-    Molecule.guessAtomTypes(mol, AtomInterface.CCT_ATOM_TYPE, CCTAtomTypes.getElementMapping());
+    getMolecularInterface( mol );
+    Molecule.guessCovalentBonds( mol );
+    Molecule.guessAtomTypes( mol, AtomInterface.CCT_ATOM_TYPE, CCTAtomTypes.getElementMapping() );
+
   }
 }

@@ -41,6 +41,7 @@ DEALINGS WITH THE SOFTWARE.
 package gamess.Dialogs;
 
 
+import cct.dialogs.FileMenu;
 import gamess.*;
 import gamess.InputFileHandlers.InputFileReader;
 import gamess.InputFileHandlers.InputFileWriter;
@@ -387,6 +388,16 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 					writer.Write("CONTRL", "ICHARG=" + charge);
 					db.Store("CONTRL", "MULT=" + multiplicity);
 					writer.Write("CONTRL", "MULT=" + multiplicity);
+					db.Store("CONTRL", "SCFTYP=" + "RHF");
+					writer.Write("CONTRL", "SCFTYP=" + "RHF");
+					db.Store("CONTRL", "RUNTYP=" + "OPTIMIZE");
+					writer.Write("CONTRL", "RUNTYP=" + "OPTIMIZE");
+					db.Store("BASIS", "GBASIS=" + "N31");
+					writer.Write("BASIS", "GBASIS=" + "N31");
+					db.Store("BASIS", "NGAUSS=" + "6");
+					writer.Write("BASIS", "NGAUSS=" + "6");
+					db.Store("BASIS", "NDFUNC=" + "1");
+					writer.Write("BASIS", "NDFUNC=" + "1");
 									
 					/* TO DISPLAY IN THE INPUT FILE TEXT AREA OF THE MAIN GUI*/
 					if(!dataFile.equals("")){
@@ -568,12 +579,16 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 
 		public void componentHidden(ComponentEvent arg0) 
 		{
-			if(nanWin.nano.exportedApplication.equals(Settings.APP_NAME_GAMESS))
+			System.err.println("Exported Application: "+ FileMenu.exportedApplication);
+
+			if(FileMenu.exportedApplication.equals(Settings.APP_NAME_GAMESS) ||
+					nanWin.nano.exportedApplication.equals(Settings.APP_NAME_GAMESS))
 			{
-				System.err.println("load temp file here!");
+
 				File f = new File(newNanocad.applicationDataDir +
 						Settings.fileSeparator + "coord.txt");
 						//legacy.editors.commons.Settings.fileSeparator + "tmp.txt");
+				System.err.println("load temp file "+ f.getAbsolutePath().toString() + " here!");
 				if ((f.exists()) )
 				{
 					try
@@ -597,21 +612,24 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 						System.err.println("IOException in showMolEditor");
 					}
 				}
-			
-				try 
-				{
-					nanWin.setVisible(false);
-					nanWin.dispose();
-					if (nanWin.nano.t !=null)	
-						nanWin.nano.t.setVisible(false);
-				} 
-				catch (HeadlessException e1) 
-				{
-					e1.printStackTrace();
+				/*
+			    if (nanWin.nano.exportedApplication != null) {
+					try {
+						nanWin.setVisible( false );
+						nanWin.dispose();
+						if (nanWin.nano.t != null)
+							nanWin.nano.t.setVisible( false );
+					} catch (HeadlessException e1) {
+						e1.printStackTrace();
+					}
 				}
+				else {
+					// close/hide Jamberoo windows
+				}
+				*/
 			}
-			else
-				nanWin.setVisible(false);
+			//else
+				//nanWin.setVisible(false);
 			
 			if(!ThisDialog.isVisible())
 			{

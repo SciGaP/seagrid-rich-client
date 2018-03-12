@@ -5,7 +5,7 @@ import java.io.File;
 public class Settings {
     public static final int ONE_SECOND = 1000;
     public static final String APP_NAME_GAUSSIAN = "GAUSSIAN";
-    public static final String APP_NAME_GAMESS = "GAMES";
+    public static final String APP_NAME_GAMESS = "GAMESS";
     public static final String APP_NAME_NWCHEM = "NWCHEM";
     public static final String APP_NAME_MOLPRO = "MOLPRO";
     public static final String APP_NAME_PSI4 = "PSI4";

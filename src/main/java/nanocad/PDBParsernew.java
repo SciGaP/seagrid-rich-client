@@ -67,7 +67,7 @@ public PDBParsernew(String filename, String data){
 	    }
 	    
 	    lineNumber = input.getLineNumber();
-	    System.out.println("Getting Line number "+lineNumber+" in Structure file ");
+	    System.out.println("Getting Line number "+lineNumber+" in Structure file " + inFile);
 	    System.out.println(" Current line is \n"+line);
 	    lineDispatch(line);
 	  }

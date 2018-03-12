@@ -117,6 +117,9 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
   private JMenu jSubmenuFileSave = new JMenu();
   private JMenu jSubmenuSEAGridExport = new JMenu();
   private JMenuItem jSEAGridGaussian = new JMenuItem();
+  private JMenuItem jSEAGridGamess = new JMenuItem();
+  private String seagridGaussianText = messages != null ? messages.getString("seagrid_gaussian_export") : "Gaussian";
+  private String seagridGamessText = messages != null ? messages.getString("seagrid_gamess_export") : "Gamess";
   private JMenu gaussianMenu = new JMenu("Gaussian");
   private JMenu mopacMenu = new JMenu("Mopac");
   private JMenu submenuLoadRemote = new JMenu();
@@ -160,6 +163,8 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
   private Set<MoleculeChangeListener> moleculeChangeListeners = new LinkedHashSet<MoleculeChangeListener>();
 
   private static ResourceBundle messages;
+
+  public static String exportedApplication = "";
 
   public FileMenu(JamberooCoreInterface jamberooCore) throws Exception {
     super();
@@ -267,10 +272,24 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
     // -- SEAGrid Export
     jSubmenuSEAGridExport.setText(messages != null ? messages.getString("seagrid_export") : "SEAGrid Export");
     jSubmenuSEAGridExport.setIcon(seagridFileImage);
-    String seagridGaussianText = messages != null ? messages.getString("seagrid_gaussian_export") : "Gaussian";
+    //String seagridGaussianText = messages != null ? messages.getString("seagrid_gaussian_export") : "Gaussian";
+    //String seagridGamessText = messages != null ? messages.getString("seagrid_gamess_export") : "Gamess";
     jSEAGridGaussian.setText(seagridGaussianText);
+    jSEAGridGamess.setText(seagridGamessText);
     jSEAGridGaussian.setIcon(new ImageIcon(cct.dialogs.JamberooFrame.class.getResource("/cct/images/gaussian-16x16.png")));
+    jSEAGridGamess.setIcon(new ImageIcon(cct.dialogs.JamberooFrame.class.getResource("/cct/images/gamess_small.png")));
+
+
+    JEditorFrame_jMenuSEAGridExport_ActionAdapter processSEAGridExportMenu = new JEditorFrame_jMenuSEAGridExport_ActionAdapter(this);
+    //JMenuItem jProcessSEAGridExport = new JMenuItem();
+    //jProcessSEAGridExport.addActionListener(processSEAGridExportMenu);
+    jSEAGridGaussian.addActionListener(processSEAGridExportMenu);
+    jSEAGridGamess.addActionListener(processSEAGridExportMenu );
+
     jSubmenuSEAGridExport.add(jSEAGridGaussian);
+    jSubmenuSEAGridExport.add(jSEAGridGamess);
+
+    /*
     jSEAGridGaussian.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
@@ -312,7 +331,84 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
         }
       }
     });
+    */
+    /*
+    jSEAGridGamess.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        String arg = actionEvent.getActionCommand();
 
+        if (java3dUniverse.getMolecule() == null
+                || java3dUniverse.getMolecule().getNumberOfAtoms() < 1) {
+          JOptionPane.showMessageDialog(null, "Load Molecule first!",
+                  ERROR_MESSAGE,
+                  JOptionPane.ERROR_MESSAGE);
+          return;
+        }
+
+        if(arg.equals(seagridGamessText)){
+          XMolXYZ g = new XMolXYZ();
+          File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+                  + "tmp.txt");
+          String fileName = f.getAbsolutePath().toString();
+          try {
+            g.saveXMolXYZ(fileName, java3dUniverse.getMolecule(),
+                    saveXYZDialog.isAtomicSymbols(),
+                    saveXYZDialog.isInAngstroms());
+          } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(),
+                    ERROR_MESSAGE,
+                    JOptionPane.ERROR_MESSAGE);
+          }
+          //.getMoleculeSpecsAsString(java3dUniverse.getMolecule());
+          //  File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+          //          + "tmp.txt");
+          //  FileWriter fw = new FileWriter(f, false);
+          //  fw.write(gamessOut);
+          //  System.err.println("gamessOut = ");
+          //  System.err.println(gamessOut);
+          //  fw.close();
+          String gamessCoordOut = Gamess.getMoleculeSpecsAsString(java3dUniverse.getMolecule());
+          String gmsTop = " $CONTRL ICHARG=0 MULT=1 $END \n"+" $DATA\n" +"default_Job\n"+"C1\n"+"\n"
+          String gmsBottom = "$END"
+          String gamessOut = gmsTop+gamessCoordOut+gmsBottom;
+          //public static String exportedApplication = "";
+          try {
+
+            File fc = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+                    + "coord.txt");
+            FileWriter cfw = new FileWriter(fc, false);
+            cfw.write(gamessCoordOut);
+            System.err.println("gamessCoords = ");
+            System.err.println(gamessCoordOut);
+            cfw.close();
+
+            exportedApplication = Settings.APP_NAME_GAMESS;
+            SwingUtilities.invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                GamessGUI.showGamesGUI();
+                //GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocadFrame2();
+                //GamessGUI.molSpec.nanoCadHandler.nanWin.nano = newNanocad.this;
+                //GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+                showMolEditor forString = new showMolEditor();
+                forString.tempmol = gamessOut;
+              }
+            });
+
+            JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                            " has been exported correctly. Make sure\n" +
+                            "to edit other sections of GUI.",
+                    "SEAGrid: Gamess GUI",
+                    JOptionPane.WARNING_MESSAGE);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+
+        }
+      }
+    });
+ */
     // --- "Open As" Submenu
     gaussianMenu.setIcon(GlobalSettings.ICON_16x16_GAUSSIAN);
     mopacMenu.setIcon(GlobalSettings.ICON_16x16_MOPAC);
@@ -476,6 +572,8 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
     add(jSubmenuFileSave);
     add(jSubmenuImageSave);
     addSeparator();
+
+   //
 
     add(jSubmenuSEAGridExport);
     addSeparator();
@@ -2448,6 +2546,131 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
     }
   }
 
+  void jMenuSEAGridExport_actionPerformed(ActionEvent actionEvent) {
+
+    String arg = actionEvent.getActionCommand();
+
+    if (java3dUniverse.getMolecule() == null
+            || java3dUniverse.getMolecule().getNumberOfAtoms() < 1) {
+      JOptionPane.showMessageDialog(this, "Load Molecule first!",
+              ERROR_MESSAGE,
+              JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    String gaussOut="";
+    if(arg.equals(seagridGaussianText)){
+      System.out.println( "Trying to Launch G09 GUI" );
+      Gaussian g = new Gaussian();
+      try {
+        gaussOut = Gaussian.getMoleculeSpecsAsString(java3dUniverse.getMolecule());
+        File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+                + "tmp.txt");
+        FileWriter fw = new FileWriter(f, false);
+        fw.write(gaussOut);
+        System.err.println("gaussOut = ");
+        System.err.println(gaussOut);
+        fw.close();
+        G03MenuTree.showG03MenuTree();
+        showMolEditor forString = new showMolEditor();
+        forString.tempmol = gaussOut;
+
+        JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                        " has been exported correctly. Make sure\n" +
+                        "to edit other sections of GUI.",
+                "SEAGrid: Gaussian GUI",
+                JOptionPane.WARNING_MESSAGE);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+    }
+    else if (arg.equals(seagridGamessText)){
+      System.out.println( "Trying to Launch GAMESS GUI" );
+      /*
+      //XMolXYZ g = new XMolXYZ();
+      //File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+      //        + "tmp.txt");
+      //String fileName = f.getAbsolutePath().toString();
+
+      try {
+        g.saveXMolXYZ(fileName, java3dUniverse.getMolecule(),
+                saveXYZDialog.isAtomicSymbols(),
+                saveXYZDialog.isInAngstroms());
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, ex.getMessage(),
+                ERROR_MESSAGE,
+                JOptionPane.ERROR_MESSAGE);
+      }
+      //.getMoleculeSpecsAsString(java3dUniverse.getMolecule());
+      //  File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator
+      //          + "tmp.txt");
+      //  FileWriter fw = new FileWriter(f, false);
+      //  fw.write(gamessOut);
+      //  System.err.println("gamessOut = ");
+      //  System.err.println(gamessOut);
+      //  fw.close();
+      */
+      //String gamessOut = java3dUniverse.getMolecule().toString();
+      //String gamessOut = "";
+      String gamessCoordOut = "";
+      //public static String exportedApplication = "";
+      try {
+        gamessCoordOut = Gaussian.getMoleculeSpecsAsGMSString(java3dUniverse.getMolecule());
+
+        File fc = new File(Settings.getApplicationDataDir() + Settings.fileSeparator+"nanocad"+
+                Settings.fileSeparator + "coord.txt");
+        //File fc = new File(Settings.getApplicationDataDir() + Settings.fileSeparator+ "coord.txt");
+        FileWriter cfw = new FileWriter(fc, false);
+        cfw.write(gamessCoordOut);
+        System.err.println("gamessCoords = ");
+        System.err.println(gamessCoordOut);
+        cfw.close();
+
+        String gmsTop = " $CONTRL SCFTYP=RHF RUNTYP=OPTIMIZE NZVAR=5 ICHARG=0 MULT=1 $END \n"+" " +
+                " $SYSTEM TIMLIM=20 MEMORY=500000 $END \n" +
+                " $BASIS  GBASIS=N31 NGAUSS=6 NDFUNC=1 $END \n" +
+                " $GUESS  GUESS=HUCKEL $END \n" +
+                " $STATPT OPTTOL=0.00001 $END \n" +
+                " $DATA\n" +
+                "default_Job\n"+
+                "C1\n"+"\n";
+        String gmsBottom = " $END";
+        String gamessOut = gmsTop+gamessCoordOut+gmsBottom;
+
+        //File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator+"nanocad"+
+                //Settings.fileSeparator + "tmp.txt");
+        File f = new File(Settings.getApplicationDataDir() + Settings.fileSeparator+"nanocad"+
+                Settings.fileSeparator + "tmp.txt");
+        FileWriter fw = new FileWriter(f, false);
+        fw.write(gamessOut);
+        System.err.println("gamessOut = ");
+        System.err.println(gamessOut);
+        fw.close();
+        exportedApplication = Settings.APP_NAME_GAMESS;
+        SwingUtilities.invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            gamess.GamessGUI.showGamesGUI();
+            //gamess.GamessGUI.molSpec.nanoCadHandler.nanWin = new nanocad.nanocadFrame2();
+            //gamess.GamessGUI.molSpec.nanoCadHandler.nanWin.nano = nanocad.newNanocad.this;
+            gamess.GamessGUI.molSpec.nanoCadHandler.componentHidden(null);
+            showMolEditor forString = new showMolEditor();
+            forString.tempmol = gamessOut;
+          }
+        });
+
+        JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                        " has been exported correctly. Make sure\n" +
+                        "to edit other sections of GUI.",
+                "SEAGrid: Gamess GUI",
+                JOptionPane.WARNING_MESSAGE);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+    }
+  }
+
   void jMenuFileSaveAs_actionPerformed(ActionEvent actionEvent) {
     String arg = actionEvent.getActionCommand();
 
@@ -2606,7 +2829,20 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
       }
     }
   }
+/*
+  public void SEAGridExport(ActionEvent e) {
+    // SEAGridExport functions go here
 
+    String arg = e.getActionCommand();
+    if (arg.equalsIgnoreCase("gaussian")) {
+
+    }
+    else if (arg.equalsIgnoreCase("gamess")) {
+
+    }
+
+  }
+*/
   public void saveImageAs(ActionEvent e) {
     jSubmenuImageSave.setEnabled(false);
 
@@ -2796,6 +3032,20 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
 
     public void actionPerformed(ActionEvent actionEvent) {
       adaptee.jMenuFileSaveAs_actionPerformed(actionEvent);
+    }
+  }
+
+  class JEditorFrame_jMenuSEAGridExport_ActionAdapter
+          implements ActionListener {
+
+    FileMenu adaptee;
+
+    JEditorFrame_jMenuSEAGridExport_ActionAdapter(FileMenu adaptee) {
+      this.adaptee = adaptee;
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+      adaptee.jMenuSEAGridExport_actionPerformed(actionEvent);
     }
   }
 

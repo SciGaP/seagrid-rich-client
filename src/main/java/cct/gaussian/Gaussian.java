@@ -36,36 +36,20 @@
  ***** END LICENSE BLOCK *****/
 package cct.gaussian;
 
-import cct.GlobalSettings;
 import cct.cprocessor.CommandInterface;
 import cct.cprocessor.Variable;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
 import cct.interfaces.AtomInterface;
 import cct.interfaces.GraphicsRendererInterface;
-import cct.interfaces.MoleculeEventObject;
 import cct.interfaces.MoleculeInterface;
 import cct.modelling.CCTAtomTypes;
 import cct.modelling.ChemicalElements;
 import cct.modelling.GeneralMolecularDataParser;
 import cct.modelling.Molecule;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
-import javax.swing.JOptionPane;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -746,6 +730,28 @@ public class Gaussian extends GeneralMolecularDataParser implements GJFParserInt
   }
 
   /**
+   * Returns molecule specifications (coordinates) as a String
+   *
+   * @param molecule MoleculeInterface
+   * @return String
+   * @throws Exception
+   */
+
+  public static String getMoleculeSpecsAsGMSString(MoleculeInterface molecule) throws
+          Exception {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    if (molecule == null || molecule.getNumberOfAtoms() == 0) {
+      return "";
+    }
+    try {
+      writeGMSMoleculeSpecs(molecule, out);
+    } catch (Exception ex) {
+      throw ex;
+    }
+    return out.toString();
+  }
+
+  /**
    * Writes coordinates of atoms into output stream
    *
    * @param molecule MoleculeInterface
@@ -822,6 +828,85 @@ public class Gaussian extends GeneralMolecularDataParser implements GJFParserInt
     }
 
   }
+
+  /**
+   * Writes coordinates of atoms into output stream
+   *
+   * @param molecule MoleculeInterface
+   * @param out OutputStream
+   * @throws Exception
+   */
+  public static void writeGMSMoleculeSpecs(MoleculeInterface molecule, OutputStream out) throws
+          Exception {
+
+    try {
+      for (int i = 0; i < molecule.getNumberOfAtoms(); i++) {
+        AtomInterface atom = molecule.getAtomInterface(i);
+        /*
+         String name = atom.getName();
+         String elSymbol = ChemicalElements.getElementSymbol( atom.getAtomicNumber() );
+         String theRest = "";
+         if ( name.length() > elSymbol.length() ) {
+         theRest = name.substring(elSymbol.length());
+         }
+
+         if ( !theRest.matches("\\d.") ) {
+         name = name.substring(0,elSymbol.length());
+         }
+         */
+
+        String aName = atom.getName();
+        int element = atom.getAtomicNumber();
+        String symbol = ChemicalElements.getElementSymbol(element);
+
+        String element_label = String.valueOf(element);
+
+        if (symbol.length() == 2) {
+          if (aName.startsWith(symbol)) {
+            element_label = aName;
+          } else {
+            element_label = symbol;
+          }
+        } else if (aName.length() > 1) {
+          int el = ChemicalElements.getAtomicNumber(aName.substring(0, 2));
+          if (el == 0) {
+            element_label = aName;
+          }
+        } else {
+          int el = ChemicalElements.getAtomicNumber(aName);
+          if (el == element) {
+            element_label = aName;
+          }
+        }
+
+        // --- Process dummy atom
+        if (element == 0 && element_label.toUpperCase().startsWith("DU")) {
+          if (element_label.length() == 2) {
+            element_label = "X";
+          } else {
+            element_label = "X" + element_label.substring(2);
+          }
+        }
+
+        String s = String.format("%s %d %f %f %f\n",
+                element_label, element, atom.getX(),
+                atom.getY(), atom.getZ());
+        out.write(s.getBytes());
+        //out.write( (atom.getAtomicNumber() + " ").getBytes());
+
+        //out.write( (" " + atom.getX() + " " + atom.getY() + " " + atom.getZ()).
+        //          getBytes());
+        //out.write( ("\n").getBytes());
+      }
+
+      out.write(("\n").getBytes());
+    } catch (IOException e) {
+      System.err.println("writeCartesianCoordinates: Error: " + e.getMessage());
+      throw e;
+    }
+
+  }
+
 
   /**
    * Defines element of an atom
