@@ -1,0 +1,17 @@
+# Name: hydroxyl group
+
+@<TRIPOS>MOLECULE
+hydroxyl group
+2 1 1 0 0
+SMALL
+NO_CHARGE
+##nbv 1
+
+@<TRIPOS>ATOM
+ 1   O1    0.0        0.0        0.0        O     1
+ 2   H1    0.92791    0.01310    0.24578    H     1
+##   bv   -0.27402   -0.93636   -0.21941  -100    1
+@<TRIPOS>BOND
+ 1   1    2     1
+@<TRIPOS>SUBSTRUCTURE
+ 1   HYDROXYL GROUP1  1

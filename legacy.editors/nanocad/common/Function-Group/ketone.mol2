@@ -1,0 +1,18 @@
+# Name: ketone group
+
+@<TRIPOS>MOLECULE
+ketone group
+2 1 1 0 0
+SMALL
+NO_CHARGE
+##nbv 2
+
+@<TRIPOS>ATOM
+ 1    C1     0.0        0.0        0.0         C      1
+ 2    O1     1.18889    0.01678    0.31491     O      1
+##    bv    -0.52797    0.84925   -0.00495   -100     1
+##    bv    -0.43861   -0.86289   -0.25107   -101     1
+@<TRIPOS>BOND
+ 1    1   2   2
+@<TRIPOS>SUBSTRUCTURE
+ 1   KETONE GROUP1   1
