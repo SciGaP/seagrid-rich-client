@@ -415,7 +415,7 @@ public class MolecularSpecification extends JDialog implements ItemListener{
 						
 						//INPUT.DOC: For C1 group, there is no card -3- or -4-.
 						if(symmetryBoxValue=="C1")
-							dataFileDisplay.append("\n"); 
+							//dataFileDisplay.append("\n");
 						dataFileDisplay.append("\n"+dataFile); 
 				
 						//dataFileDisplay.append("\n"+dataFile); 
