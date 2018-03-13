@@ -127,7 +127,7 @@ public class popKeyOptTable extends JFrame implements ActionListener{
 		    scroll.add(helpTextArea);
 		    keyOptFrame.getContentPane().add( scroll,BorderLayout.NORTH);
 		    keyOptFrame.getContentPane().add(donePanel,BorderLayout.CENTER);
-		    keyOptFrame.setSize( 600,200);
+		    keyOptFrame.setSize( 600,260);
 		    keyOptFrame.setLocation(200,75);
 		    keyOptFrame.setVisible(true);
 		    helpPanel=new JPanel(new GridBagLayout());

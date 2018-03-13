@@ -391,7 +391,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 		 scroll= new JScrollPane(table);
 		otherKeyFrame.getContentPane().add( scroll,BorderLayout.CENTER);
 		otherKeyFrame.getContentPane().add(donePanel,BorderLayout.SOUTH);
-		otherKeyFrame.setSize( 600,200);
+		otherKeyFrame.setSize( 660,220);
 		otherKeyFrame.setLocation(200,75);
 		otherKeyFrame.setVisible(true);
 	}
@@ -530,7 +530,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 						chargeFrame.getContentPane().add(panel1);
 						chargeFrame.pack();
 						chargeFrame.setLocation(200,200);
-						chargeFrame.setSize(250,225);
+						chargeFrame.setSize(280,300);
 						chargeFrame.setVisible(true);
 						chargeFrame.setResizable(true);
 						chargeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);}
@@ -794,7 +794,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					cphfFrame.getContentPane().add(panel3,BorderLayout.SOUTH);
 					cphfFrame.pack();
 					cphfFrame.setLocation(200,200);
-					cphfFrame.setSize(620,150);
+					cphfFrame.setSize(720,150);
 					cphfFrame.setVisible(true);
 					cphfFrame.setResizable(true);
 					cphfFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -877,7 +877,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					densityFrame.getContentPane().add(panel1);
 					densityFrame.pack();
 					densityFrame.setLocation(200,200);
-					densityFrame.setSize(365,210);
+					densityFrame.setSize(500,250);
 					densityFrame.setVisible(true);
 					densityFrame.setResizable(true);
 					densityFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1000,7 +1000,7 @@ public class otherKeyTable extends JFrame implements ItemListener,ActionListener
 					fmmFrame.getContentPane().add(panel1);
 					fmmFrame.pack();
 					fmmFrame.setLocation(200,200);
-					fmmFrame.setSize(375,285);
+					fmmFrame.setSize(500,285);
 					fmmFrame.setVisible(true);
 					fmmFrame.setResizable(true);
 					fmmFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -139,7 +139,7 @@ public static String exchngName="",corrName="",restrictione="",restrictionc="";
   	listAllFrame.getContentPane().add(listAllPanel);
   	listAllFrame.pack();
   	listAllFrame.setLocation(200,200);
-  	listAllFrame.setSize(300,225);
+  	listAllFrame.setSize(300,300);
   	listAllFrame.setVisible(true);
   	//listAllFrame.setResizable(false);
   	listAllFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

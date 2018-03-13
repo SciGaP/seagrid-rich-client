@@ -115,7 +115,7 @@ public static String temp1;       //String that holds all iop options
     JScrollPane scroll = new JScrollPane(iopTable);
     iopFrame.getContentPane().add( scroll,BorderLayout.CENTER);
     iopFrame.getContentPane().add(donePanel,BorderLayout.SOUTH);
-    iopFrame.setSize( 400,175);
+    iopFrame.setSize( 440,200);
     iopFrame.setLocation(200,75);
     iopFrame.setVisible(true);
     iopTable.addMouseListener(new MouseAdapter() {

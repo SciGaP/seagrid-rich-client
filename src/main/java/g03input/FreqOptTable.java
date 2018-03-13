@@ -279,7 +279,7 @@ public FreqOptTable(){
     JScrollPane scroll = new JScrollPane(table);
     freqOptFrame.getContentPane().add( scroll,BorderLayout.CENTER);
     freqOptFrame.getContentPane().add(donePanel,BorderLayout.SOUTH);
-    freqOptFrame.setSize( 600,200);
+    freqOptFrame.setSize( 700,200);
     freqOptFrame.setLocation(200,75);
     freqOptFrame.setVisible(true);
     

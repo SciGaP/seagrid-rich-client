@@ -241,7 +241,7 @@ public class geomOptTable implements ItemListener,ActionListener{
     JScrollPane scroll = new JScrollPane(table);
     geomOptFrame.getContentPane().add( scroll,BorderLayout.CENTER);
     geomOptFrame.getContentPane().add(donePanel,BorderLayout.SOUTH);
-    geomOptFrame.setSize( 600,200);
+    geomOptFrame.setSize( 660,260);
     geomOptFrame.setLocation(200,75);
     geomOptFrame.setVisible(true);
   }

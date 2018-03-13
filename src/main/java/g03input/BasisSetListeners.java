@@ -212,7 +212,7 @@ public class BasisSetListeners implements ActionListener,ChangeListener{
     		
     			
     			
-    			optionsFrame.setSize(500,300);
+    			optionsFrame.setSize(600,400);
     			optionsFrame.setLocation(200,250);
     			optionsFrame.setVisible(true);
     			optionsFrame.setResizable(true);
@@ -391,7 +391,7 @@ public class BasisSetListeners implements ActionListener,ChangeListener{
     		
     			
     			
-    			optionsFrame.setSize(520,310);
+    			optionsFrame.setSize(580,360);
     			optionsFrame.setLocation(200,250);
     			optionsFrame.setVisible(true);
     			optionsFrame.setResizable(true);
@@ -726,7 +726,7 @@ public class BasisSetListeners implements ActionListener,ChangeListener{
     		
     			
     			
-    			optionsFrame.setSize(520,310);
+    			optionsFrame.setSize(560,400);
     			optionsFrame.setLocation(200,250);
     			optionsFrame.setVisible(true);
     			optionsFrame.setResizable(true);

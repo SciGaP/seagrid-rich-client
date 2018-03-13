@@ -969,15 +969,15 @@ public class Gaussian extends GeneralMolecularDataParser implements GJFParserInt
   }
 
   public static void main(String[] args) {
-    Gaussian gamess = new Gaussian();
+    Gaussian gaussian = new Gaussian();
 
     try {
-      gamess.parseGJF(args[0], 0);
+      gaussian.parseGJF(args[0], 0);
     } catch (Exception ex) {
       System.err.println(ex.getMessage());
       ex.printStackTrace();
     }
-    List ms = gamess.getMoleculeSpecs(0);
+    List ms = gaussian.getMoleculeSpecs(0);
     logger.info(ms.toString());
     /*
      Set set = controls.entrySet();

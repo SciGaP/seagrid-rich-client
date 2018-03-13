@@ -2633,7 +2633,7 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
                 " $STATPT OPTTOL=0.00001 $END \n" +
                 " $DATA\n" +
                 "default_Job\n"+
-                "C1\n"+"\n";
+                "C1\n";
         String gmsBottom = " $END";
         String gamessOut = gmsTop+gamessCoordOut+gmsBottom;
 
