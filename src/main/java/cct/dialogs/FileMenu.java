@@ -2647,6 +2647,13 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
         System.err.println(gamessOut);
         fw.close();
         exportedApplication = Settings.APP_NAME_GAMESS;
+        
+        JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
+                        " has been exported correctly. Make sure\n" +
+                        "to edit other sections of GUI.",
+                "SEAGrid: Gamess GUI",
+                JOptionPane.WARNING_MESSAGE);
+
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
@@ -2658,12 +2665,6 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
             forString.tempmol = gamessOut;
           }
         });
-
-        JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
-                        " has been exported correctly. Make sure\n" +
-                        "to edit other sections of GUI.",
-                "SEAGrid: Gamess GUI",
-                JOptionPane.WARNING_MESSAGE);
       } catch (Exception e) {
         e.printStackTrace();
       }

@@ -541,7 +541,8 @@ public class GamessGUI extends JFrame{
     	southPanel.setLayout(new BorderLayout());
     	southPanel.add(new MessageBox(), BorderLayout.CENTER);
     	southPanel.add(submitButtonPanel,BorderLayout.SOUTH);
-    	southPanel.setPreferredSize(new Dimension( getCurrentResolutionWidth(990) ,  getCurrentResolutionHeight(195)));
+    	southPanel.setPreferredSize(new Dimension( getCurrentResolutionWidth(990) ,
+				getCurrentResolutionHeight(195)));
     	
     	basePanel.add(southPanel,BorderLayout.SOUTH);
     	
@@ -564,12 +565,14 @@ public class GamessGUI extends JFrame{
     
     public static int getCurrentResolutionHeight(int _1024X768_Resolution)
     {
-    	return ((Double)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * ((double)_1024X768_Resolution/768))).intValue() ;
+    	return ((Double)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() *
+				((double)_1024X768_Resolution/768))).intValue() ;
     }
     
     public static int getCurrentResolutionWidth(int _1024X768_Resolution)
     {
-    	return ((Double)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * ((double)_1024X768_Resolution/1024))).intValue() ;
+    	return ((Double)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() *
+				((double)_1024X768_Resolution/1024))).intValue() ;
     }
     
     private class ToolTipDisplayer implements MouseMotionListener
@@ -618,7 +621,8 @@ public class GamessGUI extends JFrame{
     	for (int i = 0; i < menuBar.getMenuCount() ; i++) 
     	{
 			JMenu currentMenu = menuBar.getMenu(i);
-			if(currentMenu != null && (currentMenu.getText().equalsIgnoreCase("File") || currentMenu.getText().equalsIgnoreCase("Edit")
+			if(currentMenu != null && (currentMenu.getText().equalsIgnoreCase("File") ||
+					currentMenu.getText().equalsIgnoreCase("Edit")
 					|| currentMenu.getText().equalsIgnoreCase("Help")))
 				continue;
 			if(currentMenu != null)

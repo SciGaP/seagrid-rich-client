@@ -387,6 +387,10 @@ public class ExperimentCreateController {
                 gaussianInputs.get(0).setValue(tempFilePath);
                 updateExperimentInputs(gaussianInputs, true);
             }
+            // selecting the first application's inputs
+            ApplicationInterfaceDescription selectedItem =
+                    (ApplicationInterfaceDescription) expCreateAppField.getSelectionModel().getSelectedItem();
+            updateExperimentInputs( selectedItem.getApplicationInputs(), true );
         }
     }
 
