@@ -2647,7 +2647,7 @@ public class FileMenu extends JMenu implements ActionListener, ShadowClientInter
         System.err.println(gamessOut);
         fw.close();
         exportedApplication = Settings.APP_NAME_GAMESS;
-        
+
         JOptionPane.showMessageDialog(null, "WARNING: Molecule information" +
                         " has been exported correctly. Make sure\n" +
                         "to edit other sections of GUI.",

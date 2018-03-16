@@ -3342,7 +3342,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
     public String NWchemOutput(String molInfo) {
         String templateTop = "start \n" + "\n";
-        String templateBottom = "task scf optimize \n" + "\n";
+        String templateBottom = "basis \n"+ "* library 6-31g* \n"+ "end \n" +"\n"+
+                "task scf optimize \n" + "\n";
 
         String text = templateTop;
         text = text + "geometry units angstroms \n";
