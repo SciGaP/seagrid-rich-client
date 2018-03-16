@@ -719,6 +719,7 @@ public class ExperimentCreateController {
                     if(result){
                         try {
                             String filePath = selectedFile.getPath();
+                            filePath= filePath.replace("\\", "/");
                             String remotePath = filePath.replaceAll(remoteDataDirRoot, "");
                             downloadFile(Paths.get(remotePath), System.getProperty("java.io.tmpdir"));
                         } catch (Exception e) {
