@@ -44,7 +44,7 @@ public class ExperimentCreateWindow extends Application{
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/views/experiment/create/experiment-create.fxml"));
         primaryStage.setTitle("SEAGrid Desktop Client - Create Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         primaryStage.show();
     }
 
@@ -53,7 +53,7 @@ public class ExperimentCreateWindow extends Application{
             createPrimaryStage = new Stage();
             Parent root = FXMLLoader.load(ExperimentCreateWindow.class.getResource("/views/experiment/create/experiment-create.fxml"));
             createPrimaryStage.setTitle("SEAGrid Desktop Client - Create Experiment");
-            createPrimaryStage.setScene(new Scene(root, 800, 600));
+            createPrimaryStage.setScene(new Scene(root, 800, 700));
             createPrimaryStage.initModality(Modality.WINDOW_MODAL);
             createPrimaryStage.show();
         }
@@ -69,7 +69,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         createPrimaryStage.setTitle("SEAGrid Desktop Client - Edit Experiment");
-        createPrimaryStage.setScene(new Scene(root, 800, 600));
+        createPrimaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initExperimentEdit(experimentModel);
         createPrimaryStage.initModality(Modality.WINDOW_MODAL);
@@ -85,7 +85,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create Gaussian Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initGaussianExperiment(gaussianInput);
         primaryStage.initModality(Modality.WINDOW_MODAL);
@@ -101,7 +101,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create Gamess Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initGamessExperiment(gamessInput);
         primaryStage.initModality(Modality.WINDOW_MODAL);
@@ -117,7 +117,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create NWChem Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initNwchemExperiment(nwchemInput);
         primaryStage.initModality(Modality.WINDOW_MODAL);
@@ -133,7 +133,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create PSI4 Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initPsi4Experiment(processors, psi4Input);
         primaryStage.initModality(Modality.WINDOW_MODAL);
@@ -149,7 +149,7 @@ public class ExperimentCreateWindow extends Application{
                 "/views/experiment/create/experiment-create.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Create Molcas Experiment");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 800, 700));
         ExperimentCreateController controller = loader.getController();
         controller.initMolcasExperiment(processors, molcasInput);
         primaryStage.initModality(Modality.WINDOW_MODAL);

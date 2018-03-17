@@ -794,7 +794,7 @@ public class ExperimentCreateController {
                 "/views/experiment/create/remote-file-picker.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("SEAGrid Desktop Client - Select Remote File");
-        primaryStage.setScene(new Scene(root, 400, 600));
+        primaryStage.setScene(new Scene(root, 400, 840));
         RemoteFilePickerController controller = loader.getController();
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();

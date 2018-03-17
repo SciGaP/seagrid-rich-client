@@ -2964,8 +2964,12 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             templatecontrols.add(select);
             templatecontrols.add(currentElement);
 
-            constrain(this, myMenuBar, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.NORTHWEST, 1.0, 0.0, 0, 0, 0, 0);
-            constrain(this, templatecontrols, 0, 1, 1, 1, GridBagConstraints.BOTH, GridBagConstraints.NORTHWEST, 0.0, 1.0, 0, 0, 0, 0);
+            constrain(this, myMenuBar, 0, 0, 1, 1,
+                    GridBagConstraints.HORIZONTAL, GridBagConstraints.NORTHWEST, 1.0,
+                    0.0, 0, 0, 0, 0);
+            constrain(this, templatecontrols, 0, 1, 1, 1,
+                    GridBagConstraints.BOTH, GridBagConstraints.NORTHWEST, 0.0, 1.0,
+                    0, 0, 0, 0);
 
 
 //***************ANU TRYING*******************/
@@ -2981,7 +2985,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
             structure.add(lFormula);
             structure.add(Formula);
             structure.add(okbutt);
-            constrain(this, structure, 0, 3, 3, 3, GridBagConstraints.BOTH, GridBagConstraints.NORTHWEST, 0.0, 3.0, 3, 3, 3, 3);
+            constrain(this, structure, 0, 3, 3, 3, GridBagConstraints.BOTH,
+                    GridBagConstraints.NORTHWEST, 0.0, 3.0, 3, 3, 3, 3);
 
 //***************ANU TRYING*******************/
             setLocationRelativeTo(null);
@@ -3127,7 +3132,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         selected.setSymbol(dFile.parseString(4));
                         selected.setAtomicNumber(dFile.parseInt(0));
                         selected.setMass(dFile.parseDouble(5));
-                        selected.setColor(new Color(dFile.parseInt(6), dFile.parseInt(7), dFile.parseInt(8)));
+                        selected.setColor(new Color(dFile.parseInt(6), dFile.parseInt(7),
+                                dFile.parseInt(8)));
                         selected.setCovalentRadius(dFile.parseDouble(9));
                         selected.setVdwEnergy(dFile.parseDouble(10));
                         selected.setVdwRadius(dFile.parseDouble(11));
@@ -3283,7 +3289,8 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                     newAtom.setVdwRadius(1.2);
                     newAtom.setCorrectNumBonds(1);
                     double pos[] = new double[numHydro * 3];
-                    Random rn = new Random(System.currentTimeMillis() * (currAtom.atomicNumber() + (k * i * i * i + (k + 1))));
+                    Random rn = new Random(System.currentTimeMillis() * (currAtom.atomicNumber() +
+                            (k * i * i * i + (k + 1))));
                     pos[3 * k + 0] = rn.nextGaussian();
                     pos[3 * k + 1] = rn.nextGaussian();
                     pos[3 * k + 2] = rn.nextGaussian();
@@ -3342,8 +3349,9 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
 
     public String NWchemOutput(String molInfo) {
         String templateTop = "start \n" + "\n";
-        String templateBottom = "basis \n"+ "* library 6-31g* \n"+ "end \n" +"\n"+
-                "task scf optimize \n" + "\n";
+        String templateBottom = "basis \n"+ "* library 6-31g* \n"+ "end \n" +
+                "driver \n"+"  maxiter=100 \n"+"end \n"+
+                "\n" +"task scf optimize \n" + "\n";
 
         String text = templateTop;
         text = text + "geometry units angstroms \n";
