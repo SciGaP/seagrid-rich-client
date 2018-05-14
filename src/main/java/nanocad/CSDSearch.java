@@ -177,7 +177,8 @@ public class CSDSearch extends javax.swing.JDialog {
             try {
                 Integer number = Integer.parseInt(limit);
                 String encodedCompoundName = URLEncoder.encode(searchString);
-                String databasecgi = "http://gw144.iu.xsede.org/cgi-bin/csd/csd_search.cgi?name=" 
+                //String databasecgi = "http://gw144.iu.xsede.org/cgi-bin/csd/csd_search.cgi?name="
+                String databasecgi = "https://gridchem.uits.iu.edu/cgi-bin/csd/csd_search.cgi?name="
                         + encodedCompoundName + "&limit=" + limit;
                 URL urlcgi = new URL(databasecgi);
                 URLConnection conn = urlcgi.openConnection();
@@ -216,6 +217,7 @@ public class CSDSearch extends javax.swing.JDialog {
                     BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
                     bw.write(structures.get(row));
                     bw.close();
+                    System.out.println( temp.getAbsolutePath() );
                     nano.loadFile(temp.getAbsolutePath(), "");
                     this.dispose();
                 } catch (IOException e) {
