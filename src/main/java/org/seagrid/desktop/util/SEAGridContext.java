@@ -220,6 +220,38 @@ public class SEAGridContext {
 
     }
 
+    public String getNextcloudServername() {
+        return SEAGridConfig.NEXTCLOUD_SERVERNAME;
+    }
+
+    public String getDavBasepath() {
+        return SEAGridConfig.NEXTCLOUD_WEBDAV_BASEPATH;
+    }
+
+    public boolean isUseHttps() {
+        return SEAGridConfig.IS_USE_HTTPS;
+    }
+
+    public String getClientID() {
+        return SEAGridConfig.CLIENT_ID;
+    }
+
+    public String getTokenGenerateEndpoint() {
+        return SEAGridConfig.TOKEN_ENDPOINT;
+    }
+
+    public String getGrantType() {
+        return SEAGridConfig.TOKEN_GRANTYPE;
+    }
+
+    public String getValidationURL() {
+        return SEAGridConfig.TOKEN_VALIDATION_URL;
+    }
+
+    public String getBaseDownloadPath() {
+        return SEAGridConfig.BASE_DOWNLOAD_PATH;
+    }
+
     //FIXME - There is an issue in loading file from resources. This is a temporary hack
     public static final String logoBase64 = "iVBORw0KGgoAAAANSUhEUgAAAdkAAACTCAMAAAD1LZOOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5" +
             "ccllPAAAAGxQTFRF1PPxWMW/j9jUx+zqLbqx8fr6LrevSsC6q+LfZc3H4/X0dM/KPLy11fHvgtTPuefkZsrFnd3as+vmnODc9Pz7YM7HNsC36f" +
