@@ -75,7 +75,6 @@ public class NextcloudAdapter {
         }
     }
 
-
     /**
      * Check if the remotepath exists at the nextcloud server
      *

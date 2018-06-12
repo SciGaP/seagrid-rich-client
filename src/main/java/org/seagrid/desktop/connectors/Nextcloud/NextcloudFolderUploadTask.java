@@ -28,28 +28,34 @@ public class NextcloudFolderUploadTask extends NextcloudFileTask {
         String path;
         path = remoterootpath + remotepath;
         String ip = localpath;
+        File f = new File(ip);
         try {
-            File f = new File(ip);
             if (f.exists() && f.isDirectory()) {
                 //Extract the Foldername from the path
                 String[] segments = ip.split("/");
                 String foldername = segments[segments.length - 1];
-                System.out.println(foldername);
-                path = path + "/" + foldername;
-                System.out.println(path);
+                String folderemotepath = remotepath + "/" + foldername;
+
                 //if the folder doesn't exist in the remote server then create the folder
-                if (!Exists(remotepath)) {
-                    createFolder(remotepath);
+                if (!Exists(folderemotepath)) {
+                    createFolder(folderemotepath);
                 }
 
                 File[] listfil = f.listFiles();
                 if (listfil != null) {
                     for (File child : listfil) {
-                        String filename = child.getName();
-                        String newpath = path + "/" + filename;
-                        InputStream input = new FileInputStream(child.getAbsolutePath());
-                        sardine.put(newpath, input);
-                        input.close();
+                        if(child.isDirectory()) {
+                            String childfoldername = child.getName();
+                            String newremotepath = folderemotepath;
+                            String newlocalpath = localpath + "/" + childfoldername;
+                            uploadFolder(newlocalpath, newremotepath);
+                        } else {
+                            String filename = child.getName();
+                            String newpath = path + "/" + foldername + "/" + filename;
+                            InputStream input = new FileInputStream(child.getAbsolutePath());
+                            sardine.put(newpath, input);
+                            input.close();
+                        }
                     }
                 }
             }
