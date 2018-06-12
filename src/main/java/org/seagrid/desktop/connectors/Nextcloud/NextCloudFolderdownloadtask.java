@@ -11,7 +11,7 @@ import java.util.List;
 public class NextCloudFolderdownloadtask extends NextcloudFileTask {
 
     private String rootpath;
-    private String downloadirpath = SEAGridContext.getInstance().getBaseDownloadPath();
+    private String rootdownloadirpath = SEAGridContext.getInstance().getBaseDownloadPath();
 
     /**
      * Constructor
@@ -31,34 +31,36 @@ public class NextCloudFolderdownloadtask extends NextcloudFileTask {
      * @throws IOException
      */
     public void downloadFolder(String remotepath,int depth) throws IOException {
-        rootpath = rootpath+remotepath ;
-        System.out.println(rootpath);
         int count = 0;
         String filepath;
+        String newrootpath = rootpath + remotepath;
+        String newdownloadir = rootdownloadirpath + "/" + remotepath ;
+        File downloadfilepathobject = new File(newdownloadir);
+        if(!downloadfilepathobject.exists()) {
+            downloadfilepathobject.mkdir();
+        }
+
         List<String> retVal= new LinkedList<>();
         List<DavResource> resources;
         try {
-            resources = sardine.list(rootpath, depth);
+            resources = sardine.list(newrootpath, depth);
             for (DavResource res : resources) {
-                //Skip the Documents folder which is listed as default as first by the sardine output
+                //Skip the first folder which is listed as default as first by the sardine output
                 if (count != 0) {
                     if (res.isDirectory()) {
                         String filename = res.getName();
-                        File dir = new File(downloadirpath + "/" + filename);
-                        dir.mkdir();
-                        filepath = rootpath + "/" + filename;
-                        downloadFolder(filepath, depth);
+                        String recursefilepath = remotepath + "/" + filename;
+                        downloadFolder(recursefilepath, depth);
                     } else {
                         String filename = res.getName();
-                        filepath = rootpath + "/" + filename;
+                        filepath = newrootpath + "/" + filename;
                         retVal.add(res.getName());
                         InputStream in = null;
-                        //System.out.println(filepath);
                         if (sardine.exists(filepath)) {
                             in = sardine.get(filepath);
                             byte[] buffer = new byte[in.available()];
                             in.read(buffer);
-                            File targetFile = new File(downloadirpath + "/" + filename);
+                            File targetFile = new File(newdownloadir + "/" + filename);
                             OutputStream outStream = new FileOutputStream(targetFile);
                             outStream.write(buffer);
                             in.close();

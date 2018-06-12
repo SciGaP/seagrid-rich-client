@@ -68,7 +68,7 @@ public class NextcloudAdapter {
         try {
             List<String> downloadlist= new LinkedList<>();
             if(dnlfolder.AuthenticateSession()) {
-                dnlfolder.downloadFolder(path, 2);
+                dnlfolder.downloadFolder(path, 1);
             }
         } catch (IOException e) {
             e.printStackTrace();
