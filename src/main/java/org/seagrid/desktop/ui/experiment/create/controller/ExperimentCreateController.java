@@ -52,9 +52,9 @@ import org.apache.airavata.model.experiment.UserConfigurationDataModel;
 import org.apache.airavata.model.scheduling.ComputationalResourceSchedulingModel;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
+import org.seagrid.desktop.connectors.NextcloudStorage.NextcloudFileDownloadTask;
+import org.seagrid.desktop.connectors.NextcloudStorage.NextcloudFileUploadTask;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
-import org.seagrid.desktop.connectors.storage.GuiBulkFileUploadTask;
-import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
 import org.seagrid.desktop.ui.commons.ImageButton;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -65,10 +65,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -243,6 +240,8 @@ public class ExperimentCreateController {
                     createExperiment(false);
                 } catch (TException e) {
                     SEAGridDialogHelper.showExceptionDialog(e,"Caught Exception",null, "Unable to create experiment");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
@@ -251,6 +250,8 @@ public class ExperimentCreateController {
                     createExperiment(true);
                 } catch (TException e) {
                     SEAGridDialogHelper.showExceptionDialog(e, "Caught Exception", null, "Unable to create experiment");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
@@ -796,13 +797,18 @@ public class ExperimentCreateController {
         return controller.getSelectedFilePath();
     }
 
-    private void createExperiment(boolean launch) throws TException {
+    private void createExperiment(boolean launch) throws TException, IOException {
         if(validateExperimentFields()){
             //FIXME Hardcoded value
             String projectId = ((Project)expCreateProjField.getSelectionModel().getSelectedItem()).getProjectID();
             String randomString = projectId.substring(0,projectId.length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
                     + expCreateNameField.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
             String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
+
+            String downlfile = "CreateExperimentLog.txt";
+            BufferedWriter writer3 = new BufferedWriter(new FileWriter(downlfile));
+            writer3.write("\nRemote Data Directory "+remoteDataDir);
+            writer3.close();
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir, randomString + "/");
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
@@ -868,6 +874,7 @@ public class ExperimentCreateController {
     }
 
     private ExperimentModel assembleExperiment(String remoteDataDir, String experimentDataDir) throws TException {
+
         ExperimentModel experimentModel = new ExperimentModel();
         experimentModel.setExperimentName(expCreateNameField.getText());
         experimentModel.setDescription(expCreateDescField.getText() == null ? "" : expCreateDescField.getText());
@@ -888,6 +895,7 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setAiravataAutoSchedule(false);
         userConfigurationDataModel.setOverrideManualScheduledParams(false);
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
+
         userConfigurationDataModel.setExperimentDataDir(remoteDataDirRoot + experimentDataDir);
         userConfigurationDataModel.setUseUserCRPref(useMyCRAccount.isSelected());
 
@@ -1026,7 +1034,16 @@ public class ExperimentCreateController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiBulkFileUploadTask(uploadFiles);
+                    /*for (Map.Entry<String, File> entry : uploadFiles.entrySet()) {
+                        //System.out.println(entry.getKey() + ":" + entry.getValue().toString());
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Content of the keys" + entry.getKey() + " ?" +"Value of the key"+entry.getValue(), ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+                        alert.showAndWait();
+                        if (alert.getResult() == ButtonType.YES) {
+                            //do stuff
+                        }
+                    }*/
+                    //return new GuiBulkFileUploadTask(uploadFiles);
+                    return new NextcloudFileUploadTask(uploadFiles);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateInputsGridPane.getScene().getWindow(),
@@ -1050,7 +1067,8 @@ public class ExperimentCreateController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiFileDownloadTask(remotePath.toString(), localPath);
+                    //return new GuiFileDownloadTask(remotePath.toString(), localPath);
+                     return new NextcloudFileDownloadTask(remotePath.toString(), localPath);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", expCreateNameField.getScene().getWindow(),
