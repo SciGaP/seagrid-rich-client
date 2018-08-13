@@ -5,7 +5,6 @@ import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import javafx.concurrent.Task;
 import org.seagrid.desktop.connectors.NextcloudStorage.Exception.NextcloudApiException;
-import org.seagrid.desktop.connectors.Nextcloud.ValidateTokenTask;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class NextcloudFileTask extends Task<Boolean> {
-    private final static Logger logger = LoggerFactory.getLogger(org.seagrid.desktop.connectors.Nextcloud.NextcloudFileTask.class);
+    private final static Logger logger = LoggerFactory.getLogger(org.seagrid.desktop.connectors.NextcloudStorage.NextcloudFileTask.class);
 
     protected Sardine sardine = SardineFactory.begin();
 
@@ -32,7 +31,7 @@ public abstract class NextcloudFileTask extends Task<Boolean> {
         isusehttps = SEAGridContext.getInstance().isUseHttps();
         rootremotepath = (isusehttps ? "https" : "http") + "://" + servername + "/" + basepath + "/" + SEAGridContext.getInstance().getUserName();
         token = SEAGridContext.getInstance().getOAuthToken();
-            sardine.setCredentials(SEAGridContext.getInstance().getUserName(), SEAGridContext.getInstance().getClientID());
+            sardine.setCredentials(SEAGridContext.getInstance().getUserName(), token);
             sardine.enablePreemptiveAuthentication(SEAGridContext.getInstance().getNextcloudServername());
     }
 

@@ -35,7 +35,7 @@ public class NextcloudStorageManager {
         isusehttps = SEAGridContext.getInstance().isUseHttps();
         rootremotepath = (isusehttps ? "https" : "http") + "://" + servername + "/" + basepath + "/" + SEAGridContext.getInstance().getUserName();
         token = SEAGridContext.getInstance().getOAuthToken();
-            sardine.setCredentials(SEAGridContext.getInstance().getUserName(), SEAGridContext.getInstance().getClientID());
+            sardine.setCredentials(SEAGridContext.getInstance().getUserName(), token);
             sardine.enablePreemptiveAuthentication(SEAGridContext.getInstance().getNextcloudServername());
     }
 

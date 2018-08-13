@@ -193,12 +193,7 @@ public class ExperimentSummaryController {
                 List<InputDataObjectType> inputDataObjectTypes = experimentModel.getExperimentInputs();
                 String experimentDataDir = "/" + experimentModel.getProjectId().substring(0, experimentModel.getProjectId().length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
                         + experimentNameLabel.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
-                //StorageManager.getInstance().createDirIfNotExists(experimentDataDir);
-                String DirectoryListings ="ExpcloneLog.txt";
-                BufferedWriter writ = new BufferedWriter(new FileWriter(DirectoryListings));
-                writ.write("Experiment Data Directory"+experimentDataDir);
                 NextcloudStorageManager.getInstance().createFolderifNotExist(experimentDataDir);
-                writ.close();
                 String expId = AiravataManager.getInstance().cloneExperiment(experimentModel.getExperimentId(),
                         "Clone of " + experimentModel.getExperimentName(), experimentModel.getProjectId());
                 ExperimentModel clonedExperimentModel = AiravataManager.getInstance().getExperiment(expId);
@@ -469,8 +464,6 @@ public class ExperimentSummaryController {
 
     private void showExperimentOutputs(ExperimentModel experimentModel) throws TException, URISyntaxException, IOException {
         int rowIndex = experimentInfoGridPane.getRowConstraints().size();
-        String downlfile="BufferedOutput.txt";
-        BufferedWriter writer3 = new BufferedWriter(new FileWriter(downlfile));
         experimentInfoGridPane.add(new Label("Outputs"), 0, rowIndex);
         List<OutputDataObjectType> outputDataObjectTypes = experimentModel.getExperimentOutputs();
         for(OutputDataObjectType output : outputDataObjectTypes){
@@ -481,7 +474,6 @@ public class ExperimentSummaryController {
                     case STDERR:
                     case STDOUT:
                         String dataRoot = remoteDataDirRoot;
-                        writer3.write("Output Directory "+dataRoot);
 
                         try{
                             List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(output.getValue());
@@ -493,15 +485,9 @@ public class ExperimentSummaryController {
                                 }
                             }
                             String filePath = (new URI(fileUri)).getPath();
-                            writer3.write("\nFilepath "+ filePath);
                             Hyperlink hyperlink = new Hyperlink(Paths.get(filePath).getFileName().toString());
                             TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);
                             hyperlink.setOnAction(event -> {
-                                try {
-                                    writer3.write("\nSending the path to the download File");
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                                 downloadFile(Paths.get(filePath.toString().replaceAll(dataRoot, "")), experimentModel);
                             });
                             experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
@@ -520,7 +506,6 @@ public class ExperimentSummaryController {
                 rowIndex++;
             }
         }
-        writer3.close();
     }
 
     private void downloadFile(Path remotePath, ExperimentModel experimentModel){

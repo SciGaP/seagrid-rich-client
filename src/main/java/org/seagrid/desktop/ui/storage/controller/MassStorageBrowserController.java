@@ -43,7 +43,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.seagrid.desktop.connectors.Nextcloud.NextcloudAdapter;
 import org.seagrid.desktop.connectors.NextcloudStorage.*;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.storage.model.FileListModel;
@@ -103,8 +102,6 @@ public class MassStorageBrowserController {
     private String currentRemotePath;
 
     ObservableList<FileListModel> currentLocalFileList, currentRemoteFileList;
-
-    private NextcloudAdapter next = new NextcloudAdapter();
 
     @SuppressWarnings("unused")
     public void initialize(){
@@ -573,19 +570,13 @@ public class MassStorageBrowserController {
                     (new File(currentRemotePath).getParent()));
             currentRemoteFileList.add(fileListModel);
         }
-        //Creating Custom Logs
 
-        //Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
-        String DirectoryListings ="LogsExperimentStorageDir.txt";
-        BufferedWriter writ = new BufferedWriter(new FileWriter(DirectoryListings));
         List<DavResource> resources = NextcloudStorageManager.getInstance().listDirectories(currentRemotePath.toString());
-        writ.write("\nPath" +currentRemotePath.toString());
         if(resources!=null) {
             for (DavResource res : resources) {
                 if (count != 0) {
                     ;
                     if (res.getName().equals(".") || res.getName().equals("..")) continue;
-                    writ.write("\nName" + res.getName());
                     fileListModel = new FileListModel(res.getName(), res.isDirectory() == false
                             ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, res.getContentLength().intValue(),
                             res.getModified().getTime(), FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
@@ -595,6 +586,5 @@ public class MassStorageBrowserController {
                 count++;
             }
         }
-        writ.close();
     }
 }

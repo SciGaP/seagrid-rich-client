@@ -804,11 +804,6 @@ public class ExperimentCreateController {
             String randomString = projectId.substring(0,projectId.length()-37).replaceAll("[^A-Za-z0-9 ]", "_") + "/"
                     + expCreateNameField.getText().replaceAll("[^A-Za-z0-9]","_")+"."+System.currentTimeMillis();
             String remoteDataDir = SEAGridContext.getInstance().getRemoteDataDirPrefix() + remoteDataDirRoot + randomString  + "/";
-
-            String downlfile = "CreateExperimentLog.txt";
-            BufferedWriter writer3 = new BufferedWriter(new FileWriter(downlfile));
-            writer3.write("\nRemote Data Directory "+remoteDataDir);
-            writer3.close();
             ExperimentModel experimentModel = assembleExperiment(remoteDataDir, randomString + "/");
             Map<String,File> uploadFiles = new HashMap<>();
             for(Iterator<Map.Entry<InputDataObjectType, Object>> it = experimentInputs.entrySet().iterator(); it.hasNext(); ) {
@@ -1042,7 +1037,6 @@ public class ExperimentCreateController {
                             //do stuff
                         }
                     }*/
-                    //return new GuiBulkFileUploadTask(uploadFiles);
                     return new NextcloudFileUploadTask(uploadFiles);
                 } catch (Exception e) {
                     e.printStackTrace();

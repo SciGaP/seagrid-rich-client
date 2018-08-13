@@ -216,7 +216,6 @@ public class RemoteFilePickerController {
                     currentRemotePath.getParent().toString());
             currentRemoteFileList.add(fileListModel);
         }
-        //Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
         List<DavResource> resources = NextcloudStorageManager.getInstance().listDirectories(currentRemotePath.toString());
 
         for (DavResource res : resources) {
