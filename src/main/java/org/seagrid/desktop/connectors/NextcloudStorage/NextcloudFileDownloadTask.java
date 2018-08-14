@@ -1,7 +1,6 @@
 package org.seagrid.desktop.connectors.NextcloudStorage;
 
 import org.seagrid.desktop.connectors.NextcloudStorage.Exception.NextcloudApiException;
-import org.seagrid.desktop.connectors.storage.GuiFileDownloadTask;
 import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,7 @@ import java.io.*;
 
 public class NextcloudFileDownloadTask extends NextcloudFileTask {
 
-    private final static Logger logger = LoggerFactory.getLogger(GuiFileDownloadTask.class);
+    private final static Logger logger = LoggerFactory.getLogger(NextcloudFileDownloadTask.class);
 
     private String remoteFilePath, localFilePath;
     private String remoterootpath;

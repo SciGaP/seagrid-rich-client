@@ -1,7 +1,6 @@
 package org.seagrid.desktop.connectors.NextcloudStorage;
 
 import org.seagrid.desktop.connectors.NextcloudStorage.Exception.NextcloudApiException;
-import org.seagrid.desktop.connectors.storage.GuiFileUploadTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
