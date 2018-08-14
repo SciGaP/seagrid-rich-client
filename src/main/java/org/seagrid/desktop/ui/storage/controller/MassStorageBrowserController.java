@@ -20,6 +20,7 @@
 */
 package org.seagrid.desktop.ui.storage.controller;
 
+import com.github.sardine.DavResource;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
@@ -42,7 +43,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.seagrid.desktop.connectors.storage.*;
+import org.seagrid.desktop.connectors.NextcloudStorage.*;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.ui.storage.model.FileListModel;
 import org.seagrid.desktop.util.SEAGridContext;
@@ -51,10 +52,14 @@ import org.seagrid.desktop.util.messaging.SEAGridEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Vector;
 
 public class MassStorageBrowserController {
@@ -257,7 +262,7 @@ public class MassStorageBrowserController {
         }
     }
 
-    private void initializeRemoteFileTable() throws SftpException, JSchException {
+    private void initializeRemoteFileTable() throws SftpException, JSchException, IOException {
         this.currentRemotePath = "/";
 
         fbRemoteFileTblFileName.setCellValueFactory(cellData-> new SimpleObjectProperty(cellData.getValue()));
@@ -379,7 +384,7 @@ public class MassStorageBrowserController {
         populateRemoteFileTable();
     }
 
-    private void populateRemoteFileTable() throws JSchException, SftpException {
+    private void populateRemoteFileTable() throws JSchException, SftpException, IOException {
         currentRemoteFileList.clear();
         fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
         FileListModel fileListModel;
@@ -388,14 +393,21 @@ public class MassStorageBrowserController {
                     (new File(currentRemotePath).getParent()));
             currentRemoteFileList.add(fileListModel);
         }
-        Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
-        for(ChannelSftp.LsEntry lsEntry : children){
-            if(lsEntry.getFilename().equals(".") || lsEntry.getFilename().equals("..")) continue;
-            fileListModel = new FileListModel(lsEntry.getFilename(), lsEntry.getAttrs().isDir() == false
-                    ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, lsEntry.getAttrs().getSize(),
-                    lsEntry.getAttrs().getATime() * 1000L, FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
-                    + "/" + lsEntry.getFilename());
-            currentRemoteFileList.add(fileListModel);
+
+        List<DavResource> resources = NextcloudStorageManager.getInstance().listDirectories(currentRemotePath.toString());
+        int count = 0;
+        if(resources!= null) {
+            for (DavResource res : resources) {
+                if(count != 0) {
+                    if (res.getName().equals(".") || res.getName().equals("..")) continue;
+                    fileListModel = new FileListModel(res.getName(), res.isDirectory() == false
+                            ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, res.getContentLength().intValue(),
+                            res.getModified().getTime(), FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
+                            + "/" + res.getName());
+                    currentRemoteFileList.add(fileListModel);
+                }
+                count++;
+            }
         }
     }
 
@@ -404,7 +416,7 @@ public class MassStorageBrowserController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiFileUploadTask(remotePath, localFile);
+                    return new NextcloudSingleFileUploadTask(remotePath, localFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbRemoteFileTable.getScene().getWindow(),
@@ -441,7 +453,7 @@ public class MassStorageBrowserController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiDirUploadTask(remoteDir, localDir);
+                    return new NextcloudFolderUploadTask(remoteDir, localDir);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbRemoteFileTable.getScene().getWindow(),
@@ -478,7 +490,7 @@ public class MassStorageBrowserController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiFileDownloadTask(remoteFile, localFile);
+                    return new NextcloudFileDownloadTask(remoteFile, localFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalFileTable.getScene().getWindow(),
@@ -515,7 +527,7 @@ public class MassStorageBrowserController {
             @Override
             protected Task<Boolean> createTask() {
                 try {
-                    return new GuiDirDownloadTask(remoteDir, localDir);
+                    return new NextCloudFolderdownloadtask(remoteDir, localDir);
                 } catch (Exception e) {
                     e.printStackTrace();
                     SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", fbLocalFileTable.getScene().getWindow(),
@@ -547,9 +559,10 @@ public class MassStorageBrowserController {
         service.start();
     }
 
-    public void gotoRemoteDir(String path) throws JSchException, SftpException {
+    public void gotoRemoteDir(String path) throws JSchException, SftpException, IOException {
         currentRemoteFileList.clear();
         currentRemotePath = path;
+        int count = 0;
         fbRemotePath.setText(SEAGridContext.getInstance().getUserName() + currentRemotePath.toString());
         FileListModel fileListModel;
         if((new File(currentRemotePath)).getParent() != null && !(new File(currentRemotePath)).getParent().isEmpty()){
@@ -557,14 +570,21 @@ public class MassStorageBrowserController {
                     (new File(currentRemotePath).getParent()));
             currentRemoteFileList.add(fileListModel);
         }
-        Vector<ChannelSftp.LsEntry> children = StorageManager.getInstance().getDirectoryListing(currentRemotePath.toString());
-        for(ChannelSftp.LsEntry lsEntry : children){
-            if(lsEntry.getFilename().equals(".") || lsEntry.getFilename().equals("..")) continue;
-            fileListModel = new FileListModel(lsEntry.getFilename(), lsEntry.getAttrs().isDir() == false
-                    ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, lsEntry.getAttrs().getSize(),
-                    lsEntry.getAttrs().getATime() * 1000L, FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
-                    + "/" + lsEntry.getFilename());
-            currentRemoteFileList.add(fileListModel);
+
+        List<DavResource> resources = NextcloudStorageManager.getInstance().listDirectories(currentRemotePath.toString());
+        if(resources!=null) {
+            for (DavResource res : resources) {
+                if (count != 0) {
+                    ;
+                    if (res.getName().equals(".") || res.getName().equals("..")) continue;
+                    fileListModel = new FileListModel(res.getName(), res.isDirectory() == false
+                            ? FileListModel.FileListModelType.FILE : FileListModel.FileListModelType.DIR, res.getContentLength().intValue(),
+                            res.getModified().getTime(), FileListModel.FileLocation.REMOTE, currentRemotePath.toString()
+                            + "/" + res.getName());
+                    currentRemoteFileList.add(fileListModel);
+                }
+                count++;
+            }
         }
     }
 }

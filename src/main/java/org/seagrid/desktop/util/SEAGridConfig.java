@@ -27,6 +27,7 @@ public class SEAGridConfig {
     private final static Logger logger = LoggerFactory.getLogger(SEAGridConfig.class);
 
     public static final boolean DEV = false; //true
+    public static final boolean IS_USE_HTTPS = false;
 
     public static final String USER_NAME = "user.name";
     public static final String AUTHENTICATED = "authenticated";
@@ -51,4 +52,12 @@ public class SEAGridConfig {
     public static final java.lang.String DEV_REMOTE_DATA_DIR_ROOT = "dev.remote.data.dir.root";
     public static final java.lang.String REMOTE_DATA_DIR_PREFIX = "remote.data.dir.prefix";
     public static final java.lang.String DEV_REMOTE_DATA_DIR_PREFIX = "dev.remote.data.dir.prefix";
+
+    public static final java.lang.String NEXTCLOUD_SERVERNAME = "nextcloud.server";
+    public static final java.lang.String NEXTCLOUD_WEBDAV_BASEPATH = "nextcloudwebdav.base.path";
+    public static final java.lang.String CLIENT_ID = "nextcloud.client.id";
+    public static final java.lang.String TOKEN_ENDPOINT = "nextcloud.token.endpoint";
+    public static final java.lang.String TOKEN_GRANTYPE = "nextcloud.grantype";
+    public static final java.lang.String TOKEN_VALIDATION_URL = "nextcloud.tokenvalidation.api";
+    public static final java.lang.String BASE_DOWNLOAD_PATH = "nextcloud.file.basedownloadpath";
 }
