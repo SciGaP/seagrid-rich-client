@@ -1,0 +1,17 @@
+# Name: sulfhydryl group
+
+@<TRIPOS>MOLECULE
+sulfhydryl group
+2 1 1 0 0
+SMALL
+NO_CHARGE
+##nbv 1
+
+@<TRIPOS>ATOM
+ 1   S1    0.0        0.0        0.0    S     1
+ 2   H1    0.87634    0.97202    0.0    H     1
+##   bv    0.71373   -0.70042    0.0  -100    1
+@<TRIPOS>BOND
+ 1   1    2     1
+@<TRIPOS>SUBSTRUCTURE
+ 1   SULFHYDRYL GROUP1  1

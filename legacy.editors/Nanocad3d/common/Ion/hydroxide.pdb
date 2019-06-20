@@ -1,0 +1,7 @@
+COMPND  hydroxide3.pdb                                                          
+HETATM    1  O                  -0.471   0.000   0.000                
+HETATM    2  H                   0.471   0.000   0.000                
+CONECT    1    2                                             
+CONECT    2    1                                             
+END   
+ÿ

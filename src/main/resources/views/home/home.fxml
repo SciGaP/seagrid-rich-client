@@ -116,6 +116,7 @@
             <Menu mnemonicParsing="false" text="Molecular Editors">
               <items>
                 <MenuItem mnemonicParsing="false" text="Nanocad" fx:id="nanocadMenuBtn" />
+                <MenuItem mnemonicParsing="false" text="Nanocad3D" fx:id="nanocad3dMenuBtn" />
                 <MenuItem mnemonicParsing="false" text="Jamberoo" visible="true" fx:id="jamberooMenuBtn" />
               </items>
             </Menu>

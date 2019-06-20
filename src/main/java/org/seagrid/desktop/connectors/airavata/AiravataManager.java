@@ -66,11 +66,11 @@ public class AiravataManager {
 
     private Airavata.Client getClient() throws AiravataClientException, TTransportException {
         try{
-            airavataClient.getAPIVersion(getAuthzToken());
+            airavataClient.getAPIVersion();
         } catch (Exception e) {
             try{
                 airavataClient = createAiravataClient();
-                airavataClient.getAPIVersion(getAuthzToken());
+                airavataClient.getAPIVersion();
             } catch (Exception e1) {
                 SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
             }

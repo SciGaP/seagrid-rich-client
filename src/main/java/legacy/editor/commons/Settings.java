@@ -18,7 +18,8 @@ public class Settings {
     public static String fileSeparator = File.separator;
     private static String applicationDataDir = defaultDataDirectory() + "legacy.editors";
     public static String jobDir = defaultDataDirectory() + "legacy.editors";
-    public static String httpsGateway = "https://ccg-mw1.ncsa.uiuc.edu/cgi-bin/";
+    public static String httpsGateway = "https://gridchem.uits.iu.edu/cgi-bin/";
+    //public static String httpsGateway = "https://ccg-mw1.ncsa.uiuc.edu/cgi-bin/";
 
     public static Settings getInstance() {
         return ourInstance;

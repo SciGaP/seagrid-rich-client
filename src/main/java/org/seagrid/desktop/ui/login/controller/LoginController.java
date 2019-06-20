@@ -105,6 +105,7 @@ public class LoginController {
 
         loginButton.setOnMouseClicked(event -> {
             handleSEAGridWebLogin();
+            loginButton.resizeRelocate( 100.0,100.0,50.0,50.0 );
         });
 
         dontHaveAccountLink.setOnAction(event -> {
@@ -140,10 +141,10 @@ public class LoginController {
 
         loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
 
-        //initializing notification messages
-        notificationLabel.setCursor(Cursor.HAND);
-        notificationLabel.setStyle("-fx-border-color: white;");
-        notificationLabel.setMaxWidth(Double.MAX_VALUE);
+        handleSEAGridWebLogin();
+
+
+
         try{
             java.util.List<Notification> messages = AiravataManager.getInstance().getNotifications();
             final Index index = new Index();
@@ -182,9 +183,15 @@ public class LoginController {
             //cannot connect to Airavata
             ex.printStackTrace();
         }
-    }
 
+    //initializing notification messages
+        notificationLabel.setCursor(Cursor.HAND);
+        notificationLabel.setStyle("-fx-border-color: white;");
+        notificationLabel.setMaxWidth(Double.MAX_VALUE);
+}
     public boolean handleSEAGridWebLogin(){
+
+        //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
         final WebEngine webEngine = loginWebView.getEngine();
         final Label location = new Label();
         String url;
@@ -219,6 +226,7 @@ public class LoginController {
                         java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
                         webEngine.load(url);
                         loginWebView.setVisible(false);
+                        //loginWebView.setVisible(true);
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
                                         " Please contact the Gateway Admin to get your account authorized by sending an" +
@@ -232,14 +240,18 @@ public class LoginController {
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
                                 " Please use a correct user credentials and try again.", stage);
+                        loginButton.resizeRelocate( 100.0,100.0,50.0,50.0 );
                         loginWebView.setVisible(true);
                     }
                 }
             }
         });
+
+        //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
         webEngine.load(url);
         return false;
     }
+
 
     private Map<String, String> getQueryMap(String query)
     {

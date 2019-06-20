@@ -1,0 +1,13 @@
+COMPND  perchlorate3.pdb                                                        
+HETATM    1 Cl                   0.245   0.253   0.064                
+HETATM    2  O                   0.889   1.166  -0.802                
+HETATM    3  O                  -0.996   0.811   0.437                
+HETATM    4  O                   0.970   0.081   1.265                
+HETATM    5  O                  -0.009  -0.987  -0.567                
+CONECT    1    2    3    4    5                              
+CONECT    2    1                                             
+CONECT    3    1                                             
+CONECT    4    1                                             
+CONECT    5    1                                             
+END   
+ÿ

@@ -1,0 +1,11 @@
+COMPND  nitrate3.pdb                                                            
+HETATM    1  N                   0.053  -0.332   0.032                
+HETATM    2  O                   0.976  -0.950   0.296                
+HETATM    3  O                  -1.084  -0.933  -0.249                
+HETATM    4  O                   0.127   0.982   0.000                
+CONECT    1    2    3    4                                   
+CONECT    2    1                                             
+CONECT    3    1                                             
+CONECT    4    1                                             
+END   
+ÿ

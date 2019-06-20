@@ -54,6 +54,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import nanocad.nanocadMain;
+import Nanocad3d.nanocad3dMain;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
@@ -162,6 +163,9 @@ public class HomeController {
 
     @FXML
     private MenuItem nanocadMenuBtn;
+
+    @FXML
+    private MenuItem nanocad3dMenuBtn;
 
     @FXML
     private MenuItem jamberooMenuBtn;
@@ -372,6 +376,12 @@ public class HomeController {
                     public void run() {
                         nanocadMain.showNanocad();
                     }
+                }));
+
+        nanocad3dMenuBtn.setOnAction(event ->
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() { nanocad3dMain.showNanocad3D(); }
                 }));
         jamberooMenuBtn.setOnAction(event ->
                 SwingUtilities.invokeLater(new Runnable() {
