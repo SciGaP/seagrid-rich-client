@@ -1,0 +1,19 @@
+# Name: ammonia
+
+@<TRIPOS>MOLECULE
+ammonia
+4 3 1 0 0
+SMALL
+NO_CHARGE
+
+@<TRIPOS>ATOM
+ 1   N1    0.0        0.0        0.0        N     1
+ 2   H1    0.97624    0.01378    0.25858    H     1
+ 3   H2   -0.27676   -0.94573   -0.22160    H     1
+ 4   H3   -0.55750    0.34183    0.76970    H     1
+@<TRIPOS>BOND
+ 1   1    2     1
+ 2   1    3     1
+ 3   1    4     1
+@<TRIPOS>SUBSTRUCTURE
+ 1   AMMONIA1  1

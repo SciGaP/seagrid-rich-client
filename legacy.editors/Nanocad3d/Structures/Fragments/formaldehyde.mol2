@@ -1,0 +1,19 @@
+# Name: formaldehyde
+
+@<TRIPOS>MOLECULE
+formaldehyde
+4 3 1 0 0
+SMALL
+NO_CHARGE
+
+@<TRIPOS>ATOM
+ 1    C1     0.0        0.0        0.0        C    1
+ 2    O1     1.18889    0.01678    0.31491    O    1
+ 3    H1    -0.48247   -0.94918   -0.27618    H    1
+ 4    H2    -0.58076    0.93417   -0.00544    H    1
+@<TRIPOS>BOND
+ 1    1   2   2
+ 2    1   3   1
+ 3    1   4   1
+@<TRIPOS>SUBSTRUCTURE
+ 1   FORMALDEHYDE1   1

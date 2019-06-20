@@ -1,0 +1,17 @@
+# Name: hydrogen sulfide
+
+@<TRIPOS>MOLECULE
+hydrogen sulfide
+3 2 1 0 0
+SMALL
+NO_CHARGE
+
+@<TRIPOS>ATOM
+ 1   S1    0.0        0.0        0.0     S     1
+ 2   H1    0.87634    0.97202    0.0     H     1
+ 3   H2    0.96193   -0.94399    0.0     H     1
+@<TRIPOS>BOND
+ 1   1    2     1
+ 2   1    3     1
+@<TRIPOS>SUBSTRUCTURE
+ 1   HYDROGEN SULFIDE1  1

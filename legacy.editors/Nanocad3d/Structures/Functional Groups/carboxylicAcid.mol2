@@ -1,0 +1,21 @@
+# Name: carboxylic acid
+
+@<TRIPOS>MOLECULE
+carboxylic acid
+4 3 1 0 0
+SMALL
+NO_CHARGE
+##nbv 1
+
+@<TRIPOS>ATOM
+ 1    C1     0.0        0.0        0.0        C    1
+ 2    O1     1.18889    0.01678    0.31491    O    1
+ 3    O2    -0.75443    1.21352   -0.00707    O    1
+ 4    H1    -0.34364    1.85785   -0.65072    H    1
+##    bv    -0.43861   -0.86289   -0.25107  -100   1
+@<TRIPOS>BOND
+ 1    1   2   2
+ 2    1   3   1
+ 3    3   4   1
+@<TRIPOS>SUBSTRUCTURE
+ 1   CARBOXYLIC ACID1   1

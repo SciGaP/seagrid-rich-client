@@ -1,0 +1,1 @@
+/Users/spamidig1/SEAGrid/.ApplicationData/legacy.editors/Nanocad3d/cgenff_win\cgenff.exe -v -v /Users/spamidig1/SEAGrid/.ApplicationData/legacy.editors/Nanocad3d/Structures/Molecules/aminoAcids/alanine.mol2 > cgenff_out.txt 2>&1

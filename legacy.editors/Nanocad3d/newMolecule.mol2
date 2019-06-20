@@ -1,0 +1,12 @@
+# Name: New Molecule
+
+@<TRIPOS>MOLECULE
+New Molecule
+1 0 1 0 0
+SMALL
+NO_CHARGE
+
+@<TRIPOS>ATOM
+ 1    O1     -1.4475535    1.2492585    0.0    O    1
+@<TRIPOS>SUBSTRUCTURE
+ 1   New Molecule1   1
