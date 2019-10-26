@@ -31,6 +31,7 @@ import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescr
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
+import org.apache.airavata.model.status.ExperimentStatus;
 import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
@@ -280,7 +281,8 @@ public class ExperimentListModel {
                 try {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     if(experimentModel.getExperimentStatus() != null) {
-                        this.setStatus(experimentModel.getExperimentStatus().get(0).getState().toString());
+                        ExperimentStatus latestStatus = experimentModel.getExperimentStatus().get(experimentModel.getExperimentStatusSize() - 1);
+                        this.setStatus(latestStatus.getState().toString());
                     }
                     logger.debug("Updated Experiment Status for :" + experimentId);
                 } catch (Exception e) {

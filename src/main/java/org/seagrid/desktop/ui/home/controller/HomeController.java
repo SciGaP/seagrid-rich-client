@@ -59,6 +59,7 @@ import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.experiment.ExperimentSearchFields;
 import org.apache.airavata.model.experiment.ExperimentSummaryModel;
 import org.apache.airavata.model.status.ExperimentState;
+import org.apache.airavata.model.status.ExperimentStatus;
 import org.apache.airavata.model.workspace.Notification;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
@@ -1082,7 +1083,8 @@ public class HomeController {
         experimentSummaryModel.setGatewayId(experiment.getGatewayId());
         experimentSummaryModel.setUserName(experiment.getUserName());
         experimentSummaryModel.setDescription(experiment.getDescription());
-        experimentSummaryModel.setExperimentStatus(experiment.getExperimentStatus().get(0).getState().toString());
+        ExperimentStatus latestStatus = experiment.getExperimentStatus().get(experiment.getExperimentStatusSize() - 1);
+        experimentSummaryModel.setExperimentStatus(latestStatus.getState().toString());
         long time = System.currentTimeMillis();
         experimentSummaryModel.setCreationTime(time);
         experimentSummaryModel.setStatusUpdateTime(time);

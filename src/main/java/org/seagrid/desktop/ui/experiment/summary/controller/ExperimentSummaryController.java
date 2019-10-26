@@ -50,6 +50,7 @@ import org.apache.airavata.model.data.replica.ReplicaLocationCategory;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.status.ExperimentState;
+import org.apache.airavata.model.status.ExperimentStatus;
 import org.apache.airavata.model.status.JobStatus;
 import org.apache.airavata.model.workspace.Project;
 import org.apache.thrift.TException;
@@ -250,7 +251,8 @@ public class ExperimentSummaryController {
             showStatus(experimentModel);
             experimentCreationTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel
                     .getCreationTime() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
-            experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(experimentModel.getExperimentStatus().get(0)
+            ExperimentStatus latestExperimentStatus = getLatestStatus(experimentModel);
+            experimentLastModifiedTimeLabel.setText(LocalDateTime.ofEpochSecond(latestExperimentStatus
                     .getTimeOfStateChange() / 1000, 0, SEAGridContext.getInstance().getTimeZoneOffset()).toString());
             experimentEnableAutoSchedLabel.setText("true");
             experimentWallTimeLabel.setText(experimentModel.getUserConfigurationData()
@@ -292,6 +294,10 @@ public class ExperimentSummaryController {
         }
     }
 
+    private ExperimentStatus getLatestStatus(ExperimentModel experimentModel) {
+        return experimentModel.getExperimentStatus().get(experimentModel.getExperimentStatusSize() - 1);
+    }
+
     public void initExperimentInfo(String experimentId) throws TException, URISyntaxException {
         experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
         initExperimentInfo(experimentModel);
@@ -307,7 +313,8 @@ public class ExperimentSummaryController {
                     ExperimentModel experimentModel = AiravataManager.getInstance().getExperiment(experimentId);
                     showStatus(experimentModel);
                     updateButtonOptions(experimentModel);
-                    String expState = experimentModel.getExperimentStatus().get(0).getState().toString();
+                    ExperimentStatus latestStatus = getLatestStatus(experimentModel);
+                    String expState = latestStatus.getState().toString();
                     if(expState.equals("FAILED") || expState.equals("COMPLETED") || expState.equals("CANCELLED")){
                         showExperimentOutputs(experimentModel);
                         expInfoUpdateTimer.stop();
@@ -325,8 +332,9 @@ public class ExperimentSummaryController {
     }
 
     private void showStatus(ExperimentModel experimentModel) throws TException {
-        experimentStatusLabel.setText(experimentModel.getExperimentStatus().get(0).getState().toString());
-        switch (experimentModel.getExperimentStatus().get(0).getState()){
+        ExperimentStatus latestStatus = getLatestStatus(experimentModel);
+        experimentStatusLabel.setText(latestStatus.getState().toString());
+        switch (latestStatus.getState()){
             case COMPLETED :
                 experimentStatusLabel.setTextFill(Color.GREEN);
                 break;
@@ -532,7 +540,8 @@ public class ExperimentSummaryController {
     }
 
     private void updateButtonOptions(ExperimentModel experimentModel){
-        switch (experimentModel.getExperimentStatus().get(0).getState()){
+        ExperimentStatus latestStatus = getLatestStatus(experimentModel);
+        switch (latestStatus.getState()){
             case CREATED:
                 expCancelButton.setDisable(true);
                 expStorageDir.setDisable(false);
