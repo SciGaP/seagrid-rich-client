@@ -180,6 +180,12 @@ public class SEAGridContext {
         return properties.getProperty(SEAGridConfig.REMOTE_DATA_DIR_PREFIX);
     }
 
+    public String getGroupResourceProfileId() {
+        if (SEAGridConfig.DEV) {
+            return properties.getProperty(SEAGridConfig.DEV_GROUP_RESOURCE_PROFILE_ID);
+        }
+        return properties.getProperty(SEAGridConfig.GROUP_RESOURCE_PROFILE_ID);
+    }
 
     public UserPrefs getUserPrefs(){
         if(this.userPrefs == null){

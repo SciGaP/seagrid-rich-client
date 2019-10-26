@@ -51,4 +51,6 @@ public class SEAGridConfig {
     public static final java.lang.String DEV_REMOTE_DATA_DIR_ROOT = "dev.remote.data.dir.root";
     public static final java.lang.String REMOTE_DATA_DIR_PREFIX = "remote.data.dir.prefix";
     public static final java.lang.String DEV_REMOTE_DATA_DIR_PREFIX = "dev.remote.data.dir.prefix";
+    public static final String GROUP_RESOURCE_PROFILE_ID = "group.resource.profile.id";
+    public static final String DEV_GROUP_RESOURCE_PROFILE_ID = "dev.group.resource.profile.id";
 }

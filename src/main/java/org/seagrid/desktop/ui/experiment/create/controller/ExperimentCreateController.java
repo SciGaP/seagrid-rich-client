@@ -895,6 +895,8 @@ public class ExperimentCreateController {
         userConfigurationDataModel.setStorageId(SEAGridContext.getInstance().getGatewayaStorageId());
         userConfigurationDataModel.setExperimentDataDir(remoteDataDirRoot + experimentDataDir);
         userConfigurationDataModel.setUseUserCRPref(useMyCRAccount.isSelected());
+        // FIXME Instead of hard coded group resource profile, query for group resource profiles that the user has access to and let user pick
+        userConfigurationDataModel.setGroupResourceProfileId(SEAGridContext.getInstance().getGroupResourceProfileId());
 
         ComputationalResourceSchedulingModel resourceSchedulingModel = new ComputationalResourceSchedulingModel();
         resourceSchedulingModel.setResourceHostId(((ComputeResourceDescription)expCreateResourceField.getSelectionModel()

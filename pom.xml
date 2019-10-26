@@ -11,7 +11,7 @@
 
     <properties>
         <!-- Airavata version-->
-        <airavata.version>0.18-SNAPSHOT</airavata.version>
+        <airavata.version>0.19-SNAPSHOT</airavata.version>
 
         <!-- Installer Filename without suffix -->
         <!--<app.filename>SEAGridDesktop</app.filename>-->
