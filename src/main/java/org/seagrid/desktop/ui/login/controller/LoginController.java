@@ -34,7 +34,9 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.airavata.model.appcatalog.appdeployment.ApplicationModule;
 import org.apache.airavata.model.workspace.Notification;
+import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridConfig;
@@ -42,11 +44,17 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.awt.*;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -220,18 +228,31 @@ public class LoginController {
                         SEAGridContext.getInstance().setRefreshToken(refreshToken);
                         SEAGridContext.getInstance().setTokenExpiaryTime(validTime);
                         SEAGridContext.getInstance().setUserName(userName);
-                        stage.close();
-                    }else if(params.get("status").equals("less_privileged")){
-                        //login failed
-                        java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
-                        webEngine.load(url);
-                        loginWebView.setVisible(false);
-                        //loginWebView.setVisible(true);
-                        SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
-                                "You don't have permission to access this client." +
-                                        " Please contact the Gateway Admin to get your account authorized by sending an" +
-                                        " email to help@seagrid.org.", stage);
-                        loginWebView.setVisible(true);
+                        try {
+                            List<ApplicationModule> appModules = AiravataManager.getInstance().getAccessibleAppModules();
+                            if (!appModules.isEmpty()) {
+                                stage.close();
+                            } else {
+                                java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                                webEngine.load(url);
+                                loginWebView.setVisible(false);
+                                //loginWebView.setVisible(true);
+                                SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
+                                        "You don't have permission to access this client." +
+                                                " Please contact the Gateway Admin to get your account authorized by sending an" +
+                                                " email to help@seagrid.org.", stage);
+                                loginWebView.setVisible(true);
+                            }
+                        } catch (TException e) {
+
+                            logger.error("Failed to check accessible app modules for user", e);
+                            java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                            webEngine.load(url);
+                            loginWebView.setVisible(false);
+                            SEAGridDialogHelper.showInformationDialog("Login Failed", "Error occurred",
+                                    "An error occurred while trying to check your access: " + e.getMessage(), stage);
+                            loginWebView.setVisible(true);
+                        }
                     }else{
                         //login failed
                         java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());

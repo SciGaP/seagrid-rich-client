@@ -1,6 +1,7 @@
 package org.seagrid.desktop.connectors.airavata;
 
 import org.apache.airavata.api.Airavata;
+import org.apache.airavata.model.appcatalog.appdeployment.ApplicationModule;
 import org.apache.airavata.model.appcatalog.appinterface.ApplicationInterfaceDescription;
 import org.apache.airavata.model.appcatalog.computeresource.ComputeResourceDescription;
 import org.apache.airavata.model.appcatalog.userresourceprofile.UserComputeResourcePreference;
@@ -265,5 +266,9 @@ public class AiravataManager {
             //User compute resource pref does not exists
             return null;
         }
+    }
+
+    public List<ApplicationModule> getAccessibleAppModules() throws TException {
+        return getClient().getAccessibleAppModules(getAuthzToken(), getGatewayId());
     }
 }
