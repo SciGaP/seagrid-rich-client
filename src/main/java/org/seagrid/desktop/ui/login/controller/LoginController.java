@@ -120,9 +120,9 @@ public class LoginController {
             try {
                 String url;
                 if(SEAGridConfig.DEV){
-                    url = "https://dev.seagrid.org/create";
+                    url = "https://dev.seagrid.org/auth/create-account";
                 }else{
-                    url = "https://seagrid.org/create";
+                    url = "https://seagrid.org/auth/create-account";
                 }
                 Desktop.getDesktop().browse(new URI(url));
             } catch (Exception e1) {
@@ -204,9 +204,9 @@ public class LoginController {
         final Label location = new Label();
         String url;
         if(SEAGridConfig.DEV){
-            url = "https://dev.seagrid.org/login-desktop";
+            url = "https://dev.seagrid.org/auth/login-desktop";
         }else{
-            url = "https://seagrid.org/login-desktop";
+            url = "https://seagrid.org/auth/login-desktop";
         }
 
 

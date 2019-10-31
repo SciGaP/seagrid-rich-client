@@ -834,10 +834,10 @@ public class HomeController {
                     try {
                         String url;
                         if(SEAGridConfig.DEV){
-                            url = "https://dev.seagrid.org/refreshed-token-desktop?refresh_code="
+                            url = "https://dev.seagrid.org/auth/refreshed-token-desktop?refresh_code="
                                     + SEAGridContext.getInstance().getRefreshToken();
                         }else{
-                            url = "https://seagrid.org/refreshed-token-desktop?refresh_code="
+                            url = "https://seagrid.org/auth/refreshed-token-desktop?refresh_code="
                                     + SEAGridContext.getInstance().getRefreshToken();
                         }
                         String json = readUrl(url);
