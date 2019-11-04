@@ -39,7 +39,7 @@
         <!-- Optional scp target for application artifacts hosted at the above url -->
 
         <!--<app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client-->
-        <app.deploy.target>root@gf4.ucs.indiana.edu:/var/www/portals/seagrid/public/seagrid-rich-client
+        <app.deploy.target>pga@gf4.ucs.indiana.edu:/var/www/portals/django-seagrid/static/seagrid-rich-client
 
         <!--<app.deploy.target>mvn:/var/www/portals/seagrid/public/seagrid-rich-client-->
         <!-- app.deploy.target>pga@gw75.iu.xsede.org:/var/www/portals/seagrid/public/seagrid-rich-client -->
