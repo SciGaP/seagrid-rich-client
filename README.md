@@ -7,9 +7,9 @@ The SEAGrid Rich Client Interface is a desktop application developed in JavaFX.
 ## Maven targets
 
 # Generate the application
-	1. First you need to build the latest copy of the master branch of Apache Airavata
+	1. First you need to build the latest copy of the master branch of Apache Airavata.
 	2. Go to jamberoo-libs directory and execute mvn_install_libs.sh
-	3. Execute `mvn -P update-deployment clean package` command from the top level of the repo
+	3. Execute `mvn -P update-deployment clean package` command from the top level of the repo.
 
 # Deploy the application artifacts to your webserver
 
