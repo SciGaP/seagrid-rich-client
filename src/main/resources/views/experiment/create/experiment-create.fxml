@@ -9,7 +9,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane prefHeight="668.0" prefWidth="681.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController">
+<ScrollPane prefHeight="968.0" prefWidth="981.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="org.seagrid.desktop.ui.experiment.create.controller.ExperimentCreateController">
   <content>
     <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" spacing="5.0">
       <children>

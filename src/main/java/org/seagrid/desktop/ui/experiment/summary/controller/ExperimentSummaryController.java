@@ -474,8 +474,8 @@ public class ExperimentSummaryController {
             if(!output.getValue().contains("*")){
                 switch (output.getType()){
                     case URI :
-                    case STDERR:
-                    case STDOUT:
+                    case STDERR :
+                    case STDOUT :
                         String dataRoot = remoteDataDirRoot;
                         try{
                             List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(output.getValue());
@@ -488,17 +488,62 @@ public class ExperimentSummaryController {
                             }
                             String filePath = (new URI(fileUri)).getPath();
                             Hyperlink hyperlink = new Hyperlink(Paths.get(filePath).getFileName().toString());
+                             
                             TextFlow uriOutputLabel = new TextFlow(new Text(output.getName()+" : "), hyperlink);
                             hyperlink.setOnAction(event -> {
                                 downloadFile(Paths.get(filePath.toString().replaceAll(dataRoot, "")), experimentModel);
                             });
                             experimentInfoGridPane.add(uriOutputLabel, 1, rowIndex);
                             break;
+
                         }catch (Exception ex){
                             logger.info("Failed to retrieve output data for experiment : " + experimentModel.getExperimentId()
                                     + ". Output : " + output.getValue());
                         }
-
+                        break;
+                    case URI_COLLECTION:
+                    dataRoot = remoteDataDirRoot;
+                        try{
+                            List<DataReplicaLocationModel> replicas = AiravataManager.getInstance().getDataReplicas(output.getValue());
+                            String fileUriC = "";
+                            for(DataReplicaLocationModel rpModel : replicas){
+                                if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                                    fileUriC = rpModel.getFilePath();
+                                    break;
+                                }
+                            }
+                            if(output.getValue() != null && !output.getValue().equals("")) {
+                                String uriOCollection = output.getValue();
+                                String[] uris = uriOCollection.split(",");
+                                int i = 1;
+                                for(String uri : uris){
+                                    replicas = AiravataManager.getInstance().getDataReplicas(uri);
+                                    fileUriC = "";
+                                    for(DataReplicaLocationModel rpModel : replicas){
+                                        if(rpModel.getReplicaLocationCategory().equals(ReplicaLocationCategory.GATEWAY_DATA_STORE)) {
+                                            fileUriC = rpModel.getFilePath();
+                                            break;
+                                        }
+                                    }
+                                    String filePath2 = (new URI(fileUriC)).getPath();
+                                    Hyperlink hyperlinkC = new Hyperlink(Paths.get(filePath2).getFileName().toString());
+                                    TextFlow uriOutputLabelC = new TextFlow(new Text(output.getName()+" ("+ i +")" +" : "), hyperlinkC);
+                                    hyperlinkC.setOnAction(event -> {
+                                        downloadFile(Paths.get(filePath2.toString().replaceAll(dataRoot, "")), experimentModel);
+                                    });
+                                    experimentInfoGridPane.add(uriOutputLabelC, 1, rowIndex);
+        
+                                    experimentInfoGridPane.getRowConstraints().add(rowIndex-1,new RowConstraints(25));
+                                    rowIndex++;
+                                    i++;
+                                }
+                                rowIndex--;
+                            }
+                            break;
+                        }catch (Exception ex){
+                            logger.info("Failed to retrieve output data for experiment : " + experimentModel.getExperimentId()
+                                    + ". Output : " + output.getValue());
+                        }
                     default :
                         Label outputLabel = new Label();
                         outputLabel.setText(output.getName() + " : " + output.getValue());

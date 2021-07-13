@@ -6,13 +6,13 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.*?>
 
-<StackPane minHeight="600.0" minWidth="1020.0" prefHeight="600.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.seagrid.desktop.ui.login.controller.LoginController">
+<StackPane minHeight="700.0" minWidth="1020.0" prefHeight="600.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.seagrid.desktop.ui.login.controller.LoginController">
   <children>
     <StackPane>
       <children>
         <VBox prefWidth="424.0" spacing="10.0">
           <children>
-            <WebView fx:id="loginWebView" minHeight="298.0" prefHeight="389.0" prefWidth="763.0" VBox.vgrow="ALWAYS" />
+            <WebView fx:id="loginWebView" minHeight="498.0" prefHeight="589.0" prefWidth="963.0" VBox.vgrow="ALWAYS" />
             <Label fx:id="notificationLabel" alignment="CENTER" contentDisplay="CENTER" focusTraversable="true" prefHeight="49.0" prefWidth="762.999977929685" text="" textAlignment="CENTER" textFill="RED" wrapText="true">
               <font>
                 <Font size="16.0" />

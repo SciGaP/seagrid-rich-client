@@ -59,11 +59,13 @@ public class AiravataManager {
         int port = SEAGridContext.getInstance().getAiravataPort();
         String applicationDataDir = System.getProperty("user.home") + File.separator + "SEAGrid" + File.separator;
         TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
-        params.setTrustStore(applicationDataDir + "client_truststore.jks", "airavata");
-        TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
+        //params.setTrustStore(applicationDataDir + "client_truststore.jks", "airavata");
+                //TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
+                TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000);
         TProtocol protocol = new TBinaryProtocol(transport);
         return new Airavata.Client(protocol);
     }
+//params.setKeyStore("/Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home/conf/security/java.security", "airavata");
 
     private Airavata.Client getClient() throws AiravataClientException, TTransportException {
         try{

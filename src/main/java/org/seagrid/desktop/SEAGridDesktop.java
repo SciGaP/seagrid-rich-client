@@ -93,7 +93,7 @@ public class SEAGridDesktop extends Application{
     }
 
     public static void initApplicationDirs() throws IOException {
-        createTrustStoreFileIfNotExists();
+        //createTrustStoreFileIfNotExists();
         File appDataRoot = new File(applicationDataDir());
         if(!appDataRoot.exists()){
             appDataRoot.mkdirs();

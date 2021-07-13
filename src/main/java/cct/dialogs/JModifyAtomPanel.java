@@ -229,7 +229,9 @@ public class JModifyAtomPanel
 
       //Radius.setEnabled(false);
       SpinnerNumberModel smodel = (SpinnerNumberModel) Radius.getModel();
-      if (smodel.getMaximum().compareTo(radius) >= 0 && smodel.getMinimum().compareTo(radius) <= 0) {
+          Double selradM = new Double (smodel.getMaximum().toString());
+          Double selradm = new Double (smodel.getMinimum().toString());
+      if ((selradM.compareTo(radius) >= 0 ) && (selradm.compareTo(radius) <= 0)) {
          smodel.setValue(radius);
       }
 

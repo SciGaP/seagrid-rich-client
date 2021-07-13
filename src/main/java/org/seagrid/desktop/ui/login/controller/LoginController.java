@@ -34,9 +34,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.airavata.model.appcatalog.appdeployment.ApplicationModule;
 import org.apache.airavata.model.workspace.Notification;
-import org.apache.thrift.TException;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
 import org.seagrid.desktop.util.SEAGridConfig;
@@ -44,17 +42,11 @@ import org.seagrid.desktop.util.SEAGridContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 import java.awt.*;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -120,9 +112,9 @@ public class LoginController {
             try {
                 String url;
                 if(SEAGridConfig.DEV){
-                    url = "https://dev.seagrid.org/auth/create-account";
+                    url = "https://dev.seagrid.org/create";
                 }else{
-                    url = "https://seagrid.org/auth/create-account";
+                    url = "https://seagrid.org/create";
                 }
                 Desktop.getDesktop().browse(new URI(url));
             } catch (Exception e1) {
@@ -148,6 +140,7 @@ public class LoginController {
                 " be auto-updated automatically.</font></p>";
 
         loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
+        loginWebView.getEngine().setJavaScriptEnabled(true);
 
         handleSEAGridWebLogin();
 
@@ -202,17 +195,30 @@ public class LoginController {
         //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
         final WebEngine webEngine = loginWebView.getEngine();
         final Label location = new Label();
+        webEngine.setJavaScriptEnabled(true);
+        webEngine.setUserAgent("AppleWebKit/605.1.15");
         String url;
         if(SEAGridConfig.DEV){
-            url = "https://dev.seagrid.org/auth/login-desktop";
+            url = "https://dev.seagrid.org/login-desktop";
         }else{
             url = "https://seagrid.org/auth/login-desktop";
+            //url="https://seagrid.org/auth/login";
+            //url = "https://pga.seagrid.org/login-desktop";
+            //url = "https://seagrid.org/airavata-django-portal/django_airavata/apps/auth/templates/django_airavata_auth/login-desktop.html";
+
         }
 
 
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED.equals(newValue)) {
                 String locationUrl = webEngine.getLocation();
+
+                webEngine.locationProperty().addListener((observableValue, s, t1) -> {
+                    System.out.println(t1);
+                    //System.out.println(GoogleAccess.cookies().getCookieStore().getCookies().toString());
+                });
+
+
                 location.setText(locationUrl);
                 Map<String, String> params = getQueryMap(locationUrl);
                 Stage stage = (Stage) loginButton.getScene().getWindow();
@@ -228,31 +234,18 @@ public class LoginController {
                         SEAGridContext.getInstance().setRefreshToken(refreshToken);
                         SEAGridContext.getInstance().setTokenExpiaryTime(validTime);
                         SEAGridContext.getInstance().setUserName(userName);
-                        try {
-                            List<ApplicationModule> appModules = AiravataManager.getInstance().getAccessibleAppModules();
-                            if (!appModules.isEmpty()) {
-                                stage.close();
-                            } else {
-                                java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
-                                webEngine.load(url);
-                                loginWebView.setVisible(false);
-                                //loginWebView.setVisible(true);
-                                SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
-                                        "You don't have permission to access this client." +
-                                                " Please contact the Gateway Admin to get your account authorized by sending an" +
-                                                " email to help@seagrid.org.", stage);
-                                loginWebView.setVisible(true);
-                            }
-                        } catch (TException e) {
-
-                            logger.error("Failed to check accessible app modules for user", e);
-                            java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
-                            webEngine.load(url);
-                            loginWebView.setVisible(false);
-                            SEAGridDialogHelper.showInformationDialog("Login Failed", "Error occurred",
-                                    "An error occurred while trying to check your access: " + e.getMessage(), stage);
-                            loginWebView.setVisible(true);
-                        }
+                        stage.close();
+                    }else if(params.get("status").equals("less_privileged")){
+                        //login failed
+                        java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                        webEngine.load(url);
+                        loginWebView.setVisible(false);
+                        //loginWebView.setVisible(true);
+                        SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
+                                "You don't have permission to access this client." +
+                                        " Please contact the Gateway Admin to get your account authorized by sending an" +
+                                        " email to help@seagrid.org.", stage);
+                        loginWebView.setVisible(true);
                     }else{
                         //login failed
                         java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
@@ -261,7 +254,7 @@ public class LoginController {
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
                                 " Please use a correct user credentials and try again.", stage);
-                        loginButton.resizeRelocate( 100.0,100.0,50.0,50.0 );
+                        loginButton.resizeRelocate( 100.0,650.0,50.0,50.0 );
                         loginWebView.setVisible(true);
                     }
                 }
@@ -269,6 +262,7 @@ public class LoginController {
         });
 
         //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         webEngine.load(url);
         return false;
     }
