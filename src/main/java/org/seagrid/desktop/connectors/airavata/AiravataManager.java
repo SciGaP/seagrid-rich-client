@@ -59,10 +59,14 @@ public class AiravataManager {
         int port = SEAGridContext.getInstance().getAiravataPort();
         String applicationDataDir = System.getProperty("user.home") + File.separator + "SEAGrid" + File.separator;
         TSSLTransportFactory.TSSLTransportParameters params = new TSSLTransportFactory.TSSLTransportParameters();
-        //params.setTrustStore(applicationDataDir + "client_truststore.jks", "airavata");
-                //TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
-                TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000);
+        params.setTrustStore(applicationDataDir + "client-truststore.jks", "airavata");
+        //System.setProperty("javax.net.ssl.trustStore","clientTrustStore.key");
+        System.setProperty("javax.net.ssl.trustStore", applicationDataDir + "client-truststore.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword","airavata"); 
+                TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000, params);
+                //TTransport transport = TSSLTransportFactory.getClientSocket(host, port, 10000);
         TProtocol protocol = new TBinaryProtocol(transport);
+        //SharingRegistryService.Client sharingServiceClient = new SharingRegistryService.Client(protocol);
         return new Airavata.Client(protocol);
     }
 //params.setKeyStore("/Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home/conf/security/java.security", "airavata");
@@ -74,8 +78,14 @@ public class AiravataManager {
             try{
                 airavataClient = createAiravataClient();
                 airavataClient.getAPIVersion();
+                //airavataClient.getAPIVersion(getAuthzToken());
             } catch (Exception e1) {
                 SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
+                 AiravataClientException clientError = new AiravataClientException();
+                 //clientError.setParameter("Unable to connect to the server at " + host + ":" + port);
+                 clientError.setParameter("Unable to connect to the server ");
+                 throw clientError;
+                //SEAGridEventBus.getInstance().post(new SEAGridEvent(SEAGridEvent.SEAGridEventType.LOGOUT, null));
             }
         }
         return airavataClient;

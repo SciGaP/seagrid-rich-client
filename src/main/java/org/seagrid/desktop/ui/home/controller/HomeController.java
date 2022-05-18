@@ -1039,6 +1039,17 @@ public class HomeController {
                                 "Failed to launch PSI4 experiment dialog");
                     }
                 }
+        } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_ORCA_EXP)) {
+                if (event.getPayload() instanceof String) {
+                    String orcaInput = (String) event.getPayload();
+                    //String processors = "$SLURM_NPROCS";
+                    try {
+                        ExperimentCreateWindow.displayCreateOrcaExp(orcaInput);
+                    } catch (Exception e) {
+                        SEAGridDialogHelper.showExceptionDialog(e, "Exception Dialog", expSummaryTable.getScene().getWindow(),
+                                "Failed to launch Orca experiment dialog");
+                    }
+                }        
         } else if (event.getEventType().equals(SEAGridEvent.SEAGridEventType.EXPORT_MOLCAS_EXP)) {
         if (event.getPayload() instanceof String) {
             String molcasInput = (String) event.getPayload();

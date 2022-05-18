@@ -842,6 +842,55 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                         }
 
                     }
+                    case 13: // Create a Orca Input Template close and go back to edit mode //lixh_3_4
+                    if (clearFlag)
+                        break;
+                    else {
+
+                        if (clearFlag == true) break;
+                        else {
+                            // runAsApplication
+                            System.out.println( " Case 13 Orca Input Template being Generated" );
+                            JOptionPane.showMessageDialog( null, "WARNING: Molecule information" +
+                                            " has been exported  into default orca.inp file. Make sure\n" +
+                                            "to edit this file from the Create Experiment Panel.",
+                                    "SEAGrid: Orca input Template",
+                                    JOptionPane.WARNING_MESSAGE );
+                            String OrcaOut = OrcaOutput( grp.getXYZ() );
+                            // write to a file now
+                            boolean append = false;
+                            try {
+                                File f = new File( applicationDataDir + fileSeparator
+                                        + "tmp.txt" );
+                                FileWriter fw = new FileWriter( f, append );
+                                fw.write( OrcaOut );
+                                System.err.println( "OrcaOut = " );
+                                System.err.println( OrcaOut );
+                                fw.close();
+
+                                exportedApplication = Settings.APP_NAME_ORCA;
+
+                            } catch (IOException ioe) {
+                                System.err.println( "newNanocad:output Orca:" +
+                                        "IOException" );
+                                System.err.println( ioe.toString() );
+                                ioe.printStackTrace();
+                            }
+
+                            // close molecular editor
+                            // close the structure panel
+                            if (t != null) {
+                                t.setVisible( false );
+                            }
+                            //this.setVisible(false);
+                            Platform.runLater( () -> {
+                                SEAGridEventBus.getInstance().post( new SEAGridEvent( SEAGridEvent.SEAGridEventType
+                                        .EXPORT_ORCA_EXP, OrcaOut ) );
+                            } );
+                            break;
+                        }
+
+                    }
                     // lixh_4/27/05
                 case 1: //open saved PDB/MOL2
                     if (clearFlag)
@@ -1650,10 +1699,12 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
         getSetStructure.addItem("NWChem Input");
         getSetStructure.addItem( "PSI4 Input" );
         getSetStructure.addItem( "Molcas Input" );
+        
 //        getSetStructure.addItem("Molpro Input");
 
-//        getSetStructure.addItem("View PDB");
-//        getSetStructure.addItem("View with VMD");
+        getSetStructure.addItem("View PDB");
+        getSetStructure.addItem("View with VMD");
+        getSetStructure.addItem( "Orca Input" );
 
         grp = new group(drawingArea);
         grp1 = new group(drawingArea);
@@ -3467,6 +3518,49 @@ public class newNanocad extends Applet implements MouseListener, MouseMotionList
                       ">>>   EndDo";
         text = text + templateRun;
 
+        return text;
+    }
+
+    public String OrcaOutput(String molInfo) {
+        String text;
+        String templateTop = "#***,SEAGrid Orca (SCF,MP2,CASSCF and properties) Template Title\n" +
+                "\n" +
+                "! M06L OPT FREQ cc-pVTZ NormalPrint VeryTightSCF pal8 \n" +
+                "\n" +
+                "%MaxCore 16000 \n" +
+                "% geom MaxIter 1000 end \n" +
+                "%scf   MaxIter 125  end \n" +
+                "\n" +
+                "%output \n" +
+                "  print[p_mos] true \n" +
+                "  print[p_basis] 5 \n" +
+                "end \n" +
+                "\n";
+
+
+        text = templateTop;
+        text = text + " * xyz 0 1 \n";
+        StringTokenizer molTok = new StringTokenizer(molInfo, "\n");
+        //int n = molInfsplit.size();
+        //int i;
+        // ignore first line of molInfo
+        String line = molTok.nextToken();
+        int i = 0;
+        while (molTok.hasMoreTokens()) {
+            line = molTok.nextToken();
+            if ((line.length() > 0) && (i > 0)) {
+                text = text + line + "\n";
+                System.err.println(line);
+            }
+            i++;
+        }
+        text = text + "* \n";
+        String templateBottom;
+        templateBottom = "# ## $new_job \n" +
+                "  \n";
+        //text = "It has not been supported yet. \n"
+        //+ "Please type input by yourself";
+        text = text + templateBottom;
         return text;
     }
 

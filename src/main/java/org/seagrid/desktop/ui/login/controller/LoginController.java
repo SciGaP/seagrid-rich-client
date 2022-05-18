@@ -32,8 +32,14 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.scene.web.PopupFeatures;
+import javafx.util.Callback;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import jdk.jfr.internal.PrivateAccess;
+
 import org.apache.airavata.model.workspace.Notification;
 import org.seagrid.desktop.connectors.airavata.AiravataManager;
 import org.seagrid.desktop.ui.commons.SEAGridDialogHelper;
@@ -44,10 +50,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.awt.*;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.List;
+
+
 
 
 public class LoginController {
@@ -190,6 +204,7 @@ public class LoginController {
         notificationLabel.setStyle("-fx-border-color: white;");
         notificationLabel.setMaxWidth(Double.MAX_VALUE);
 }
+
     public boolean handleSEAGridWebLogin(){
 
         //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
@@ -197,6 +212,7 @@ public class LoginController {
         final Label location = new Label();
         webEngine.setJavaScriptEnabled(true);
         webEngine.setUserAgent("AppleWebKit/605.1.15");
+        //private InterceptingBrowser interceptingBrowser = null;
         String url;
         if(SEAGridConfig.DEV){
             url = "https://dev.seagrid.org/login-desktop";
@@ -207,11 +223,22 @@ public class LoginController {
             //url = "https://seagrid.org/airavata-django-portal/django_airavata/apps/auth/templates/django_airavata_auth/login-desktop.html";
 
         }
-
+        //cannot connect to Airavata
+       
+     
+        URI gatewayURI = URI.create(url);       
 
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED.equals(newValue)) {
                 String locationUrl = webEngine.getLocation();
+
+                //interceptingBrowser = new InterceptingBrowser();
+        //final WebEngine webEngine = interceptingBrowser.getWebEngine();
+        //webEngine.locationProperty().addListener(new ChangeListener<String>() {
+            //public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
+                //addressBar.setText(newValue);
+            //}
+        //});
 
                 webEngine.locationProperty().addListener((observableValue, s, t1) -> {
                     System.out.println(t1);
@@ -221,7 +248,52 @@ public class LoginController {
 
                 location.setText(locationUrl);
                 Map<String, String> params = getQueryMap(locationUrl);
+                Map<String, List<String>> headers = new LinkedHashMap<String, List<String>>();
+                            headers.put("Set-Cookie", Arrays.asList("name=value"));
                 Stage stage = (Stage) loginButton.getScene().getWindow();
+                webEngine.getLoadWorker().stateProperty().addListener(new HyperLinkRedirectListener(loginWebView));
+                
+                
+                // intercept target=_blank hyperlinks
+loginWebView.getEngine().setCreatePopupHandler(
+    new Callback<PopupFeatures, WebEngine>() {
+        @Override
+        public WebEngine call(PopupFeatures config) {
+            // grab the last hyperlink that has :hover pseudoclass
+            //Object o = webView
+            Object o = loginWebView
+                    .getEngine()
+                    .executeScript(
+                            "var list = document.querySelectorAll( ':hover' );"
+                                    + "for (i=list.length-1; i>-1; i--) "
+                                    + "{ if ( list.item(i).getAttribute('href') ) "
+                                    + "{ list.item(i).getAttribute('href'); break; } }");
+
+            // open in native browser
+            try {
+                if (o != null) {
+                    Desktop.getDesktop().browse(
+                            new URI(o.toString()));
+                } else {
+                    //log.error("No result from uri detector: " + o);
+                    System.out.println("No result from uri detector: " + o);
+                }
+            } catch (IOException e) {
+                //log.error("Unexpected error obtaining uri: " + o, e);
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                //log.error("Could not interpret uri: " + o, e);
+                e.printStackTrace();
+            }
+
+            // prevent from opening in webView
+            return null;
+        }
+    });
+
+
+
+
                 if(params.containsKey("status")){
                     if(params.get("status").equals("ok")){
                         //login successful
@@ -237,9 +309,14 @@ public class LoginController {
                         stage.close();
                     }else if(params.get("status").equals("less_privileged")){
                         //login failed
-                        java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                        try {
+                        java.net.CookieHandler.getDefault().put(gatewayURI, headers);
+                        //java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
                         webEngine.load(url);
                         loginWebView.setVisible(false);
+                        }catch (IOException ioe){
+                            ioe.printStackTrace();
+                        }
                         //loginWebView.setVisible(true);
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
@@ -248,22 +325,26 @@ public class LoginController {
                         loginWebView.setVisible(true);
                     }else{
                         //login failed
-                        java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
+                        try {
+                        java.net.CookieHandler.getDefault().put(gatewayURI, headers);
+                        //java.net.CookieHandler.setDefault(new com.sun.webkit.network.CookieManager());
                         webEngine.load(url);
                         loginWebView.setVisible(false);
+                        }catch (IOException ioe){
+                            ioe.printStackTrace();
+                        }
                         SEAGridDialogHelper.showInformationDialog("Login Failed", "Unauthorized login",
                                 "You don't have permission to access this client." +
                                 " Please use a correct user credentials and try again.", stage);
                         loginButton.resizeRelocate( 100.0,650.0,50.0,50.0 );
                         loginWebView.setVisible(true);
                     }
-                }
-            }
-        });
-
+                } 
+            }     
+        });         
         //loginWebView.getEngine().loadContent(textinfo1 + textinfo2 + textinfo3 + textinfo4);
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
-        webEngine.load(url);
+        webEngine.load(url);  
         return false;
     }
 

@@ -140,6 +140,22 @@ public class ExperimentCreateWindow extends Application{
         primaryStage.show();
     }
 
+    public static void displayCreateOrcaExp(String orcaInput) throws IOException, TException, URISyntaxException {
+        if(createPrimaryStage != null) {
+            createPrimaryStage.close();
+        }
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ExperimentCreateWindow.class.getResource(
+                "/views/experiment/create/experiment-create.fxml"));
+        Parent root = loader.load();
+        primaryStage.setTitle("SEAGrid Desktop Client - Create Orca Experiment");
+        primaryStage.setScene(new Scene(root, 800, 700));
+        ExperimentCreateController controller = loader.getController();
+        controller.initOrcaExperiment(orcaInput);
+        primaryStage.initModality(Modality.WINDOW_MODAL);
+        primaryStage.show();
+    }
+
     public static void displayCreateMolcasExp(String processors, String molcasInput) throws IOException, TException, URISyntaxException {
         if(createPrimaryStage != null) {
             createPrimaryStage.close();

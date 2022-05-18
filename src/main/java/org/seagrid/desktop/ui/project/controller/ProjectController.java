@@ -67,7 +67,7 @@ public class ProjectController {
             } catch (Exception e) {
                 e.printStackTrace();
                 SEAGridDialogHelper.showExceptionDialogAndWait(e, "Exception Dialog", saveButton.getScene().getWindow(),
-                        "Failed tp save project !");
+                        "Failed to save project !");
             }
         });
     }

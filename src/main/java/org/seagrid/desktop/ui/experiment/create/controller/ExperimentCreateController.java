@@ -440,6 +440,31 @@ public class ExperimentCreateController {
             }
         }
     }
+    public void initOrcaExperiment(String orcaInput) throws FileNotFoundException, TException, URISyntaxException {
+        String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "orca.inp";
+        PrintWriter out = new PrintWriter(tempFilePath);
+        out.println(orcaInput);
+        out.close();
+        List<ApplicationInterfaceDescription> applicationInterfaceDescriptions = AiravataManager.getInstance().getAllApplicationInterfaces();
+        List<ApplicationInterfaceDescription> orcaApps = new ArrayList<>();
+        for(ApplicationInterfaceDescription appInter : applicationInterfaceDescriptions){
+            if(appInter.getApplicationName().toLowerCase().startsWith(SEAGridContext.getInstance().getOrcaAppName())){
+                orcaApps.add(appInter);
+            }
+        }
+        if(orcaApps.size() > 0){
+            expCreateAppField.getItems().setAll(orcaApps);
+            expCreateAppField.getSelectionModel().select(0);
+            for(ApplicationInterfaceDescription app : orcaApps){
+                List<InputDataObjectType> gaussianInputs = app.getApplicationInputs();
+                //gaussianInputs.get(0).setValue(processors);
+                gaussianInputs.get(0).setValue(tempFilePath);
+                updateExperimentInputs(gaussianInputs, true);
+            }
+        }
+    }
+
+
     public void initMolcasExperiment(String processors, String molcasInput) throws FileNotFoundException, TException, URISyntaxException {
         String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "molcas.input";
         PrintWriter out = new PrintWriter(tempFilePath);

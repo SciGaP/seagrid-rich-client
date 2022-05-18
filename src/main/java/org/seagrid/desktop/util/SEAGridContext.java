@@ -157,6 +157,8 @@ public class SEAGridContext {
 
     public String getPsi4AppName() { return "psi4"; }
 
+    public String getOrcaAppName() { return "orca"; }
+
     public String getMolcasAppName() { return "molcas"; }
 
     public String getGatewayaStorageId(){
